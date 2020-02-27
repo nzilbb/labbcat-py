@@ -1,0 +1,720 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>nzilbb-labbcat module &#8212; nzilbb-labbcat 0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="nzilbb-labbcat-module">
+<h1>nzilbb-labbcat module<a class="headerlink" href="#nzilbb-labbcat-module" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+<div class="section" id="labbcat-class">
+<h2>Labbcat class<a class="headerlink" href="#labbcat-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="labbcat.Labbcat">
+<em class="property">class </em><code class="descclassname">labbcat.</code><code class="descname">Labbcat</code><span class="sig-paren">(</span><em>labbcatUrl</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Labbcat client, for accessing LaBB-CAT server functions programmatically.</p>
+<dl class="method">
+<dt id="labbcat.Labbcat.getTasks">
+<code class="descname">getTasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.getTasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of all tasks on the server.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>The Labbcat class inherits from the GraphStoreAdministration class.</p>
+</div>
+<div class="section" id="graphstoreadministration-class">
+<h2>GraphStoreAdministration class<a class="headerlink" href="#graphstoreadministration-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="labbcat.GraphStoreAdministration">
+<em class="property">class </em><code class="descclassname">labbcat.</code><code class="descname">GraphStoreAdministration</code><span class="sig-paren">(</span><em>labbcatUrl</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreAdministration" title="Permalink to this definition">¶</a></dt>
+<dd><p>API for querying, updating, and administering an annotation graph store.</p>
+</dd></dl>
+
+<p>The GraphStoreAdministration class inherits from the GraphStore class.</p>
+</div>
+<div class="section" id="graphstore-class">
+<h2>GraphStore class<a class="headerlink" href="#graphstore-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="labbcat.GraphStore">
+<em class="property">class </em><code class="descclassname">labbcat.</code><code class="descname">GraphStore</code><span class="sig-paren">(</span><em>labbcatUrl</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>API for querying and updating an annotation graph store.</p>
+<dl class="method">
+<dt id="labbcat.GraphStore.deleteTranscript">
+<code class="descname">deleteTranscript</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStore.deleteTranscript" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the given transcript, and all associated files.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>The GraphStore class also inherits the GraphStoreQuery class.</p>
+</div>
+<div class="section" id="graphstorequery-class">
+<h2>GraphStoreQuery class<a class="headerlink" href="#graphstorequery-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="labbcat.GraphStoreQuery">
+<em class="property">class </em><code class="descclassname">labbcat.</code><code class="descname">GraphStoreQuery</code><span class="sig-paren">(</span><em>labbcatUrl</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery" title="Permalink to this definition">¶</a></dt>
+<dd><p>API for querying an annotation graph store.</p>
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.countAnnotations">
+<code class="descname">countAnnotations</code><span class="sig-paren">(</span><em>id</em>, <em>layerId</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.countAnnotations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the number of annotations on the given layer of the given transcript.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<em>str</em>) – The ID of the transcript.</li>
+<li><strong>layerId</strong> (<em>str</em>) – The ID of the layer.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A (possibly empty) array of annotations.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.countMatchingAnnotations">
+<code class="descname">countMatchingAnnotations</code><span class="sig-paren">(</span><em>expression</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.countMatchingAnnotations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Counts the number of annotations that match a particular pattern.</p>
+<p>The expression language is loosely based on JavaScript; expressions such as the
+following can be used:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">==</span> <span class="pre">'ew_0_456'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">!/th[aeiou].&amp;#47;/.test(label)</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">my('who').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('utterances').start.offset</span> <span class="pre">==</span> <span class="pre">12.345</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">graph.id</span> <span class="pre">==</span> <span class="pre">'AdaAicheson-01.trs'</span> <span class="pre">&amp;&amp;</span> <span class="pre">layer.id</span> <span class="pre">==</span> <span class="pre">'orthography'</span> <span class="pre">&amp;&amp;</span> <span class="pre">start.offset</span> <span class="pre">&lt;</span> <span class="pre">10.5</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">previous.id</span> <span class="pre">==</span> <span class="pre">'ew_0_456'</span></code></li>
+</ul>
+<p><em>NB</em> all expressions must match by either id or layer.id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>expression</strong> (<em>str</em>) – An expression that determines which participants match.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The number of matching annotations.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.countMatchingParticipantIds">
+<code class="descname">countMatchingParticipantIds</code><span class="sig-paren">(</span><em>expression</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.countMatchingParticipantIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Counts the number of participants that match a particular pattern.</p>
+<p>The expression language is loosely based on JavaScript; expressions such as the
+following can be used:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">/Ada.+/.test(id)</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('corpus').includes('CC')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('participant_languages').includes('en')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('transcript_language').includes('en')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">!/Ada.+/.test(id)</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('corpus').label</span> <span class="pre">==</span> <span class="pre">'CC'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">list('transcript_rating').length</span> <span class="pre">&lt;</span> <span class="pre">2</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">list('participant_rating').length</span> <span class="pre">=</span> <span class="pre">0</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">!annotators('transcript_rating').includes('labbcat')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">my('participant_gender').label</span> <span class="pre">==</span> <span class="pre">'NA'</span></code></li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>expression</strong> (<em>str</em>) – An expression that determines which participants match.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The number of matching participants.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.countMatchingTranscriptIds">
+<code class="descname">countMatchingTranscriptIds</code><span class="sig-paren">(</span><em>expression</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.countMatchingTranscriptIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Counts the number of transcripts that match a particular pattern.</p>
+<p>The expression language is loosely based on JavaScript; expressions such as the
+following can be used:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">/Ada.+/.test(id)</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('who').includes('Robert')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">('CC',</span> <span class="pre">'IA',</span> <span class="pre">'MU').includes(my('corpus').label)</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">my('episode').label</span> <span class="pre">==</span> <span class="pre">'Ada</span> <span class="pre">Aitcheson'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">my('transcript_scribe').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">my('participant_languages').label</span> <span class="pre">==</span> <span class="pre">'en'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">my('noise').label</span> <span class="pre">==</span> <span class="pre">'bell'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('transcript_languages').includes('en')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('participant_languages').includes('en')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('noise').includes('bell')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">list('transcript_languages').length</span> <span class="pre">gt;</span> <span class="pre">1</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">list('participant_languages').length</span> <span class="pre">gt;</span> <span class="pre">1</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">list('transcript').length</span> <span class="pre">gt;</span> <span class="pre">100</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">annotators('transcript_rating').includes('Robert')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">!/Ada.+/.test(id)</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('corpus').label</span> <span class="pre">==</span> <span class="pre">'CC'</span> <span class="pre">&amp;&amp;</span> <span class="pre">labels('who').includes('Robert')</span></code></li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>expression</strong> (<em>str</em>) – An expression that determines which transcripts match.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The number of matching transcripts.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getAnchors">
+<code class="descname">getAnchors</code><span class="sig-paren">(</span><em>id</em>, <em>anchorIds</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getAnchors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the given anchors in the given transcript.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<em>str</em>) – The ID of the transcript.</li>
+<li><strong>anchorIds</strong> (<em>list of str</em>) – A list of anchor IDs.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A (possibly empty) list of anchors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dictionaries</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getAnnotations">
+<code class="descname">getAnnotations</code><span class="sig-paren">(</span><em>id</em>, <em>layerId</em>, <em>pageLength=None</em>, <em>pageNumber=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getAnnotations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the annotations on the given layer of the given transcript.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<em>str</em>) – The ID of the transcript.</li>
+<li><strong>layerId</strong> – The ID of the layer.</li>
+<li><strong>pageLength</strong> (<em>int</em><em> or </em><em>None</em>) – The maximum number of IDs to return, or null to return all.</li>
+<li><strong>pageNumber</strong> (<em>int</em><em> or </em><em>None</em>) – The zero-based page number to return, or null to return the first page.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A (possibly empty) list of annotations.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dictionaries</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getAvailableMedia">
+<code class="descname">getAvailableMedia</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getAvailableMedia" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the media available for the given transcript.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>str</em>) – The transcript ID.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of media files available for the given transcript.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of dictionaries</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getCorpusIds">
+<code class="descname">getCorpusIds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getCorpusIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of corpus IDs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of corpus IDs.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getEpisodeDocuments">
+<code class="descname">getEpisodeDocuments</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getEpisodeDocuments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of documents associated with the episode of the given transcript.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>str</em>) – The transcript ID.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of URLs to documents.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getId">
+<code class="descname">getId</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the store’s ID.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The annotation store’s ID.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getLayer">
+<code class="descname">getLayer</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getLayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a layer definition.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>str</em>) – ID of the layer to get the definition for.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The definition of the given layer.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionary</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getLayerIds">
+<code class="descname">getLayerIds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getLayerIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of layer IDs (annotation ‘types’).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of layer IDs.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getLayers">
+<code class="descname">getLayers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getLayers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of layer definitions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of layer definitions.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getMatchingAnnotations">
+<code class="descname">getMatchingAnnotations</code><span class="sig-paren">(</span><em>expression</em>, <em>pageLength=None</em>, <em>pageNumber=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getMatchingAnnotations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of annotations that match a particular pattern.</p>
+<p>The expression language is loosely based on JavaScript; expressions such as the
+following can be used:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">==</span> <span class="pre">'ew_0_456'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">!/th[aeiou].&amp;#47;/.test(label)</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">my('who').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('utterances').start.offset</span> <span class="pre">==</span> <span class="pre">12.345</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">graph.id</span> <span class="pre">==</span> <span class="pre">'AdaAicheson-01.trs'</span> <span class="pre">&amp;&amp;</span> <span class="pre">layer.id</span> <span class="pre">==</span> <span class="pre">'orthography'</span> <span class="pre">&amp;&amp;</span> <span class="pre">start.offset</span> <span class="pre">&lt;</span> <span class="pre">10.5</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">previous.id</span> <span class="pre">==</span> <span class="pre">'ew_0_456'</span></code></li>
+</ul>
+<p><em>NB</em> all expressions must match by either id or layer.id.
+:param expression: An expression that determines which transcripts match.
+:type expression: str</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pageLength</strong> (<em>int</em><em> or </em><em>None</em>) – The maximum number of annotations to return, or null to return all.</li>
+<li><strong>pageNumber</strong> (<em>int</em><em> or </em><em>None</em>) – The zero-based page number to return, or null to return the first page.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of matching Annotations.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dictionaries</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getMatchingParticipantIds">
+<code class="descname">getMatchingParticipantIds</code><span class="sig-paren">(</span><em>expression</em>, <em>pageLength=None</em>, <em>pageNumber=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getMatchingParticipantIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of IDs of participants that match a particular pattern.</p>
+<p>The expression language is loosely based on JavaScript; expressions such as the
+following can be used:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">/Ada.+/.test(id)</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('corpus').includes('CC')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('participant_languages').includes('en')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('transcript_language').includes('en')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">!/Ada.+/.test(id)</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('corpus').label</span> <span class="pre">==</span> <span class="pre">'CC'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">list('transcript_rating').length</span> <span class="pre">&lt;</span> <span class="pre">2</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">list('participant_rating').length</span> <span class="pre">=</span> <span class="pre">0</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">!annotators('transcript_rating').includes('labbcat')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">my('participant_gender').label</span> <span class="pre">==</span> <span class="pre">'NA'</span></code></li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>expression</strong> (<em>str</em>) – An expression that determines which participants match.</li>
+<li><strong>pageLength</strong> (<em>int</em><em> or </em><em>None</em>) – The maximum number of IDs to return, or null to return all.</li>
+<li><strong>pageNumber</strong> (<em>int</em><em> or </em><em>None</em>) – The zero-based page number to return, or null to return the first page.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of participant IDs.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getMatchingTranscriptIds">
+<code class="descname">getMatchingTranscriptIds</code><span class="sig-paren">(</span><em>expression</em>, <em>pageLength=None</em>, <em>pageNumber=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getMatchingTranscriptIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of IDs of transcripts that match a particular pattern.</p>
+<p>The results can be exhaustive, by omitting pageLength and pageNumber, or they can
+be a subset (a ‘page’) of results, by given pageLength and pageNumber values.</p>
+<p>The order of the list can be specified.  If ommitted, the transcripts are listed
+in ID order.</p>
+<p>The expression language is loosely based on JavaScript; expressions such as the
+following can be used:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">/Ada.+/.test(id)</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('who').includes('Robert')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">('CC',</span> <span class="pre">'IA',</span> <span class="pre">'MU').includes(my('corpus').label)</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">my('episode').label</span> <span class="pre">==</span> <span class="pre">'Ada</span> <span class="pre">Aitcheson'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">my('transcript_scribe').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">my('participant_languages').label</span> <span class="pre">==</span> <span class="pre">'en'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">my('noise').label</span> <span class="pre">==</span> <span class="pre">'bell'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('transcript_languages').includes('en')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('participant_languages').includes('en')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('noise').includes('bell')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">list('transcript_languages').length</span> <span class="pre">gt;</span> <span class="pre">1</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">list('participant_languages').length</span> <span class="pre">gt;</span> <span class="pre">1</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">list('transcript').length</span> <span class="pre">gt;</span> <span class="pre">100</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">annotators('transcript_rating').includes('Robert')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">!/Ada.+/.test(id)</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('corpus').label</span> <span class="pre">==</span> <span class="pre">'CC'</span> <span class="pre">&amp;&amp;</span> <span class="pre">labels('who').includes('Robert')</span></code></li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>expression</strong> (<em>str</em>) – An expression that determines which transcripts match.</li>
+<li><strong>pageLength</strong> (<em>int</em><em> or </em><em>None</em>) – The maximum number of IDs to return, or null to return all.</li>
+<li><strong>pageNumber</strong> (<em>int</em><em> or </em><em>None</em>) – The zero-based page number to return, or null to return the first page.</li>
+<li><strong>order</strong> (<em>str</em>) – The ordering for the list of IDs, a string containing a
+comma-separated list of expressions, which may be appended by ” ASC” or ” DESC”,
+or null for transcript ID order.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of transcript IDs.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getMedia">
+<code class="descname">getMedia</code><span class="sig-paren">(</span><em>id</em>, <em>trackSuffix</em>, <em>mimeType</em>, <em>startOffset=None</em>, <em>endOffset=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getMedia" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a given media track for a given transcript.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<em>str</em>) – The transcript ID.</li>
+<li><strong>trackSuffix</strong> (<em>str</em>) – The track suffix of the media.</li>
+<li><strong>mimeType</strong> (<em>str</em>) – The MIME type of the media, which may include parameters for type
+conversion, e.g. ‘text/wav; samplerate=16000’</li>
+<li><strong>startOffset</strong> (<em>int</em><em> or </em><em>None</em>) – The start offset of the media sample, or null for the start of
+the whole recording.</li>
+<li><strong>endOffset</strong> (<em>int</em><em> or </em><em>None</em>) – The end offset of the media sample, or null for the end of the
+whole recording.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A URL to the given media for the given transcript, or null if the given
+media doesn’t exist.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getMediaTracks">
+<code class="descname">getMediaTracks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getMediaTracks" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the predefined media tracks available for transcripts.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">An ordered list of media track definitions.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dictionaries</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getParticipant">
+<code class="descname">getParticipant</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getParticipant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the participant record specified by the given identifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>str</em>) – The ID of the participant, which could be their name or their database
+annotation ID.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An annotation representing the participant, or null if the participant</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionary
+was not found.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getParticipantIds">
+<code class="descname">getParticipantIds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getParticipantIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of participant IDs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of participant IDs.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getTranscript">
+<code class="descname">getTranscript</code><span class="sig-paren">(</span><em>id</em>, <em>layerIds=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getTranscript" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a transcript given its ID.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<em>str</em>) – The given transcript ID.</li>
+<li><strong>layerIds</strong> (<em>list of str</em>) – The IDs of the layers to load, or null if only transcript data is
+required.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The identified transcript.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dictionary</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getTranscriptIds">
+<code class="descname">getTranscriptIds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getTranscriptIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of transcript IDs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of transcript IDs.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getTranscriptIdsInCorpus">
+<code class="descname">getTranscriptIdsInCorpus</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getTranscriptIdsInCorpus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of transcript IDs in the given corpus.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>str</em>) – A corpus ID.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of transcript IDs.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.GraphStoreQuery.getTranscriptIdsWithParticipant">
+<code class="descname">getTranscriptIdsWithParticipant</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getTranscriptIdsWithParticipant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of IDs of transcripts that include the given participant.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>str</em>) – A participant ID.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of transcript IDs.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">nzilbb-labbcat</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, New Zealand Institute of Language, Brain and Behaviour.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
