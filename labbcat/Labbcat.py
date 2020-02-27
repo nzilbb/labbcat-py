@@ -1,4 +1,4 @@
-from GraphStoreAdministration import GraphStoreAdministration
+from labbcat.GraphStoreAdministration import GraphStoreAdministration
 
 class Labbcat(GraphStoreAdministration):
     """ Labbcat client, for accessing LaBB-CAT server functions programmatically. """

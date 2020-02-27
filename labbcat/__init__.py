@@ -1,7 +1,4 @@
-version = "0.0.1"
-
-from GraphStoreQuery import GraphStoreQuery
-from GraphStore import GraphStore
-from GraphStoreAdministration import GraphStoreAdministration
-from Labbcat import Labbcat
-
+from labbcat.GraphStoreQuery import GraphStoreQuery
+from labbcat.GraphStore import GraphStore
+from labbcat.GraphStoreAdministration import GraphStoreAdministration
+from labbcat.Labbcat import Labbcat

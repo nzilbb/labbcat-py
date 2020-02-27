@@ -26,7 +26,7 @@ class GraphStoreQuery:
             auth = (self.username, self.password)            
         resp = requests.get(url=url, params=params, auth=auth, headers={"Accept":"application/json"})
         # TODO check for 401 and ask for credentials if required        
-        if resp.status_code <> requests.codes.ok and self.verbose:
+        if resp.status_code != requests.codes.ok and self.verbose:
             print("response status: " + resp.status_code)
             print("response text: " + resp.text)
         resp.raise_for_status()
@@ -40,7 +40,7 @@ class GraphStoreQuery:
             auth = (self.username, self.password)            
         resp = requests.post(url=url, params=params, auth=auth, headers={"Accept":"application/json"})
         # TODO check for 401 and ask for credentials if required
-        if resp.status_code <> requests.codes.ok and self.verbose:
+        if resp.status_code != requests.codes.ok and self.verbose:
             print("response status: " + resp.status_code)
             print("response text: " + resp.text)
         resp.raise_for_status()        

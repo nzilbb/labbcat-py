@@ -1,4 +1,4 @@
-from GraphStore import GraphStore
+from labbcat.GraphStore import GraphStore
 
 class GraphStoreAdministration(GraphStore):
     """ API for querying, updating, and administering an annotation graph store. """

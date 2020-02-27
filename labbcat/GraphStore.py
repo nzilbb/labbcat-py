@@ -1,4 +1,4 @@
-from GraphStoreQuery import GraphStoreQuery
+from labbcat.GraphStoreQuery import GraphStoreQuery
 
 class GraphStore(GraphStoreQuery):
     """ API for querying and updating an annotation graph store. """
