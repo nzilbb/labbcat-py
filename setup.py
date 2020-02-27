@@ -9,7 +9,7 @@ README = (HERE / "README.md").read_text()
 
 # This call to setup() does all the work
 setup(
-    name="labbcat",
+    name="nzilbb-labbcat",
     version="0.0.3",
     description="Client library for communicating with LaBB-CAT servers",
     long_description=README,
