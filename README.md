@@ -6,6 +6,14 @@ Client library for communicating with LaBB-CAT servers using Python.
 
 # Developers
 
+## Documentation generation
+
+```
+cd docs
+make clean
+make
+```
+
 ## Publishing
 
 ```
