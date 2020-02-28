@@ -21,9 +21,7 @@ class Labbcat(GraphStoreAdministration):
     :param password: The password for logging in to the server, if necessary.
     :type password: str or None
     
-    :Example: 
-    
-    code-block::
+    Example::
         
         import labbcat
         
