@@ -6,14 +6,14 @@ class Response:
 
     :Attributes:
 
-    - httpStatus - The HTTP status code, or -1 if not known.
-    - title - The title reqturned by the server.
-    - version - The server version. 
-    - code - The numeric request code (0 or 1 means no error).
-    - errors - Errors returned.
-    - messages - Messages returned.
-    - model = The model or result returned if any.
-    - text = The full plain text of the HTTP response.
+    - ``httpStatus`` - The HTTP status code, or -1 if not known.
+    - ``title`` - The title reqturned by the server.
+    - ``version`` - The server version. 
+    - ``code`` - The numeric request code (0 or 1 means no error).
+    - ``errors`` - Errors returned.
+    - ``messages`` - Messages returned.
+    - ``model`` - The model or result returned if any.
+    - ``text`` - The full plain text of the HTTP response.
     """
 
     httpStatus = -1
