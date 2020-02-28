@@ -27,7 +27,8 @@ class TestLabbcat(unittest.TestCase):
         if len(tasks) == 0:
             print("\nThere are no tasks, can't test for well-formed response.")
         else:
-            for task in tasks:
+            for taskId in tasks:
+                task = tasks[taskId]
                 for key in ["threadId", "threadName", "running", "percentComplete", "status"]:
                     with self.subTest(key=key):
                         self.assertIn(key, task, "Has " + key)
