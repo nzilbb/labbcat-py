@@ -2,8 +2,10 @@ import requests
 from labbcat.ResponseException import ResponseException
 
 class Response:
-    """ Standard LaBB-CAT response.
-    Attributes:
+    """ Standard LaBB-CAT response object.
+
+    :Attributes:
+
     - httpStatus - The HTTP status code, or -1 if not known.
     - title - The title reqturned by the server.
     - version - The server version. 

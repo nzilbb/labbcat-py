@@ -82,6 +82,20 @@ and adds some extra operations, including transcript upload and task management.
 </pre></div>
 </div>
 <dl class="method">
+<dt id="labbcat.Labbcat.cancelTask">
+<code class="descname">cancelTask</code><span class="sig-paren">(</span><em>threadId</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.cancelTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cancels a running task.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>threadId</strong> (<em>str.</em>) – The ID of the task.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.Labbcat.getTasks">
 <code class="descname">getTasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.getTasks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of all tasks on the server.</p>
@@ -92,6 +106,38 @@ and adds some extra operations, including transcript upload and task management.
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of all task statuses.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dictionaries</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.Labbcat.releaseTask">
+<code class="descname">releaseTask</code><span class="sig-paren">(</span><em>threadId</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.releaseTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release a finished task, to free up server resources.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>threadId</strong> (<em>str.</em>) – The ID of the task.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.Labbcat.taskStatus">
+<code class="descname">taskStatus</code><span class="sig-paren">(</span><em>threadId</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.taskStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the current state of the given task.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>threadId</strong> (<em>str.</em>) – The ID of the task.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The status of the task.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"></td>
 </tr>
 </tbody>
 </table>
@@ -155,7 +201,7 @@ and adds some <em>write</em> operations for updating data.</p>
 </table>
 <dl class="method">
 <dt id="labbcat.GraphStore.deleteTranscript">
-<code class="descname">deleteTranscript</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStore.deleteTranscript" title="Permalink to this definition">¶</a></dt>
+<code class="descname">deleteTranscript</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStore.deleteTranscript" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes the given transcript, and all associated files.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -786,6 +832,48 @@ required.</li>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="responseexception-class">
+<h2>ResponseException class<a class="headerlink" href="#responseexception-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="labbcat.ResponseException">
+<em class="property">class </em><code class="descclassname">labbcat.</code><code class="descname">ResponseException</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.ResponseException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Any method that creates a server request can raise this exception if an error occurs.</p>
+<p>This has one attribute, <code class="docutils literal notranslate"><span class="pre">response</span></code>, which is a Response object representing the full 
+response from the server, from which error messages etc. can be obtained.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="labbcat.Response">
+<em class="property">class </em><code class="descclassname">labbcat.</code><code class="descname">Response</code><span class="sig-paren">(</span><em>resp</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard LaBB-CAT response object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>httpStatus - The HTTP status code, or -1 if not known.</li>
+<li>title - The title reqturned by the server.</li>
+<li>version - The server version.</li>
+<li>code - The numeric request code (0 or 1 means no error).</li>
+<li>errors - Errors returned.</li>
+<li>messages - Messages returned.</li>
+<li>model = The model or result returned if any.</li>
+<li>text = The full plain text of the HTTP response.</li>
+</ul>
+<dl class="method">
+<dt id="labbcat.Response.checkForErrors">
+<code class="descname">checkForErrors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Response.checkForErrors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method for checking whether the response any errors.</p>
+<p>If so, a corresponding ResponseException will be thrown.</p>
 </dd></dl>
 
 </dd></dl>

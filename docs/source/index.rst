@@ -39,3 +39,13 @@ GraphStoreQuery class
 
 .. autoclass:: labbcat.GraphStoreQuery
     :members:
+
+==========================================
+ResponseException class
+==========================================
+
+.. autoclass:: labbcat.ResponseException
+    :members:
+
+.. autoclass:: labbcat.Response
+    :members:

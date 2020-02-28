@@ -1,5 +1,5 @@
 class ResponseException(Exception):
-    """ Exception raised when a request fails.
+    """ Any method that creates a server request can raise this exception if an error occurs.
     
     This has one attribute, ``response``, which is a Response object representing the full 
     response from the server, from which error messages etc. can be obtained.    
