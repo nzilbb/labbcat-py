@@ -153,21 +153,20 @@ class TestGraphStoreQuery(unittest.TestCase):
                     with self.subTest(key=key):
                         self.assertIn(key, anchor, "Has " + key)
    
-   
-    # def test_getMedia(self):
-    #     ids = self.store.getMatchingTranscriptIds("/AP511.+\\.eaf/.test(id)", 1, 0)
-    #     self.assertTrue(len(ids) > 0, "Some graph IDs are returned")
-    #     graphId = ids[0]
-    #     url = self.store.getMedia(graphId, "", "audio/wav")
-    #     self.assertIsNotNone(url, "There is some media (check the first graph listed) "+graphId+")")
+    def test_getMedia(self):
+        ids = self.store.getMatchingTranscriptIds("/AP511.+\\.eaf/.test(id)", 1, 0)
+        self.assertTrue(len(ids) > 0, "Some graph IDs are returned")
+        graphId = ids[0]
+        url = self.store.getMedia(graphId, "", "audio/wav")
+        self.assertIsNotNone(
+            url, "There is some media (check the first graph listed) "+graphId+")")
     
-    # def test_getMediaFragment(self):
-    #   ids = self.store.getMatchingTranscriptIds("/AP511.+\\.eaf/.test(id)", 1, 0)
-    #   self.assertTrue(len(ids) > 0, "Some graph IDs are returned")
-    #   graphId = ids[0]
-    #   url = self.store.getMedia(graphId, "", "audio/wav", 1.0, 2.0)
-    #   self.assertIsNotNone(url, "There is some media")
-   
+    def test_getMediaFragment(self):
+      ids = self.store.getMatchingTranscriptIds("/AP511.+\\.eaf/.test(id)", 1, 0)
+      self.assertTrue(len(ids) > 0, "Some graph IDs are returned")
+      graphId = ids[0]
+      url = self.store.getMedia(graphId, "", "audio/wav", 1.0, 2.0)
+      self.assertIsNotNone(url, "There is some media")   
 
     def test_getLayer(self):
         layer = self.store.getLayer("orthography")
