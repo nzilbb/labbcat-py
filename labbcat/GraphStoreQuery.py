@@ -1,4 +1,5 @@
 import requests
+from labbcat.Response import Response
 
 class GraphStoreQuery:
     """ API for querying a `LaBB--CAT <https://labbcat.canterbury.ac.nz/>`_ annotation graph
@@ -61,28 +62,32 @@ class GraphStoreQuery:
         if self.username == None:
             auth = None
         else:
-            auth = (self.username, self.password)            
-        resp = requests.get(url=url, params=params, auth=auth, headers={"Accept":"application/json"})
-        # TODO check for 401 and ask for credentials if required        
-        if resp.status_code != requests.codes.ok and self.verbose:
-            print("response status: " + resp.status_code)
-            print("response text: " + resp.text)
-        resp.raise_for_status()
-        return(resp.json()["model"])
+            auth = (self.username, self.password)
+            
+        response = Response(
+            requests.get(
+                url=url, params=params, auth=auth, headers={"Accept":"application/json"}),
+            self.verbose)
+        response.checkForErrors()
+
+        if self.verbose: print("response: " + str(response.text))
+        return(response.model)
         
     def _postRequest(self, url, params):
         if self.verbose: print("_postRequest " + url + " : " + str(params))
         if self.username == None:
             auth = None
         else:
-            auth = (self.username, self.password)            
-        resp = requests.post(url=url, params=params, auth=auth, headers={"Accept":"application/json"})
-        # TODO check for 401 and ask for credentials if required
-        if resp.status_code != requests.codes.ok and self.verbose:
-            print("response status: " + resp.status_code)
-            print("response text: " + resp.text)
-        resp.raise_for_status()        
-        return(resp.json()["model"])
+            auth = (self.username, self.password)
+            
+        response = Response(
+            requests.post(
+                url=url, params=params, auth=auth, headers={"Accept":"application/json"}),
+            self.verbose)
+        response.checkForErrors()
+        
+        if self.verbose: print("model: " + str(response.model))
+        return(response.model)
          
     def getId(self):
         """ Gets the store's ID. 
