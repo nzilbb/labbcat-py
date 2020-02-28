@@ -496,7 +496,7 @@ class GraphStoreQuery:
         """
         return(self._getRequest(
             self._storeQueryUrl("getMedia"),
-            { "id":id, "trackSuffix":trackSuffix, "trackSuffix":trackSuffix,
+            { "id":id, "trackSuffix":trackSuffix, "mimeType":mimeType,
               "startOffset":startOffset, "endOffset":endOffset }))
         
     def getEpisodeDocuments(self, id):
