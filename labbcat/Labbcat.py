@@ -49,11 +49,37 @@ class Labbcat(GraphStoreAdministration):
 
     # TODO newTranscript
     # TODO updateTranscript
-    # TODO taskStatus
+    def taskStatus(self, threadId):
+        """ Gets the current state of the given task.
+
+        :param threadId: The ID of the task.
+        :type threadId: str.
+
+        :returns: The status of the task.
+        :rtype:
+        """
+        return(self._getRequest(self._labbcatUrl("thread"), { "threadId" : threadId }))
+
     # TODO waitForTask
-    # TODO cancelTask
-    # TODO releaseTask
     
+    def cancelTask(self, threadId):
+        """ Cancels a running task.
+
+        :param threadId: The ID of the task.
+        :type threadId: str.
+        """
+        return(self._getRequest(self._labbcatUrl("threads"), {
+            "threadId" : threadId, "command" : "cancel" }))
+
+    def releaseTask(self, threadId):
+        """ Release a finished task, to free up server resources.
+
+        :param threadId: The ID of the task.
+        :type threadId: str.
+        """
+        return(self._getRequest(self._labbcatUrl("threads"), {
+            "threadId" : threadId, "command" : "release" }))
+
     def getTasks(self):
         """ Gets a list of all tasks on the server. 
         
