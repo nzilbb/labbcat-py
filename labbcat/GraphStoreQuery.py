@@ -1,10 +1,50 @@
 import requests
 
 class GraphStoreQuery:
-    """ API for querying an annotation graph store. """
+    """ API for querying a `LaBB--CAT <https://labbcat.canterbury.ac.nz/>`_ annotation graph
+    store; a database of linguistic transcripts represented using 
+    `Annotation Graphs <https://nzilbb.github.io/ag/>`_
+    
+    This interface provides only *read-only* operations.
+
+    Constructor arguments:    
+    
+    :param labbcatUrl: The 'home' URL of the LaBB-CAT server.
+    :type labbcatUrl: str
+    
+    :param username: The username for logging in to the server, if necessary.
+    :type username: str or None
+    
+    :param password: The password for logging in to the server, if necessary.
+    :type password: str or None
+
+    :Example: 
+    
+    code-block::
+        
+        import labbcat
+        
+        # create annotation store client
+        store = labbcat.GraphStoreQuery("https://labbcat.canterbury.ac.nz", "demo", "demo");
+        
+        # show some basic information
+        
+        print("Information about LaBB-CAT at " + store.getId())
+        
+        layerIds = store.getLayerIds()
+        for layerId in layerIds: 
+            print("layer: " + layerId) 
+        
+        corpora = store.getCorpusIds()
+        for corpus in corpora:
+            print("transcripts in: " + corpus)
+            for transcript in store.getTranscriptIdsInCorpus(corpus):
+                print(" " + transcript)
+
+    """
     
     def __init__(self, labbcatUrl, username=None, password=None):
-        """ Constructor for this class. """
+        """ Constructor. """
 
         if labbcatUrl.endswith("/"):
             self.labbcatUrl = labbcatUrl
@@ -83,7 +123,6 @@ class GraphStoreQuery:
         
     def getCorpusIds(self):
         """ Gets a list of corpus IDs. 
-
 
         :returns: A list of corpus IDs.
         :rtype: list
@@ -195,7 +234,7 @@ class GraphStoreQuery:
         
         :param id: A participant ID.
         :type id: str
-
+        
         :returns: A list of transcript IDs.
         :rtype: list of str
         """

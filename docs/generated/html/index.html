@@ -41,10 +41,39 @@
 <dt id="labbcat.Labbcat">
 <em class="property">class </em><code class="descclassname">labbcat.</code><code class="descname">Labbcat</code><span class="sig-paren">(</span><em>labbcatUrl</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Labbcat client, for accessing LaBB-CAT server functions programmatically.</p>
+<p><a class="reference external" href="https://labbcat.canterbury.ac.nz">LaBB-CAT</a> is an annotation graph store
+functionality; a database of linguistic transcripts represented using <a class="reference external" href="https://nzilbb.github.io/ag/">Annotation
+Graphs</a>.</p>
+<p>This class inherits the <em>read-write</em> operations of GraphStoreAdministration
+and adds some extra operations, including transcript upload and task management.</p>
+<p>Constructor arguments:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>labbcatUrl</strong> (<em>str</em>) – The ‘home’ URL of the LaBB-CAT server.</li>
+<li><strong>username</strong> (<em>str</em><em> or </em><em>None</em>) – The username for logging in to the server, if necessary.</li>
+<li><strong>password</strong> (<em>str</em><em> or </em><em>None</em>) – The password for logging in to the server, if necessary.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="labbcat.Labbcat.getTasks">
 <code class="descname">getTasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.getTasks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of all tasks on the server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of all task statuses.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dictionaries</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -56,7 +85,25 @@
 <dl class="class">
 <dt id="labbcat.GraphStoreAdministration">
 <em class="property">class </em><code class="descclassname">labbcat.</code><code class="descname">GraphStoreAdministration</code><span class="sig-paren">(</span><em>labbcatUrl</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreAdministration" title="Permalink to this definition">¶</a></dt>
-<dd><p>API for querying, updating, and administering an annotation graph store.</p>
+<dd><p>API for querying, updating, and administering a <a class="reference external" href="https://labbcat.canterbury.ac.nz">LaBB-CAT</a> annotation graph store; a database of linguistic
+transcripts represented using <a class="reference external" href="https://nzilbb.github.io/ag/">Annotation Graphs</a></p>
+<p>This class inherits the <em>read-write</em> operations of GraphStore
+and adds some administration operations, including definition of layers,
+registration of converters, etc.</p>
+<p>Constructor arguments:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>labbcatUrl</strong> (<em>str</em>) – The ‘home’ URL of the LaBB-CAT server.</li>
+<li><strong>username</strong> (<em>str</em><em> or </em><em>None</em>) – The username for logging in to the server, if necessary.</li>
+<li><strong>password</strong> (<em>str</em><em> or </em><em>None</em>) – The password for logging in to the server, if necessary.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <p>The GraphStoreAdministration class inherits from the GraphStore class.</p>
@@ -66,11 +113,37 @@
 <dl class="class">
 <dt id="labbcat.GraphStore">
 <em class="property">class </em><code class="descclassname">labbcat.</code><code class="descname">GraphStore</code><span class="sig-paren">(</span><em>labbcatUrl</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStore" title="Permalink to this definition">¶</a></dt>
-<dd><p>API for querying and updating an annotation graph store.</p>
+<dd><p>API for querying and updating a <a class="reference external" href="https://labbcat.canterbury.ac.nz">LaBB-CAT</a>
+annotation graph store; a database of linguistic transcripts represented using 
+<a class="reference external" href="https://nzilbb.github.io/ag/">Annotation Graphs</a></p>
+<p>This class inherits the <em>read-only</em> operations of GraphStoreQuery
+and adds some <em>write</em> operations for updating data.</p>
+<p>Constructor arguments:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>labbcatUrl</strong> (<em>str</em>) – The ‘home’ URL of the LaBB-CAT server.</li>
+<li><strong>username</strong> (<em>str</em><em> or </em><em>None</em>) – The username for logging in to the server, if necessary.</li>
+<li><strong>password</strong> (<em>str</em><em> or </em><em>None</em>) – The password for logging in to the server, if necessary.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="labbcat.GraphStore.deleteTranscript">
-<code class="descname">deleteTranscript</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStore.deleteTranscript" title="Permalink to this definition">¶</a></dt>
+<code class="descname">deleteTranscript</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStore.deleteTranscript" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes the given transcript, and all associated files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>str</em>) – The ID transcript to save.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -82,7 +155,47 @@
 <dl class="class">
 <dt id="labbcat.GraphStoreQuery">
 <em class="property">class </em><code class="descclassname">labbcat.</code><code class="descname">GraphStoreQuery</code><span class="sig-paren">(</span><em>labbcatUrl</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery" title="Permalink to this definition">¶</a></dt>
-<dd><p>API for querying an annotation graph store.</p>
+<dd><p>API for querying a <a class="reference external" href="https://labbcat.canterbury.ac.nz/">LaBB–CAT</a> annotation graph
+store; a database of linguistic transcripts represented using 
+<a class="reference external" href="https://nzilbb.github.io/ag/">Annotation Graphs</a></p>
+<p>This interface provides only <em>read-only</em> operations.</p>
+<p>Constructor arguments:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>labbcatUrl</strong> (<em>str</em>) – The ‘home’ URL of the LaBB-CAT server.</li>
+<li><strong>username</strong> (<em>str</em><em> or </em><em>None</em>) – The username for logging in to the server, if necessary.</li>
+<li><strong>password</strong> (<em>str</em><em> or </em><em>None</em>) – The password for logging in to the server, if necessary.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>code-block:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">labbcat</span>
+
+<span class="c1"># create annotation store client</span>
+<span class="n">store</span> <span class="o">=</span> <span class="n">labbcat</span><span class="o">.</span><span class="n">GraphStoreQuery</span><span class="p">(</span><span class="s2">&quot;https://labbcat.canterbury.ac.nz&quot;</span><span class="p">,</span> <span class="s2">&quot;demo&quot;</span><span class="p">,</span> <span class="s2">&quot;demo&quot;</span><span class="p">);</span>
+
+<span class="c1"># show some basic information</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Information about LaBB-CAT at &quot;</span> <span class="o">+</span> <span class="n">store</span><span class="o">.</span><span class="n">getId</span><span class="p">())</span>
+
+<span class="n">layerIds</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">getLayerIds</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">layerId</span> <span class="ow">in</span> <span class="n">layerIds</span><span class="p">:</span> 
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;layer: &quot;</span> <span class="o">+</span> <span class="n">layerId</span><span class="p">)</span> 
+
+<span class="n">corpora</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">getCorpusIds</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">corpus</span> <span class="ow">in</span> <span class="n">corpora</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;transcripts in: &quot;</span> <span class="o">+</span> <span class="n">corpus</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">transcript</span> <span class="ow">in</span> <span class="n">store</span><span class="o">.</span><span class="n">getTranscriptIdsInCorpus</span><span class="p">(</span><span class="n">corpus</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">transcript</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="method">
 <dt id="labbcat.GraphStoreQuery.countAnnotations">
 <code class="descname">countAnnotations</code><span class="sig-paren">(</span><em>id</em>, <em>layerId</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.countAnnotations" title="Permalink to this definition">¶</a></dt>
