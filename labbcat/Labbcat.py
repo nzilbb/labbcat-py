@@ -20,6 +20,30 @@ class Labbcat(GraphStoreAdministration):
     
     :param password: The password for logging in to the server, if necessary.
     :type password: str or None
+    
+    :Example: 
+    
+    code-block::
+        
+        import labbcat
+        
+        # create annotation store client
+        store = labbcat.Labbcat("https://labbcat.canterbury.ac.nz", "demo", "demo");
+        
+        # show some basic information
+        
+        print("Information about LaBB-CAT at " + store.getId())
+        
+        layerIds = store.getLayerIds()
+        for layerId in layerIds: 
+            print("layer: " + layerId) 
+        
+        corpora = store.getCorpusIds()
+        for corpus in corpora:
+            print("transcripts in: " + corpus)
+            for transcript in store.getTranscriptIdsInCorpus(corpus):
+                print(" " + transcript)
+
     """
     
     def _labbcatUrl(self, resource):
