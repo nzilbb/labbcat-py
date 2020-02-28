@@ -10,10 +10,16 @@ Detailed documentation is available [here](https://nzilbb.github.io/labbcat-py/)
 
 # Developers
 
-To build and release the module, the following prerequisites are reuiqred:
+To build, test, release, and document the module, the following prerequisites are required:
  - `pip install twine`
  - `pip install pathlib`
  - `apt install python3-sphinx`
+
+## Unit tests
+
+```
+python -m unittest
+```
 
 ## Documentation generation
 
