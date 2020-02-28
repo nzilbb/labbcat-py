@@ -21,9 +21,9 @@ class TestGraphStore(unittest.TestCase):
     def setUp(self):
         self.store = labbcat.GraphStore(labbcatUrl, username, password)
         
-    # TODO def test_deleteNonexistentTranscript(self):
-    #     with self.assertRaises(LabbcatException):
-    #         self.store.deleteTranscript("nonexistent transcript ID")    
+    def test_deleteNonexistentTranscript(self):
+        with self.assertRaises(labbcat.ResponseException):
+            self.store.deleteTranscript("nonexistent transcript ID")    
           
 if __name__ == '__main__':
     unittest.main()
