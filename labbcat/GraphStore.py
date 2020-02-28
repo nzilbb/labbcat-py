@@ -24,13 +24,9 @@ class GraphStore(GraphStoreQuery):
         return self.labbcatUrl + "edit/store/" + resource
 
     def deleteTranscript(self, id):
-        """ Deletes the given transcript, and all associated files. """
-        return(self._postRequest(self._storeEditUrl("deleteTranscript"), {"id":id}))
-
-    def deleteTranscript(id):
         """ Deletes the given transcript, and all associated files.
         
         :param id: The ID transcript to save.
         :type id: str
         """
-        return(self._postRequest(self._storeQueryUrl("deleteTranscript"), {"id":id}))
+        return(self._postRequest(self._storeEditUrl("deleteTranscript"), {"id":id}))
