@@ -89,6 +89,20 @@ class GraphStoreQuery:
         if self.verbose: print("model: " + str(response.model))
         return(response.model)
          
+    def _postMultipartRequest(self, url, params, files):
+        if self.verbose: print("_postMultipartRequest " + url + " : " + str(params) + " - " + str(files))
+        if self.username == None:
+            auth = None
+        else:
+            auth = (self.username, self.password)
+            
+        response = Response(requests.post(
+            url=url, data=params, files=files, auth=auth, headers={"Accept":"application/json"}))
+        response.checkForErrors()
+        
+        if self.verbose: print("model: " + str(response.model))
+        return(response.model)
+         
     def getId(self):
         """ Gets the store's ID. 
 
@@ -518,6 +532,6 @@ class GraphStoreQuery:
             { "id":id }))
         
 
-    # TODO getMatchingAnnotations
+    # TODO getSoundFragment
     # TODO getFragment
     # TODO getFragmentSeries

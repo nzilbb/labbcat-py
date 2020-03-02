@@ -33,5 +33,52 @@ class TestLabbcat(unittest.TestCase):
                     with self.subTest(key=key):
                         self.assertIn(key, task, "Has " + key)
             
+    def test_newTranscript_updateTranscript_deleteTranscript(self):
+        transcriptName = "labbcat-py.test.txt"
+        transcriptPath = "/home/robert/nzilbb/labbcat-py/test/" + transcriptName
+
+        # ensure the transcript doesn't exist to start with
+        try:
+            self.store.deleteTranscript(transcriptName)
+        except labbcat.ResponseException as x:
+            pass
+            
+        # get valid attribute values
+        corpusId = self.store.getCorpusIds()[0]
+        typeLayer = self.store.getLayer("transcript_type")
+        transcriptType = next(iter(typeLayer["validLabels"]))
+        
+        # upload transcript (with no media)
+        tasks = self.store.newTranscript(
+            transcriptPath, None, None, transcriptType, corpusId, "test")
+        
+        # wait for task generation to finish
+        threadId = tasks["result"][transcriptName]        
+        self.store.waitForTask(threadId)
+        self.store.releaseTask(threadId)
+        
+        # ensure the transcript is there
+        count = self.store.countMatchingTranscriptIds("id = '"+transcriptName+"'")
+        self.assertEqual(1, count, "Transcript is in the store")
+        
+        # re-upload transcript (with no media)
+        tasks = self.store.updateTranscript(transcriptPath)
+        
+        # wait for task generation to finish
+        threadId = tasks["result"][transcriptName]        
+        self.store.waitForTask(threadId)
+        self.store.releaseTask(threadId)
+        
+        # ensure the transcript is there
+        count = self.store.countMatchingTranscriptIds("id = '"+transcriptName+"'")
+        self.assertEqual(1, count, "Transcript is in the store")
+        
+        # delete it
+        self.store.deleteTranscript(transcriptName)
+        
+        # make sure it was deleted
+        count = self.store.countMatchingTranscriptIds("id = '"+transcriptName+"'")
+        self.assertEqual(0, count, "Transcript is gone")
+            
 if __name__ == '__main__':
     unittest.main()
