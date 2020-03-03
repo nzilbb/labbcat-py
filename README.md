@@ -8,6 +8,12 @@ Detailed documentation is available [here](https://nzilbb.github.io/labbcat-py/)
 
 # Basic usage
 
+To install the module:
+
+```
+pip install nzilbb-labbcat
+```
+
 The following example shows how to upload a transcript.
 
 For batch uploading and other example code, see the *examples* subdirectory.
