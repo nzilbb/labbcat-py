@@ -6,7 +6,31 @@ Client library for communicating with LaBB-CAT servers using Python.
 
 Detailed documentation is available [here](https://nzilbb.github.io/labbcat-py/)
 
-# Usage
+# Basic usage
+
+The following example shows how to upload a transcript.
+
+For batch uploading and other example code, see the *examples* subdirectory.
+
+```python
+import labbcat
+
+# Connect to the LaBB-CAT annotation store
+store = labbcat.Labbcat("http://localhost:8080/labbcat", "labbcat", "labbcat")
+
+# List the corpora on the server
+corpora = store.getCorpusIds()
+
+# List the transcript types
+transcript_type_layer = store.getLayer("transcript_type")
+transcript_types = transcript_type_layer["validLabels"]
+
+# Upload a transcript
+corpus_id = corpora[0]
+transcript_type = next(iter(transcript_types))
+store.newTranscript("test/labbcat-py.test.txt", None, None, transcript_type, corpus_id, "test")
+
+```
 
 # Developers
 
