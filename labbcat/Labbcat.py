@@ -55,8 +55,8 @@ class Labbcat(GraphStoreAdministration):
         :param transcript: The path to the transcript to upload.
         :type transcript: str
 
-        :param media: The path(s) to media to upload, if any. 
-        :type media: str or list of str
+        :param media: The path to media to upload, if any. 
+        :type media: str
 
         :param mediaSuffix: The media suffix for the media.
         :type mediaSuffix: str
@@ -88,14 +88,8 @@ class Labbcat(GraphStoreAdministration):
         
         if media != None:
             if mediaSuffix == None: mediaSuffix = ""
-            if isinstance(media, list):
-                # list of media files
-                for m in media:
-                    mediaName = os.path.basename(media[m])
-                    params["uploadmedia"+mediaSuffix+str(m+1)] = (mediaName, open(media[m], 'rb'))
-            else:
-                mediaName = os.path.basename(media[m])
-                params["uploadmedia"+mediaSuffix+"1"] = (mediaName, open(media, 'rb'))
+            mediaName = os.path.basename(media)
+            files["uploadmedia"+mediaSuffix+"1"] = (mediaName, open(media, 'rb'))
 
         try:
             return(self._postMultipartRequest(
