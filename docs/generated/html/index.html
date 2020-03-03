@@ -82,20 +82,6 @@ and adds some extra operations, including transcript upload and task management.
 </pre></div>
 </div>
 <dl class="method">
-<dt id="labbcat.Labbcat.cancelTask">
-<code class="descname">cancelTask</code><span class="sig-paren">(</span><em>threadId</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.cancelTask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cancels a running task.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>threadId</strong> (<em>str.</em>) – The ID of the task.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="labbcat.Labbcat.getTasks">
 <code class="descname">getTasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.getTasks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of all tasks on the server.</p>
@@ -106,6 +92,36 @@ and adds some extra operations, including transcript upload and task management.
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of all task statuses.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dictionaries</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.Labbcat.newTranscript">
+<code class="descname">newTranscript</code><span class="sig-paren">(</span><em>transcript</em>, <em>media</em>, <em>mediaSuffix</em>, <em>transcriptType</em>, <em>corpus</em>, <em>episode</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.newTranscript" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uploads a new transcript.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>transcript</strong> (<em>str</em>) – The path to the transcript to upload.</li>
+<li><strong>media</strong> (<em>str</em>) – The path to media to upload, if any.</li>
+<li><strong>mediaSuffix</strong> (<em>str</em>) – The media suffix for the media.</li>
+<li><strong>transcriptType</strong> – The transcript type.</li>
+<li><strong>type</strong> – str</li>
+<li><strong>corpus</strong> (<em>str</em>) – The corpus for the transcript.</li>
+<li><strong>episode</strong> (<em>str</em>) – The episode the transcript belongs to.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A dictionary of transcript IDs (transcript names) to task threadIds. The
+task status can be updated using Labbcat.taskStatus(taskId).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dictionary of str</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -137,7 +153,51 @@ and adds some extra operations, including transcript upload and task management.
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The status of the task.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionary</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.Labbcat.updateTranscript">
+<code class="descname">updateTranscript</code><span class="sig-paren">(</span><em>transcript</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.updateTranscript" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uploads a new transcript.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>transcript</strong> (<em>str</em>) – The path to the transcript to upload.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A dictionary of transcript IDs (transcript names) to task threadIds. The
+task status can be updated using Labbcat.taskStatus(taskId).</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionary of str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.Labbcat.waitForTask">
+<code class="descname">waitForTask</code><span class="sig-paren">(</span><em>threadId</em>, <em>maxSeconds=0</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.waitForTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for the given task to finish.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>threadId</strong> (<em>str</em>) – The task ID.</li>
+<li><strong>maxSeconds</strong> (<em>int</em>) – The maximum time to wait for the task, or 0 for forever.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The final task status. To determine whether the task finished or waiting
+timed out, check <em>result.running</em>, which will be false if the task finished.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dictionary</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -860,13 +920,13 @@ response from the server, from which error messages etc. can be obtained.</p>
 </tbody>
 </table>
 <ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">model</span></code> - The model or result returned if any.</li>
 <li><code class="docutils literal notranslate"><span class="pre">httpStatus</span></code> - The HTTP status code, or -1 if not known.</li>
 <li><code class="docutils literal notranslate"><span class="pre">title</span></code> - The title reqturned by the server.</li>
 <li><code class="docutils literal notranslate"><span class="pre">version</span></code> - The server version.</li>
 <li><code class="docutils literal notranslate"><span class="pre">code</span></code> - The numeric request code (0 or 1 means no error).</li>
 <li><code class="docutils literal notranslate"><span class="pre">errors</span></code> - Errors returned.</li>
 <li><code class="docutils literal notranslate"><span class="pre">messages</span></code> - Messages returned.</li>
-<li><code class="docutils literal notranslate"><span class="pre">model</span></code> - The model or result returned if any.</li>
 <li><code class="docutils literal notranslate"><span class="pre">text</span></code> - The full plain text of the HTTP response.</li>
 </ul>
 <dl class="method">
