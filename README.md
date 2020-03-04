@@ -14,9 +14,11 @@ To install the module:
 pip install nzilbb-labbcat
 ```
 
-The following example shows how to upload a transcript.
-
-For batch uploading and other example code, see the *examples* subdirectory.
+The following example shows how to:
+1. upload a transcript to LaBB-CAT,
+2. wait for the automatic annotation tasks to finish,
+3. extract the annotation labels, and
+4. delete the transcript from LaBB-CAT.
 
 ```python
 import labbcat
@@ -34,9 +36,22 @@ transcript_types = transcript_type_layer["validLabels"]
 # Upload a transcript
 corpus_id = corpora[0]
 transcript_type = next(iter(transcript_types))
-store.newTranscript("test/labbcat-py.test.txt", None, None, transcript_type, corpus_id, "test")
+taskId = store.newTranscript(
+    "test/labbcat-py.test.txt", None, None, transcript_type, corpus_id, "test")
 
+# wait for the annotation generation to finish
+store.waitForTask(taskId)
+store.releaseTask(taskId)
+
+# get the "POS" layer annotations
+annotations = store.getAnnotations("labbcat-py.test.txt", "pos")
+labels = list(map(lambda annotation: annotation["label"], annotations))
+
+# delete tha transcript from the corpus
+store.deleteTranscript("labbcat-py.test.txt")
 ```
+
+For batch uploading and other example code, see the *examples* subdirectory.
 
 # Developers
 

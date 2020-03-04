@@ -10,6 +10,20 @@
     <p>This is client library for communicating with
       <a href="https://labbcat.canterbury.ac.nz/">LaBB-CAT</a>
       web application servers.</p>
+
+    <h2>What is LaBB-CAT?</h2>
+
+    <p>LaBB-CAT is a web-based linguistic annotation store that stores audio or video
+    recordings, text transcripts, and other annotations.</p>
+
+    <p>Annotations of various types can be automatically generated or manually added.</p>
+
+    <p>LaBB-CAT servers are usually password-protected linguistic corpora, and can be
+    accessed manually via a web browser, or programmatically using a client library like
+    this one.</p>
+        
+    <h2>What is this library?</h2>
+    
     <p>The library copies from  
       <a href="https://nzilbb.github.io/ag/javadoc/nzilbb/ag/IGraphStoreQuery.html">nzilbb.ag.IGraphStoreQuery</a>
       and related Java interfaces, for standardized API calls.</p>
@@ -17,6 +31,45 @@
     <p>Detailed documentation generated from doc strings is available
       <a href="generated/html/index.html">here</a>.
     </p>
+
+    <h2>Example</h2>
+
+    <p>The following example shows how to:</p>
+    <ol>
+      <li>upload a transcript to LaBB-CAT,</li>
+      <li>wait for the automatic annotation tasks to finish,</li>
+      <li>extract the annotation labels, and</li>
+      <li>delete the transcript from LaBB-CAT.</li>
+    </ol>
+    
+    <pre>import labbcat
+# Connect to the LaBB-CAT annotation store
+store = labbcat.Labbcat("http://localhost:8080/labbcat", "labbcat", "labbcat")
+
+# List the corpora on the server
+corpora = store.getCorpusIds()
+
+# List the transcript types
+transcript_type_layer = store.getLayer("transcript_type")
+transcript_types = transcript_type_layer["validLabels"]
+
+# Upload a transcript
+corpus_id = corpora[0]
+transcript_type = next(iter(transcript_types))
+taskId = store.newTranscript(
+    "test/labbcat-py.test.txt", None, None, transcript_type, corpus_id, "test")
+
+# wait for the annotation generation to finish
+store.waitForTask(taskId)
+store.releaseTask(taskId)
+
+# get the "POS" layer annotations
+annotations = store.getAnnotations("labbcat-py.test.txt", "pos")
+labels = list(map(lambda annotation: annotation["label"], annotations))
+
+# delete tha transcript from the corpus
+store.deleteTranscript("labbcat-py.test.txt")
+</pre>
 
   </body>
 </html>
