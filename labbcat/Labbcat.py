@@ -70,9 +70,9 @@ class Labbcat(GraphStoreAdministration):
         :param episode: The episode the transcript belongs to.
         :type episode: str
 
-        :returns: A dictionary of transcript IDs (transcript names) to task threadIds. The
+        :returns: The task ID of the resulting annotation layer generation task. The
                   task status can be updated using Labbcat.taskStatus(taskId).
-        :rtype: dictionary of str
+        :rtype: str
         """
         params = {
             "todo" : "new",
@@ -92,8 +92,18 @@ class Labbcat(GraphStoreAdministration):
             files["uploadmedia"+mediaSuffix+"1"] = (mediaName, open(media, 'rb'))
 
         try:
-            return(self._postMultipartRequest(
-                self._labbcatUrl("edit/transcript/new"), params, files))
+            model = self._postMultipartRequest(
+                self._labbcatUrl("edit/transcript/new"), params, files)
+            if not "result" in model:
+                raise ResponseException("Malformed response model, no result: " + str(model))
+            else:
+                if transcriptName not in model["result"]:
+                    raise ResponseException(
+                        "Malformed response model, '"+transcriptName+"' not present: "
+                        + str(model))
+                else:
+                    threadId = model["result"][transcriptName]
+                    return(threadId)
         finally:
             f.close()
         
@@ -117,8 +127,18 @@ class Labbcat(GraphStoreAdministration):
         files["uploadfile1_0"] = (transcriptName, f)
         
         try:
-            return(self._postMultipartRequest(
-                self._labbcatUrl("edit/transcript/new"), params, files))
+            model = self._postMultipartRequest(
+                self._labbcatUrl("edit/transcript/new"), params, files)
+            if not "result" in model:
+                raise ResponseException("Malformed response model, no result: " + str(model))
+            else:
+                if transcriptName not in model["result"]:
+                    raise ResponseException(
+                        "Malformed response model, '"+transcriptName+"' not present: "
+                        + str(model))
+                else:
+                    threadId = model["result"][transcriptName]
+                    return(threadId)
         finally:
             f.close()
 

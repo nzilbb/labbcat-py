@@ -49,11 +49,10 @@ class TestLabbcat(unittest.TestCase):
         transcriptType = next(iter(typeLayer["validLabels"]))
         
         # upload transcript (with no media)
-        tasks = self.store.newTranscript(
+        threadId = self.store.newTranscript(
             transcriptPath, None, None, transcriptType, corpusId, "test")
         
         # wait for task generation to finish
-        threadId = tasks["result"][transcriptName]        
         self.store.waitForTask(threadId)
         self.store.releaseTask(threadId)
         
@@ -62,10 +61,9 @@ class TestLabbcat(unittest.TestCase):
         self.assertEqual(1, count, "Transcript is in the store")
         
         # re-upload transcript (with no media)
-        tasks = self.store.updateTranscript(transcriptPath)
+        threadId = self.store.updateTranscript(transcriptPath)
         
         # wait for task generation to finish
-        threadId = tasks["result"][transcriptName]        
         self.store.waitForTask(threadId)
         self.store.releaseTask(threadId)
         

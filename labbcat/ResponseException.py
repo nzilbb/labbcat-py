@@ -7,19 +7,22 @@ class ResponseException(Exception):
 
     response = None
     
-    def __init__(self, response):        
-        self.response = response        
-        message = ""
-        if response.errors != None and len(response.errors) > 0:
-            for error in response.errors:
-                if len(message) > 0:
-                    message += "\n"
-                message += error
-        else:
-            if response.code > 0:
-                message = "Response code " + response.code;
+    def __init__(self, response):
+        if isinstance(response, str):
+            message = response
+        else: # response is a Response object
+            self.response = response        
+            message = ""
+            if response.errors != None and len(response.errors) > 0:
+                for error in response.errors:
+                    if len(message) > 0:
+                        message += "\n"
+                        message += error
             else:
-                if response.httpStatus > 0:
-                    message = "HTTP status " + response.httpStatus
+                if response.code > 0:
+                    message = "Response code " + response.code;
+                else:
+                    if response.httpStatus > 0:
+                        message = "HTTP status " + response.httpStatus
         super().__init__(message)
         
