@@ -184,8 +184,9 @@ class Labbcat(GraphStoreAdministration):
         :param threadId: The ID of the task.
         :type threadId: str.
         """
-        return(self._getRequest(self._labbcatUrl("threads"), {
-            "threadId" : threadId, "command" : "release" }))
+        self._getRequest(self._labbcatUrl("threads"), {
+            "threadId" : threadId, "command" : "release" })
+        return()
 
     def getTasks(self):
         """ Gets a list of all tasks on the server. 
