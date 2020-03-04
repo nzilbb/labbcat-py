@@ -18,7 +18,7 @@ Detailed documentation is available [here](https://nzilbb.github.io/labbcat-py/)
 
 # Basic usage
 
-<em>nzilbb.labbcat</em> is available in the Python Package Index
+*nzilbb-labbcat* is available in the Python Package Index
 [here](https://pypi.org/project/nzilbb-labbcat/)
 
 To install the module:
