@@ -264,7 +264,7 @@ class GraphStoreQuery:
         following can be used: 
         
         - ``/Ada.+/.test(id)``
-        - ``labels('who').includes('Robert')``
+        - ``labels('participant').includes('Robert')``
         - ``('CC', 'IA', 'MU').includes(my('corpus').label)``
         - ``my('episode').label == 'Ada Aitcheson'``
         - ``my('transcript_scribe').label == 'Robert'``
@@ -277,7 +277,7 @@ class GraphStoreQuery:
         - ``list('participant_languages').length gt; 1``
         - ``list('transcript').length gt; 100``
         - ``annotators('transcript_rating').includes('Robert')``
-        - ``!/Ada.+/.test(id) && my('corpus').label == 'CC' && labels('who').includes('Robert')`` 
+        - ``!/Ada.+/.test(id) && my('corpus').label == 'CC' && labels('participant').includes('Robert')`` 
         
         :param expression: An expression that determines which transcripts match.
         :type expression: str
@@ -302,7 +302,7 @@ class GraphStoreQuery:
         following can be used: 
         
         - ``/Ada.+/.test(id)``
-        - ``labels('who').includes('Robert')``
+        - ``labels('participant').includes('Robert')``
         - ``('CC', 'IA', 'MU').includes(my('corpus').label)``
         - ``my('episode').label == 'Ada Aitcheson'``
         - ``my('transcript_scribe').label == 'Robert'``
@@ -315,7 +315,7 @@ class GraphStoreQuery:
         - ``list('participant_languages').length gt; 1``
         - ``list('transcript').length gt; 100``
         - ``annotators('transcript_rating').includes('Robert')``
-        - ``!/Ada.+/.test(id) && my('corpus').label == 'CC' && labels('who').includes('Robert')``
+        - ``!/Ada.+/.test(id) && my('corpus').label == 'CC' && labels('participant').includes('Robert')``
         
         :param expression: An expression that determines which transcripts match.        
         :type expression: str
@@ -348,7 +348,7 @@ class GraphStoreQuery:
         
         - ``id == 'ew_0_456'``
         - ``!/th[aeiou].&#47;/.test(label)``
-        - ``my('who').label == 'Robert' && my('utterances').start.offset == 12.345`` 
+        - ``my('participant').label == 'Robert' && my('utterances').start.offset == 12.345`` 
         - ``graph.id == 'AdaAicheson-01.trs' && layer.id == 'orthography' && start.offset < 10.5`` 
         - ``previous.id == 'ew_0_456'``
 
@@ -372,7 +372,7 @@ class GraphStoreQuery:
         
         - ``id == 'ew_0_456'``
         - ``!/th[aeiou].&#47;/.test(label)``
-        - ``my('who').label == 'Robert' && my('utterances').start.offset == 12.345`` 
+        - ``my('participant').label == 'Robert' && my('utterances').start.offset == 12.345`` 
         - ``graph.id == 'AdaAicheson-01.trs' && layer.id == 'orthography' && start.offset < 10.5`` 
         - ``previous.id == 'ew_0_456'``
         
