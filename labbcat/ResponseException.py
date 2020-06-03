@@ -20,9 +20,9 @@ class ResponseException(Exception):
                         message += error
             else:
                 if response.code > 0:
-                    message = "Response code " + response.code;
+                    message = "Response code " + str(response.code);
                 else:
                     if response.httpStatus > 0:
-                        message = "HTTP status " + response.httpStatus
+                        message = "HTTP status " + str(response.httpStatus)
         super().__init__(message)
         
