@@ -55,7 +55,7 @@ class GraphStoreQuery:
         self.verbose = False
 
     def _storeQueryUrl(self, resource):
-        return self.labbcatUrl + "store/" + resource
+        return self.labbcatUrl + "api/store/" + resource
 
     def _getRequest(self, url, params):
         if self.verbose: print("_getRequest " + url + " : " + str(params))

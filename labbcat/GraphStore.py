@@ -21,7 +21,7 @@ class GraphStore(GraphStoreQuery):
     """
     
     def _storeEditUrl(self, resource):
-        return self.labbcatUrl + "edit/store/" + resource
+        return self.labbcatUrl + "api/edit/store/" + resource
 
     def deleteTranscript(self, id):
         """ Deletes the given transcript, and all associated files.

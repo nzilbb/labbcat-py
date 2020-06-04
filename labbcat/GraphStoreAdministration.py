@@ -23,5 +23,5 @@ class GraphStoreAdministration(GraphStore):
     """
 
     def _storeAdminUrl(self, resource):
-        return self.labbcatUrl + "admin/store/" + resource
+        return self.labbcatUrl + "api/admin/store/" + resource
 
