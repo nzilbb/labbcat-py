@@ -82,6 +82,33 @@ and adds some extra operations, including transcript upload and task management.
 </pre></div>
 </div>
 <dl class="method">
+<dt id="labbcat.Labbcat.getParticipantAttributes">
+<code class="descname">getParticipantAttributes</code><span class="sig-paren">(</span><em>participantIds</em>, <em>layerIds</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.getParticipantAttributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets participant attribute values.</p>
+<p>Retrieves participant attribute values for given participant IDs, saves them
+to a CSV file, and returns the name of the file.</p>
+<p>In general, participant attributes are layers whose ID is prefixed ‘participant’,
+however formally it’s any layer where layer.parentId == ‘participant’ and
+layer.alignment == 0.</p>
+<p>The resulting file is the responsibility of the caller to delete when finished.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>participantIds</strong> (<em>list of str.</em>) – A list of participant IDs</li>
+<li><strong>layerIds</strong> (<em>list of str.</em>) – A list of layer IDs corresponding to participant attributes.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.Labbcat.getTasks">
 <code class="descname">getTasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.getTasks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of all tasks on the server.</p>
@@ -92,6 +119,33 @@ and adds some extra operations, including transcript upload and task management.
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of all task statuses.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dictionaries</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.Labbcat.getTranscriptAttributes">
+<code class="descname">getTranscriptAttributes</code><span class="sig-paren">(</span><em>transcriptIds</em>, <em>layerIds</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.getTranscriptAttributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get transcript attribute values.</p>
+<p>Retrieves transcript attribute values for given transcript IDs, saves them to
+a CSV file, and returns the name of the file.</p>
+<p>In general, transcript attributes are layers whose ID is prefixed ‘transcript’,
+however formally it’s any layer where layer.parentId == ‘graph’ and layer.alignment
+== 0, which includes ‘corpus’ as well as transcript attribute layers.</p>
+<p>The resulting file is the responsibility of the caller to delete when finished.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>transcriptIds</strong> (<em>list of str.</em>) – A list of transcript IDs</li>
+<li><strong>layerIds</strong> (<em>list of str.</em>) – A list of layer IDs corresponding to transcript attributes.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -354,7 +408,7 @@ following can be used:</p>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">==</span> <span class="pre">'ew_0_456'</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">!/th[aeiou].&amp;#47;/.test(label)</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">my('who').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('utterances').start.offset</span> <span class="pre">==</span> <span class="pre">12.345</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">my('participant').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('utterances').start.offset</span> <span class="pre">==</span> <span class="pre">12.345</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">graph.id</span> <span class="pre">==</span> <span class="pre">'AdaAicheson-01.trs'</span> <span class="pre">&amp;&amp;</span> <span class="pre">layer.id</span> <span class="pre">==</span> <span class="pre">'orthography'</span> <span class="pre">&amp;&amp;</span> <span class="pre">start.offset</span> <span class="pre">&lt;</span> <span class="pre">10.5</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">previous.id</span> <span class="pre">==</span> <span class="pre">'ew_0_456'</span></code></li>
 </ul>
@@ -412,7 +466,7 @@ following can be used:</p>
 following can be used:</p>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">/Ada.+/.test(id)</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">labels('who').includes('Robert')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('participant').includes('Robert')</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">('CC',</span> <span class="pre">'IA',</span> <span class="pre">'MU').includes(my('corpus').label)</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">my('episode').label</span> <span class="pre">==</span> <span class="pre">'Ada</span> <span class="pre">Aitcheson'</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">my('transcript_scribe').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span></code></li>
@@ -425,7 +479,7 @@ following can be used:</p>
 <li><code class="docutils literal notranslate"><span class="pre">list('participant_languages').length</span> <span class="pre">gt;</span> <span class="pre">1</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">list('transcript').length</span> <span class="pre">gt;</span> <span class="pre">100</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">annotators('transcript_rating').includes('Robert')</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">!/Ada.+/.test(id)</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('corpus').label</span> <span class="pre">==</span> <span class="pre">'CC'</span> <span class="pre">&amp;&amp;</span> <span class="pre">labels('who').includes('Robert')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">!/Ada.+/.test(id)</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('corpus').label</span> <span class="pre">==</span> <span class="pre">'CC'</span> <span class="pre">&amp;&amp;</span> <span class="pre">labels('participant').includes('Robert')</span></code></li>
 </ul>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -603,7 +657,7 @@ following can be used:</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of layer definitions.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dictionaries</td>
 </tr>
 </tbody>
 </table>
@@ -618,7 +672,7 @@ following can be used:</p>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">==</span> <span class="pre">'ew_0_456'</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">!/th[aeiou].&amp;#47;/.test(label)</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">my('who').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('utterances').start.offset</span> <span class="pre">==</span> <span class="pre">12.345</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">my('participant').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('utterances').start.offset</span> <span class="pre">==</span> <span class="pre">12.345</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">graph.id</span> <span class="pre">==</span> <span class="pre">'AdaAicheson-01.trs'</span> <span class="pre">&amp;&amp;</span> <span class="pre">layer.id</span> <span class="pre">==</span> <span class="pre">'orthography'</span> <span class="pre">&amp;&amp;</span> <span class="pre">start.offset</span> <span class="pre">&lt;</span> <span class="pre">10.5</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">previous.id</span> <span class="pre">==</span> <span class="pre">'ew_0_456'</span></code></li>
 </ul>
@@ -695,7 +749,7 @@ in ID order.</p>
 following can be used:</p>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">/Ada.+/.test(id)</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">labels('who').includes('Robert')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('participant').includes('Robert')</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">('CC',</span> <span class="pre">'IA',</span> <span class="pre">'MU').includes(my('corpus').label)</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">my('episode').label</span> <span class="pre">==</span> <span class="pre">'Ada</span> <span class="pre">Aitcheson'</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">my('transcript_scribe').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span></code></li>
@@ -708,7 +762,7 @@ following can be used:</p>
 <li><code class="docutils literal notranslate"><span class="pre">list('participant_languages').length</span> <span class="pre">gt;</span> <span class="pre">1</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">list('transcript').length</span> <span class="pre">gt;</span> <span class="pre">100</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">annotators('transcript_rating').includes('Robert')</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">!/Ada.+/.test(id)</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('corpus').label</span> <span class="pre">==</span> <span class="pre">'CC'</span> <span class="pre">&amp;&amp;</span> <span class="pre">labels('who').includes('Robert')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">!/Ada.+/.test(id)</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('corpus').label</span> <span class="pre">==</span> <span class="pre">'CC'</span> <span class="pre">&amp;&amp;</span> <span class="pre">labels('participant').includes('Robert')</span></code></li>
 </ul>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
