@@ -197,20 +197,23 @@ class Labbcat(GraphStoreAdministration):
         return(self._getRequest(self._labbcatUrl("threads"), None))
     
     def getTranscriptAttributes(self, transcriptIds, layerIds):
-        """ Retrieves transcript attribute values for given transcript IDs, saves them to
+        """ Get transcript attribute values.
+        
+        Retrieves transcript attribute values for given transcript IDs, saves them to
         a CSV file, and returns the name of the file.
+
+        In general, transcript attributes are layers whose ID is prefixed 'transcript',
+        however formally it's any layer where layer.parentId == 'graph' and layer.alignment
+        == 0, which includes 'corpus' as well as transcript attribute layers.
         
         The resulting file is the responsibility of the caller to delete when finished.
         
         :param transcriptIds: A list of transcript IDs
         :type transcriptIds: list of str.
         
-        :param layerIds: A list of layer IDs corresponding to transcript attributes. In
-        general, these are layers whose ID is prefixed 'transcript_', however formally
-        it's any layer where layer$parentId == 'graph' && layer$alignment == 0, which
-        includes 'corpus' as well as transcript attribute layers.
+        :param layerIds: A list of layer IDs corresponding to transcript attributes.
         :type layerIds: list of str.
-
+        
         :rtype: str
         """
         params = {
@@ -221,19 +224,23 @@ class Labbcat(GraphStoreAdministration):
         return (self._postRequestToFile(self._labbcatUrl("transcripts"), params))
     
     def getParticipantAttributes(self, participantIds, layerIds):
-        """ Retrieves participant attribute values for given participant IDs, saves them
+        """ Gets participant attribute values.
+        
+        Retrieves participant attribute values for given participant IDs, saves them
         to a CSV file, and returns the name of the file.
+
+        In general, participant attributes are layers whose ID is prefixed 'participant',
+        however formally it's any layer where layer.parentId == 'participant' and
+        layer.alignment == 0. 
         
         The resulting file is the responsibility of the caller to delete when finished.
         
         :param participantIds: A list of participant IDs
         :type participantIds: list of str.
         
-        :param layerIds: A list of layer IDs corresponding to participant attributes. In
-        general, these are layers whose ID is prefixed 'participant_', however formally
-        it's any layer where layer$parentId == 'participant' && layer$alignment == 0.
+        :param layerIds: A list of layer IDs corresponding to participant attributes. 
         :type layerIds: list of str.
-
+        
         :rtype: str
         """
         params = {
