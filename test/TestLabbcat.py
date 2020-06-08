@@ -1,4 +1,5 @@
 import unittest
+import os
 import labbcat
 
 # YOU MUST ENSURE THE FOLLOWING SETTINGS ARE VALID FOR YOU TEST LABB-CAT SERVER:
@@ -77,6 +78,26 @@ class TestLabbcat(unittest.TestCase):
         # make sure it was deleted
         count = self.store.countMatchingTranscriptIds("id = '"+transcriptName+"'")
         self.assertEqual(0, count, "Transcript is gone")
+            
+    def test_getTrascriptAttributes(self):
+        ids = self.store.getTranscriptIds()
+        self.assertTrue(len(ids) > 0, "At least 3 transcripts in the corpus")
+        ids = ids[:3]
+        layerIds = ["transcript_type", "corpus"]
+        fileName = self.store.getTranscriptAttributes(ids, layerIds)
+        self.assertTrue(fileName.endswith(".csv"), "CSV file returned")
+        self.assertTrue(os.path.isfile(fileName), "CSV file exists")
+        os.remove(fileName)
+            
+    def test_getParticipantAttributes(self):
+        ids = self.store.getParticipantIds()
+        self.assertTrue(len(ids) > 0, "At least 3 participants in the corpus")
+        ids = ids[:3]
+        layerIds = ["participant_gender", "participant_notes"]
+        fileName = self.store.getParticipantAttributes(ids, layerIds)
+        self.assertTrue(fileName.endswith(".csv"), "CSV file returned: " + fileName)
+        self.assertTrue(os.path.isfile(fileName), "CSV file exists: " + fileName)
+        os.remove(fileName)
             
 if __name__ == '__main__':
     unittest.main()

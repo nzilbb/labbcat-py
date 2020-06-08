@@ -1,4 +1,6 @@
 import requests
+import tempfile
+import os
 from labbcat.Response import Response
 
 class GraphStoreQuery:
@@ -89,6 +91,39 @@ class GraphStoreQuery:
         if self.verbose: print("model: " + str(response.model))
         return(response.model)
          
+    def _postRequestToFile(self, url, params):
+        if self.verbose: print("_postRequestToFile " + url + " : " + str(params))
+        if self.username == None:
+            auth = None
+        else:
+            auth = (self.username, self.password)
+        
+        response = requests.post(
+            url=url, params=params, auth=auth, headers={"Accept":"application/json"})
+        # ensure status was ok
+        response.raise_for_status();
+        
+        # figure out the content type
+        contentType = response.headers['Content-Type'];
+        if self.verbose: print("Content-Type: " + contentType)
+        extension = ".bin"
+        if contentType.startswith("text/csv"): extension = ".csv"
+        elif contentType.startswith("application/json"): extension = ".json"
+        elif contentType.startswith("text/plain"): extension = ".txt"
+        elif contentType.startswith("text/html"): extension = ".html"
+        elif contentType.startswith("application/zip"): extension = ".zip"
+        elif contentType.startswith("audio/wav"): extension = ".wav"
+        elif contentType.startswith("audio/mpeg"): extension = ".mp3"
+        elif contentType.startswith("video/mpeg"): extension = ".mp4"
+        
+        fd, fileName = tempfile.mkstemp(extension, "labbcat-py-")
+        if self.verbose: print("file: " + fileName)
+        with open(fileName, "wb") as file:
+            file.write(response.content)
+        os.close(fd)
+        
+        return(fileName)
+         
     def _postMultipartRequest(self, url, params, files):
         if self.verbose: print("_postMultipartRequest " + url + " : " + str(params) + " - " + str(files))
         if self.username == None:
@@ -123,7 +158,7 @@ class GraphStoreQuery:
         """ Gets a list of layer definitions. 
 
         :returns: A list of layer definitions.
-        :rtype: list
+        :rtype: list of dictionaries
         """
         return(self._getRequest(self._storeQueryUrl("getLayers"), None))
         

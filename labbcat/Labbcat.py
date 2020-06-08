@@ -195,6 +195,55 @@ class Labbcat(GraphStoreAdministration):
         :rtype: list of dictionaries
         """
         return(self._getRequest(self._labbcatUrl("threads"), None))
+    
+    def getTranscriptAttributes(self, transcriptIds, layerIds):
+        """ Retrieves transcript attribute values for given transcript IDs, saves them to
+        a CSV file, and returns the name of the file.
+        
+        The resulting file is the responsibility of the caller to delete when finished.
+        
+        :param transcriptIds: A list of transcript IDs
+        :type transcriptIds: list of str.
+        
+        :param layerIds: A list of layer IDs corresponding to transcript attributes. In
+        general, these are layers whose ID is prefixed 'transcript_', however formally
+        it's any layer where layer$parentId == 'graph' && layer$alignment == 0, which
+        includes 'corpus' as well as transcript attribute layers.
+        :type layerIds: list of str.
+
+        :rtype: str
+        """
+        params = {
+            "todo" : "export",
+            "exportType" : "csv",
+            "layer" : layerIds,
+            "id" : transcriptIds }
+        return (self._postRequestToFile(self._labbcatUrl("transcripts"), params))
+    
+    def getParticipantAttributes(self, participantIds, layerIds):
+        """ Retrieves participant attribute values for given participant IDs, saves them
+        to a CSV file, and returns the name of the file.
+        
+        The resulting file is the responsibility of the caller to delete when finished.
+        
+        :param participantIds: A list of participant IDs
+        :type participantIds: list of str.
+        
+        :param layerIds: A list of layer IDs corresponding to participant attributes. In
+        general, these are layers whose ID is prefixed 'participant_', however formally
+        it's any layer where layer$parentId == 'participant' && layer$alignment == 0.
+        :type layerIds: list of str.
+
+        :rtype: str
+        """
+        params = {
+            "type" : "participant",
+            "content-type" : "text/csv",
+            "csvFieldDelimiter" : ",",
+            "layer" : layerIds,
+            "participantId" : participantIds }
+        return (self._postRequestToFile(self._labbcatUrl("participantsExport"), params))
+        
 
     # TODO search
     # TODO getMatches
