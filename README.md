@@ -12,6 +12,8 @@ LaBB-CAT servers are usually password-protected linguistic corpora, and can be
 accessed manually via a web browser, or programmatically using a client library like
 this one.
 
+The current version of this library requires LaBB-CAT version 20200608.1507.
+
 ## Documentation
 
 Detailed documentation is available [here](https://nzilbb.github.io/labbcat-py/)
@@ -90,6 +92,7 @@ make
 ## Publishing
 
 ```
+rm dist/*
 python setup.py sdist bdist_wheel
 twine check dist/*
 twine upload dist/*
