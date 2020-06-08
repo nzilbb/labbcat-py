@@ -219,7 +219,7 @@ class Labbcat(GraphStoreAdministration):
         params = {
             "todo" : "export",
             "exportType" : "csv",
-            "layer" : layerIds,
+            "layer" : ["graph"]+layerIds,
             "id" : transcriptIds }
         return (self._postRequestToFile(self._labbcatUrl("transcripts"), params))
     
