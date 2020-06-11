@@ -1,3 +1,4 @@
+from .version import __version__
 from labbcat.GraphStoreQuery import GraphStoreQuery
 from labbcat.GraphStore import GraphStore
 from labbcat.GraphStoreAdministration import GraphStoreAdministration

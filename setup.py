@@ -7,10 +7,12 @@ HERE = pathlib.Path(__file__).parent
 # The text of the README file
 README = (HERE / "README.md").read_text()
 
+exec(open('labbcat/version.py').read())
+
 # This call to setup() does all the work
 setup(
     name="nzilbb-labbcat",
-    version="0.2.1",
+    version=__version__,
     description="Client library for communicating with LaBB-CAT servers",
     long_description=README,
     long_description_content_type="text/markdown",

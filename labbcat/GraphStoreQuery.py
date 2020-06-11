@@ -2,6 +2,7 @@ import requests
 import tempfile
 import os
 from labbcat.Response import Response
+from labbcat import __version__
 
 class GraphStoreQuery:
     """ API for querying a `LaBB--CAT <https://labbcat.canterbury.ac.nz/>`_ annotation graph
@@ -69,7 +70,9 @@ class GraphStoreQuery:
         # TODO {'user-agent': 'my-app/0.0.1'}
         response = Response(
             requests.get(
-                url=url, params=params, auth=auth, headers={"Accept":"application/json"}), 
+                url=url, params=params, auth=auth, headers={
+                    "Accept":"application/json",
+                    "user-agent": "labbcat-py/"+__version__}), 
             self.verbose)
         response.checkForErrors()
 
