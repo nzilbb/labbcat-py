@@ -65,10 +65,11 @@ class GraphStoreQuery:
             auth = None
         else:
             auth = (self.username, self.password)
-            
+
+        # TODO {'user-agent': 'my-app/0.0.1'}
         response = Response(
             requests.get(
-                url=url, params=params, auth=auth, headers={"Accept":"application/json"}),
+                url=url, params=params, auth=auth, headers={"Accept":"application/json"}), 
             self.verbose)
         response.checkForErrors()
 
@@ -91,8 +92,8 @@ class GraphStoreQuery:
         if self.verbose: print("model: " + str(response.model))
         return(response.model)
          
-    def _postRequestToFile(self, url, params):
-        if self.verbose: print("_postRequestToFile " + url + " : " + str(params))
+    def _postRequestToFile(self, url, params, dir=None):
+        if self.verbose: print("_postRequestToFile " + url + " : " + str(params) + " -> " + dir)
         if self.username == None:
             auth = None
         else:
@@ -115,13 +116,37 @@ class GraphStoreQuery:
         elif contentType.startswith("audio/wav"): extension = ".wav"
         elif contentType.startswith("audio/mpeg"): extension = ".mp3"
         elif contentType.startswith("video/mpeg"): extension = ".mp4"
-        
-        fd, fileName = tempfile.mkstemp(extension, "labbcat-py-")
-        if self.verbose: print("file: " + fileName)
-        with open(fileName, "wb") as file:
-            file.write(response.content)
-        os.close(fd)
-        
+
+        fileName = None
+        if dir == None:
+            # save to temporary file
+            fd, fileName = tempfile.mkstemp(extension, "labbcat-py-")
+            if self.verbose: print("file: " + fileName)
+            with open(fileName, "wb") as file:
+                file.write(response.content)
+            os.close(fd)
+        else:
+            # save into the given directory...
+            # use the name given by the server, if any
+            contentDisposition = response.headers["content-disposition"];
+            if self.verbose: print("contentDisposition: " + contentDisposition)
+            if contentDisposition != None:                
+                # something like attachment; filename=blah.wav
+                equals = contentDisposition.find("=")
+                if equals >= 0:
+                    fileName = contentDisposition[equals + 1:]
+                    if self.verbose: print("fileName: " + fileName)
+                    if fileName == "":
+                        fileName = None
+                    else:
+                        fileName = os.path.join(dir, fileName)
+            if fileName == None:
+                fd, fileName = tempfile.mkstemp(extension, "labbcat-py-", dir)
+                os.close(fd)
+            if self.verbose: print("file: " + fileName)
+            with open(fileName, "wb") as file:
+                file.write(response.content)
+            
         return(fileName)
          
     def _postMultipartRequest(self, url, params, files):
@@ -538,11 +563,11 @@ class GraphStoreQuery:
         
         :param startOffset: The start offset of the media sample, or null for the start of
             the whole recording. 
-        :type startOffset: int or None
+        :type startOffset: float or None
 
         :param endOffset: The end offset of the media sample, or null for the end of the
             whole recording. 
-        :type endOffset: int or None
+        :type endOffset: float or None
 
         :returns: A URL to the given media for the given transcript, or null if the given
             media doesn't exist. 
