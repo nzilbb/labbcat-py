@@ -38,32 +38,32 @@ The following example shows how to:
 ```python
 import labbcat
 
-# Connect to the LaBB-CAT annotation store
-store = labbcat.Labbcat("http://localhost:8080/labbcat", "labbcat", "labbcat")
+# Connect to the LaBB-CAT corpus
+corpus = labbcat.LabbcatEdit("http://localhost:8080/labbcat", "labbcat", "labbcat")
 
 # List the corpora on the server
-corpora = store.getCorpusIds()
+corpora = corpus.getCorpusIds()
 
 # List the transcript types
-transcript_type_layer = store.getLayer("transcript_type")
+transcript_type_layer = corpus.getLayer("transcript_type")
 transcript_types = transcript_type_layer["validLabels"]
 
 # Upload a transcript
 corpus_id = corpora[0]
 transcript_type = next(iter(transcript_types))
-taskId = store.newTranscript(
+taskId = corpus.newTranscript(
     "test/labbcat-py.test.txt", None, None, transcript_type, corpus_id, "test")
 
 # wait for the annotation generation to finish
-store.waitForTask(taskId)
-store.releaseTask(taskId)
+corpus.waitForTask(taskId)
+corpus.releaseTask(taskId)
 
 # get the "POS" layer annotations
-annotations = store.getAnnotations("labbcat-py.test.txt", "pos")
+annotations = corpus.getAnnotations("labbcat-py.test.txt", "pos")
 labels = list(map(lambda annotation: annotation["label"], annotations))
 
 # delete tha transcript from the corpus
-store.deleteTranscript("labbcat-py.test.txt")
+corpus.deleteTranscript("labbcat-py.test.txt")
 ```
 
 For batch uploading and other example code, see the *examples* subdirectory.
