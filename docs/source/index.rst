@@ -7,38 +7,29 @@ nzilbb-labbcat module
 * :ref:`search`
 
 ==========================================
-Labbcat class
+LabbcatView class
 ==========================================
   
-.. autoclass:: labbcat.Labbcat
+.. autoclass:: labbcat.LabbcatView
     :members:
 
-The Labbcat class inherits from the GraphStoreAdministration class.
-
 ==========================================
-GraphStoreAdministration class
+LabbcatEdit class
 ==========================================
 
-.. autoclass:: labbcat.GraphStoreAdministration
+.. autoclass:: labbcat.LabbcatEdit
     :members:
 
-The GraphStoreAdministration class inherits from the GraphStore class.
+The LabbcatEdit class inherits from the LabbcatView class.
 
 ==========================================
-GraphStore class
+LabbcatAdmin class
 ==========================================
 
-.. autoclass:: labbcat.GraphStore
+.. autoclass:: labbcat.LabbcatAdmin
     :members:
 
-The GraphStore class also inherits the GraphStoreQuery class.
-
-==========================================
-GraphStoreQuery class
-==========================================
-
-.. autoclass:: labbcat.GraphStoreQuery
-    :members:
+The LabbcatAdmin class also inherits the LabbcatEdit class.
 
 ==========================================
 ResponseException class

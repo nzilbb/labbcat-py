@@ -730,8 +730,10 @@ class LabbcatView:
     def search(self, pattern, participantIds=None, transcriptTypes=None, mainParticipant=True, aligned=False, matchesPerTranscript=None):
         """
         Searches for tokens that match the given pattern.
-
-pattern = { "columns" : [ { "layers" : { "orthography" : { "pattern" : "the" } } } ] }
+        
+        Example::
+        
+          pattern = {"columns":[{"layers":{"orthography":{"pattern":"the"}}}]}
         
         Strictly speaking, *pattern* should be a dictionary that matches the structure of
         the search matrix in the browser interface of LaBB-CAT; i.e. a dictionary with
@@ -746,27 +748,29 @@ pattern = { "columns" : [ { "layers" : { "orthography" : { "pattern" : "the" } }
         Each element in the "layers" dictionary is named after the layer it matches, and
         the value is a dictionary with the following possible entries:
         
-         - "pattern" : A regular expression to match against the label
-         - "min" : An inclusive minimum numeric value for the label
-         - "max" : An exclusive maximum numeric value for the label
-         - "not" : True to negate the match
-         - "anchorStart" : True to anchor to the start of the annotation on this layer
-            (i.e. the matching word token will be the first at/after the start of the matching
-            annotation on this layer)
-         - "anchorEnd" : True to anchor to the end of the annotation on this layer
-            (i.e. the matching word token will be the last before/at the end of the matching
-            annotation on this layer)
-         - "target" : True to make this layer the target of the search; the results will
-            contain one row for each match on the target layer
+        - "pattern" : A regular expression to match against the label
+        - "min" : An inclusive minimum numeric value for the label
+        - "max" : An exclusive maximum numeric value for the label
+        - "not" : True to negate the match
+        - "anchorStart" : True to anchor to the start of the annotation on this layer
+        (i.e. the matching word token will be the first at/after the start of the matching
+        annotation on this layer)
+        - "anchorEnd" : True to anchor to the end of the annotation on this layer
+        (i.e. the matching word token will be the last before/at the end of the matching
+        annotation on this layer)
+        - "target" : True to make this layer the target of the search; the results will
+        contain one row for each match on the target layer
         
-        Examples of valid pattern objects include:
+        Some examples of valid pattern objects are shown below.
         
-        ## words starting with 'ps...'
-        pattern = { "columns" : [ { "layers" : { "orthography" : { "pattern" : "ps.*" } } } ] }
-        
-        ## the word 'the' followed immediately or with one intervening word by
-        ## a hapax legomenon (word with a frequency of 1) that doesn't start with a vowel
-        pattern = { "columns" : [
+        Example:: 
+          
+          ## words starting with 'ps...'
+          pattern = {"columns":[{"layers":{"orthography":{"pattern":"ps.*"}}}]}
+          
+          ## the word 'the' followed immediately or with one intervening word by
+          ## a hapax legomenon (word with a frequency of 1) that doesn't start with a vowel
+          pattern = { "columns" : [
             { "layers" : {
                 "orthography" : { "pattern" : "the" } }
               "adj" : 2 },
@@ -774,44 +778,47 @@ pattern = { "columns" : [ { "layers" : { "orthography" : { "pattern" : "the" } }
                 "phonemes" : { "not" : True, "pattern" : "[cCEFHiIPqQuUV0123456789~#\\$@].*" },
                 "frequency" : { max : "2" } } } ] }
         
-        For ease of use, the function will also accept the following abbreviated forms:
+        For ease of use, the function will also accept the following abbreviated forms;
+        some examples are shown below.
         
-        ## a single list representing a 'one column' search, 
-        ## and string values, representing regular expression pattern matching
-        pattern = { "orthography" : "ps.*" }
-        
-        ## a list containing the columns (adj defaults to 1, so matching tokens are contiguous)...
-        pattern = [
+        Example:: 
+          
+          ## a single list representing a 'one column' search, 
+          ## and string values, representing regular expression pattern matching
+          pattern = { "orthography" : "ps.*" }
+          
+          ## a list containing the columns (adj defaults to 1, so matching tokens are contiguous)...
+          pattern = [
             { "orthography" : "the" },
             { "phonemes" : { "not" : True, "pattern" : "[cCEFHiIPqQuUV0123456789~#\\$@].*" },
               "frequency" : { "max" : "2" } } ]
         
         :param pattern: An object representing the pattern to search for, which mirrors the
-        Search Matrix in the browser interface.
+          Search Matrix in the browser interface.
         :type dictionary:
         
         :param participantIds: An optional list of participant IDs to search the utterances
-        of. If null, all utterances in the corpus will be searched.
+          of. If null, all utterances in the corpus will be searched.
         :type list of str:
         
         :param transcriptTypes: An optional list of transcript types to limit the results
-        to. If null, all transcript types will be searched. 
+          to. If null, all transcript types will be searched. 
         :type list of str:
         
         :param mainParticipant: true to search only main-participant utterances, false to
-        search all utterances. 
+          search all utterances. 
         :type boolean:
         
         :param aligned: true to include only words that are aligned (i.e. have anchor
-        confidence &ge; 50, false to search include un-aligned words as well. 
+          confidence &ge; 50, false to search include un-aligned words as well. 
         :type boolean:
         
         :param matchesPerTranscript: Optional maximum number of matches per transcript to
-        return. *None* means all matches.
+          return. *None* means all matches.
         :type int:
         
         :returns: The threadId of the resulting task, which can be passed in to
-        getMatches(), taskStatus(), waitForTask(), etc. 
+          getMatches(), taskStatus(), waitForTask(), etc. 
         :rtype: str
         """
 
@@ -879,19 +886,19 @@ pattern = { "columns" : [ { "layers" : { "orthography" : { "pattern" : "the" } }
         :type threadId: str
         
         :param wordsContext: Number of words context to include in the <q>Before Match</q>
-        and <q>After Match</q> columns in the results.
+          and <q>After Match</q> columns in the results.
         :type wordsContext: int
         
         :param pageLength: The maximum number of matches to return, or None to return all.
         :type pageLength: int or None
         
         :param pageNumber: The zero-based page number to return, or null to return the
-        first page.
+          first page.
         :type pageNumber: int or None
         
-        :returns: A list of IDs that can be used to identify utterances/tokens that were matched by
-        search(pattern), or None if the task was cancelled. 
-        :rtype" list of dict
+        :returns: A list of IDs that can be used to identify utterances/tokens that were
+          matched by search(pattern), or None if the task was cancelled. 
+        :rtype: list of dict
         """
         # ensure it's finished
         self.waitForTask(threadId)
@@ -942,7 +949,7 @@ pattern = { "columns" : [ { "layers" : { "orthography" : { "pattern" : "the" } }
         
         :param annotationsPerLayer: The number of annotations on the given layer to
          retrieve. In most cases, there's only one annotation available. However, tokens may,
-         for example, be annotated with `all possible phonemic transcriptions', in which case
+         for example, be annotated with 'all possible phonemic transcriptions', in which case
          using a value of greater than 1 for this parameter provides other phonemic
          transcriptions, for tokens that have more than one.
         :type annotationsPerLayer: int

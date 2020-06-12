@@ -35,311 +35,16 @@
 <li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
 <li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
 </ul>
-<div class="section" id="labbcat-class">
-<h2>Labbcat class<a class="headerlink" href="#labbcat-class" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="labbcatview-class">
+<h2>LabbcatView class<a class="headerlink" href="#labbcatview-class" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="labbcat.Labbcat">
-<em class="property">class </em><code class="descclassname">labbcat.</code><code class="descname">Labbcat</code><span class="sig-paren">(</span><em>labbcatUrl</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Labbcat client, for accessing LaBB-CAT server functions programmatically.</p>
-<p><a class="reference external" href="https://labbcat.canterbury.ac.nz">LaBB-CAT</a> is an annotation graph store
-functionality; a database of linguistic transcripts represented using <a class="reference external" href="https://nzilbb.github.io/ag/">Annotation
-Graphs</a>.</p>
-<p>This class inherits the <em>read-write</em> operations of GraphStoreAdministration
-and adds some extra operations, including transcript upload and task management.</p>
-<p>Constructor arguments:</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>labbcatUrl</strong> (<em>str</em>) – The ‘home’ URL of the LaBB-CAT server.</li>
-<li><strong>username</strong> (<em>str</em><em> or </em><em>None</em>) – The username for logging in to the server, if necessary.</li>
-<li><strong>password</strong> (<em>str</em><em> or </em><em>None</em>) – The password for logging in to the server, if necessary.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">labbcat</span>
-
-<span class="c1"># create annotation store client</span>
-<span class="n">store</span> <span class="o">=</span> <span class="n">labbcat</span><span class="o">.</span><span class="n">Labbcat</span><span class="p">(</span><span class="s2">&quot;https://labbcat.canterbury.ac.nz&quot;</span><span class="p">,</span> <span class="s2">&quot;demo&quot;</span><span class="p">,</span> <span class="s2">&quot;demo&quot;</span><span class="p">);</span>
-
-<span class="c1"># show some basic information</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Information about LaBB-CAT at &quot;</span> <span class="o">+</span> <span class="n">store</span><span class="o">.</span><span class="n">getId</span><span class="p">())</span>
-
-<span class="n">layerIds</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">getLayerIds</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">layerId</span> <span class="ow">in</span> <span class="n">layerIds</span><span class="p">:</span> 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;layer: &quot;</span> <span class="o">+</span> <span class="n">layerId</span><span class="p">)</span> 
-
-<span class="n">corpora</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">getCorpusIds</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">corpus</span> <span class="ow">in</span> <span class="n">corpora</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;transcripts in: &quot;</span> <span class="o">+</span> <span class="n">corpus</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">transcript</span> <span class="ow">in</span> <span class="n">store</span><span class="o">.</span><span class="n">getTranscriptIdsInCorpus</span><span class="p">(</span><span class="n">corpus</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">transcript</span><span class="p">)</span>
-</pre></div>
-</div>
-<dl class="method">
-<dt id="labbcat.Labbcat.getParticipantAttributes">
-<code class="descname">getParticipantAttributes</code><span class="sig-paren">(</span><em>participantIds</em>, <em>layerIds</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.getParticipantAttributes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets participant attribute values.</p>
-<p>Retrieves participant attribute values for given participant IDs, saves them
-to a CSV file, and returns the name of the file.</p>
-<p>In general, participant attributes are layers whose ID is prefixed ‘participant’,
-however formally it’s any layer where layer.parentId == ‘participant’ and
-layer.alignment == 0.</p>
-<p>The resulting file is the responsibility of the caller to delete when finished.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>participantIds</strong> (<em>list of str.</em>) – A list of participant IDs</li>
-<li><strong>layerIds</strong> (<em>list of str.</em>) – A list of layer IDs corresponding to participant attributes.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="labbcat.Labbcat.getTasks">
-<code class="descname">getTasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.getTasks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a list of all tasks on the server.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of all task statuses.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dictionaries</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="labbcat.Labbcat.getTranscriptAttributes">
-<code class="descname">getTranscriptAttributes</code><span class="sig-paren">(</span><em>transcriptIds</em>, <em>layerIds</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.getTranscriptAttributes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get transcript attribute values.</p>
-<p>Retrieves transcript attribute values for given transcript IDs, saves them to
-a CSV file, and returns the name of the file.</p>
-<p>In general, transcript attributes are layers whose ID is prefixed ‘transcript’,
-however formally it’s any layer where layer.parentId == ‘graph’ and layer.alignment
-== 0, which includes ‘corpus’ as well as transcript attribute layers.</p>
-<p>The resulting file is the responsibility of the caller to delete when finished.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>transcriptIds</strong> (<em>list of str.</em>) – A list of transcript IDs</li>
-<li><strong>layerIds</strong> (<em>list of str.</em>) – A list of layer IDs corresponding to transcript attributes.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="labbcat.Labbcat.newTranscript">
-<code class="descname">newTranscript</code><span class="sig-paren">(</span><em>transcript</em>, <em>media</em>, <em>mediaSuffix</em>, <em>transcriptType</em>, <em>corpus</em>, <em>episode</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.newTranscript" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uploads a new transcript.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>transcript</strong> (<em>str</em>) – The path to the transcript to upload.</li>
-<li><strong>media</strong> (<em>str</em>) – The path to media to upload, if any.</li>
-<li><strong>mediaSuffix</strong> (<em>str</em>) – The media suffix for the media.</li>
-<li><strong>transcriptType</strong> – The transcript type.</li>
-<li><strong>type</strong> – str</li>
-<li><strong>corpus</strong> (<em>str</em>) – The corpus for the transcript.</li>
-<li><strong>episode</strong> (<em>str</em>) – The episode the transcript belongs to.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The task ID of the resulting annotation layer generation task. The
-task status can be updated using Labbcat.taskStatus(taskId).</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="labbcat.Labbcat.releaseTask">
-<code class="descname">releaseTask</code><span class="sig-paren">(</span><em>threadId</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.releaseTask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Release a finished task, to free up server resources.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>threadId</strong> (<em>str.</em>) – The ID of the task.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="labbcat.Labbcat.taskStatus">
-<code class="descname">taskStatus</code><span class="sig-paren">(</span><em>threadId</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.taskStatus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the current state of the given task.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>threadId</strong> (<em>str.</em>) – The ID of the task.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The status of the task.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionary</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="labbcat.Labbcat.updateTranscript">
-<code class="descname">updateTranscript</code><span class="sig-paren">(</span><em>transcript</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.updateTranscript" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uploads a new transcript.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>transcript</strong> (<em>str</em>) – The path to the transcript to upload.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A dictionary of transcript IDs (transcript names) to task threadIds. The
-task status can be updated using Labbcat.taskStatus(taskId).</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionary of str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="labbcat.Labbcat.waitForTask">
-<code class="descname">waitForTask</code><span class="sig-paren">(</span><em>threadId</em>, <em>maxSeconds=0</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.Labbcat.waitForTask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wait for the given task to finish.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>threadId</strong> (<em>str</em>) – The task ID.</li>
-<li><strong>maxSeconds</strong> (<em>int</em>) – The maximum time to wait for the task, or 0 for forever.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The final task status. To determine whether the task finished or waiting
-timed out, check <em>result.running</em>, which will be false if the task finished.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dictionary</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<p>The Labbcat class inherits from the GraphStoreAdministration class.</p>
-</div>
-<div class="section" id="graphstoreadministration-class">
-<h2>GraphStoreAdministration class<a class="headerlink" href="#graphstoreadministration-class" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="labbcat.GraphStoreAdministration">
-<em class="property">class </em><code class="descclassname">labbcat.</code><code class="descname">GraphStoreAdministration</code><span class="sig-paren">(</span><em>labbcatUrl</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreAdministration" title="Permalink to this definition">¶</a></dt>
-<dd><p>API for querying, updating, and administering a <a class="reference external" href="https://labbcat.canterbury.ac.nz">LaBB-CAT</a> annotation graph store; a database of linguistic
-transcripts represented using <a class="reference external" href="https://nzilbb.github.io/ag/">Annotation Graphs</a></p>
-<p>This class inherits the <em>read-write</em> operations of GraphStore
-and adds some administration operations, including definition of layers,
-registration of converters, etc.</p>
-<p>Constructor arguments:</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>labbcatUrl</strong> (<em>str</em>) – The ‘home’ URL of the LaBB-CAT server.</li>
-<li><strong>username</strong> (<em>str</em><em> or </em><em>None</em>) – The username for logging in to the server, if necessary.</li>
-<li><strong>password</strong> (<em>str</em><em> or </em><em>None</em>) – The password for logging in to the server, if necessary.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<p>The GraphStoreAdministration class inherits from the GraphStore class.</p>
-</div>
-<div class="section" id="graphstore-class">
-<h2>GraphStore class<a class="headerlink" href="#graphstore-class" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="labbcat.GraphStore">
-<em class="property">class </em><code class="descclassname">labbcat.</code><code class="descname">GraphStore</code><span class="sig-paren">(</span><em>labbcatUrl</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStore" title="Permalink to this definition">¶</a></dt>
-<dd><p>API for querying and updating a <a class="reference external" href="https://labbcat.canterbury.ac.nz">LaBB-CAT</a>
-annotation graph store; a database of linguistic transcripts represented using 
-<a class="reference external" href="https://nzilbb.github.io/ag/">Annotation Graphs</a></p>
-<p>This class inherits the <em>read-only</em> operations of GraphStoreQuery
-and adds some <em>write</em> operations for updating data.</p>
-<p>Constructor arguments:</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>labbcatUrl</strong> (<em>str</em>) – The ‘home’ URL of the LaBB-CAT server.</li>
-<li><strong>username</strong> (<em>str</em><em> or </em><em>None</em>) – The username for logging in to the server, if necessary.</li>
-<li><strong>password</strong> (<em>str</em><em> or </em><em>None</em>) – The password for logging in to the server, if necessary.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="labbcat.GraphStore.deleteTranscript">
-<code class="descname">deleteTranscript</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStore.deleteTranscript" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes the given transcript, and all associated files.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>str</em>) – The ID transcript to save.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<p>The GraphStore class also inherits the GraphStoreQuery class.</p>
-</div>
-<div class="section" id="graphstorequery-class">
-<h2>GraphStoreQuery class<a class="headerlink" href="#graphstorequery-class" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="labbcat.GraphStoreQuery">
-<em class="property">class </em><code class="descclassname">labbcat.</code><code class="descname">GraphStoreQuery</code><span class="sig-paren">(</span><em>labbcatUrl</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView">
+<em class="property">class </em><code class="descclassname">labbcat.</code><code class="descname">LabbcatView</code><span class="sig-paren">(</span><em>labbcatUrl</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView" title="Permalink to this definition">¶</a></dt>
 <dd><p>API for querying a <a class="reference external" href="https://labbcat.canterbury.ac.nz/">LaBB–CAT</a> annotation graph
 store; a database of linguistic transcripts represented using 
 <a class="reference external" href="https://nzilbb.github.io/ag/">Annotation Graphs</a></p>
-<p>This interface provides only <em>read-only</em> operations.</p>
+<p>This interface provides only <em>read-only</em> operations, i.e. those that can be performed
+by users with “view” permission.</p>
 <p>Constructor arguments:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -358,26 +63,40 @@ store; a database of linguistic transcripts represented using
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">labbcat</span>
 
 <span class="c1"># create annotation store client</span>
-<span class="n">store</span> <span class="o">=</span> <span class="n">labbcat</span><span class="o">.</span><span class="n">GraphStoreQuery</span><span class="p">(</span><span class="s2">&quot;https://labbcat.canterbury.ac.nz&quot;</span><span class="p">,</span> <span class="s2">&quot;demo&quot;</span><span class="p">,</span> <span class="s2">&quot;demo&quot;</span><span class="p">);</span>
+<span class="n">corpus</span> <span class="o">=</span> <span class="n">labbcat</span><span class="o">.</span><span class="n">LabbcatView</span><span class="p">(</span><span class="s2">&quot;https://labbcat.canterbury.ac.nz&quot;</span><span class="p">,</span> <span class="s2">&quot;demo&quot;</span><span class="p">,</span> <span class="s2">&quot;demo&quot;</span><span class="p">);</span>
 
 <span class="c1"># show some basic information</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Information about LaBB-CAT at &quot;</span> <span class="o">+</span> <span class="n">store</span><span class="o">.</span><span class="n">getId</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Information about LaBB-CAT at &quot;</span> <span class="o">+</span> <span class="n">corpus</span><span class="o">.</span><span class="n">getId</span><span class="p">())</span>
 
-<span class="n">layerIds</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">getLayerIds</span><span class="p">()</span>
+<span class="n">layerIds</span> <span class="o">=</span> <span class="n">corpus</span><span class="o">.</span><span class="n">getLayerIds</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">layerId</span> <span class="ow">in</span> <span class="n">layerIds</span><span class="p">:</span> 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;layer: &quot;</span> <span class="o">+</span> <span class="n">layerId</span><span class="p">)</span> 
 
-<span class="n">corpora</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">getCorpusIds</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">corpus</span> <span class="ow">in</span> <span class="n">corpora</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;transcripts in: &quot;</span> <span class="o">+</span> <span class="n">corpus</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">transcript</span> <span class="ow">in</span> <span class="n">store</span><span class="o">.</span><span class="n">getTranscriptIdsInCorpus</span><span class="p">(</span><span class="n">corpus</span><span class="p">):</span>
+<span class="n">corpora</span> <span class="o">=</span> <span class="n">corpus</span><span class="o">.</span><span class="n">getCorpusIds</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">corpora</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;transcripts in: &quot;</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">transcript</span> <span class="ow">in</span> <span class="n">corpus</span><span class="o">.</span><span class="n">getTranscriptIdsInCorpus</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">transcript</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.countAnnotations">
-<code class="descname">countAnnotations</code><span class="sig-paren">(</span><em>id</em>, <em>layerId</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.countAnnotations" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.cancelTask">
+<code class="descname">cancelTask</code><span class="sig-paren">(</span><em>threadId</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.cancelTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cancels (but does not release) a running task.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>threadId</strong> (<em>str.</em>) – The ID of the task.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.countAnnotations">
+<code class="descname">countAnnotations</code><span class="sig-paren">(</span><em>id</em>, <em>layerId</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.countAnnotations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the number of annotations on the given layer of the given transcript.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -400,8 +119,8 @@ store; a database of linguistic transcripts represented using
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.countMatchingAnnotations">
-<code class="descname">countMatchingAnnotations</code><span class="sig-paren">(</span><em>expression</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.countMatchingAnnotations" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.countMatchingAnnotations">
+<code class="descname">countMatchingAnnotations</code><span class="sig-paren">(</span><em>expression</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.countMatchingAnnotations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Counts the number of annotations that match a particular pattern.</p>
 <p>The expression language is loosely based on JavaScript; expressions such as the
 following can be used:</p>
@@ -428,8 +147,8 @@ following can be used:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.countMatchingParticipantIds">
-<code class="descname">countMatchingParticipantIds</code><span class="sig-paren">(</span><em>expression</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.countMatchingParticipantIds" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.countMatchingParticipantIds">
+<code class="descname">countMatchingParticipantIds</code><span class="sig-paren">(</span><em>expression</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.countMatchingParticipantIds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Counts the number of participants that match a particular pattern.</p>
 <p>The expression language is loosely based on JavaScript; expressions such as the
 following can be used:</p>
@@ -459,8 +178,8 @@ following can be used:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.countMatchingTranscriptIds">
-<code class="descname">countMatchingTranscriptIds</code><span class="sig-paren">(</span><em>expression</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.countMatchingTranscriptIds" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.countMatchingTranscriptIds">
+<code class="descname">countMatchingTranscriptIds</code><span class="sig-paren">(</span><em>expression</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.countMatchingTranscriptIds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Counts the number of transcripts that match a particular pattern.</p>
 <p>The expression language is loosely based on JavaScript; expressions such as the
 following can be used:</p>
@@ -496,8 +215,8 @@ following can be used:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getAnchors">
-<code class="descname">getAnchors</code><span class="sig-paren">(</span><em>id</em>, <em>anchorIds</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getAnchors" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getAnchors">
+<code class="descname">getAnchors</code><span class="sig-paren">(</span><em>id</em>, <em>anchorIds</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getAnchors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the given anchors in the given transcript.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -520,8 +239,8 @@ following can be used:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getAnnotations">
-<code class="descname">getAnnotations</code><span class="sig-paren">(</span><em>id</em>, <em>layerId</em>, <em>pageLength=None</em>, <em>pageNumber=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getAnnotations" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getAnnotations">
+<code class="descname">getAnnotations</code><span class="sig-paren">(</span><em>id</em>, <em>layerId</em>, <em>pageLength=None</em>, <em>pageNumber=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getAnnotations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the annotations on the given layer of the given transcript.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -546,8 +265,8 @@ following can be used:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getAvailableMedia">
-<code class="descname">getAvailableMedia</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getAvailableMedia" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getAvailableMedia">
+<code class="descname">getAvailableMedia</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getAvailableMedia" title="Permalink to this definition">¶</a></dt>
 <dd><p>List the media available for the given transcript.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -564,8 +283,8 @@ following can be used:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getCorpusIds">
-<code class="descname">getCorpusIds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getCorpusIds" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getCorpusIds">
+<code class="descname">getCorpusIds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getCorpusIds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of corpus IDs.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -580,8 +299,8 @@ following can be used:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getEpisodeDocuments">
-<code class="descname">getEpisodeDocuments</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getEpisodeDocuments" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getEpisodeDocuments">
+<code class="descname">getEpisodeDocuments</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getEpisodeDocuments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of documents associated with the episode of the given transcript.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -598,8 +317,52 @@ following can be used:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getId">
-<code class="descname">getId</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getId" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getFragments">
+<code class="descname">getFragments</code><span class="sig-paren">(</span><em>transcriptIds</em>, <em>layerIds</em>, <em>mimeType</em>, <em>dir=None</em>, <em>startOffsets=None</em>, <em>endOffsets=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getFragments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get transcript fragments in a specified format.</p>
+<p>The intervals to extract can be defined in two possible ways:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>transcriptIds is a list of strings, and startOffsets and endOffsets are lists
+of floats</li>
+<li>transcriptIds is a list of dict objects returned by getMatches(threadId), and
+startOffsets and endOffsets are None</li>
+</ol>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>transcriptIds</strong> (<em>list of str</em><em> or </em><em>list of dict</em>) – A list of transcript IDs (transcript names), or a list of
+dictionaries returned by getMatches(threadId).</li>
+<li><strong>startOffsets</strong> (<em>list of float</em><em> or </em><em>None</em>) – A list of start offsets, with one element for each element in
+<em>transcriptIds</em>.</li>
+<li><strong>endOffsets</strong> (<em>list of float</em><em> or </em><em>None</em>) – A list of end offsets, with one element for each element in
+<em>transcriptIds</em>.</li>
+<li><strong>layerIds</strong> (<em>list of str</em>) – A list of IDs of annotation layers to include in the fragment.</li>
+<li><strong>mimeType</strong> (<em>list of str</em>) – The desired format, for example “text/praat-textgrid” for Praat
+TextGrids, “text/plain” for plain text, etc.</li>
+<li><strong>dir</strong> (<em>str</em>) – A directory in which the files should be stored, or null for a temporary
+folder.  If specified, and the directory doesn’t exist, it will be created.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of files. If <em>dir</em> is None, these files will be stored under the
+system’s temporary directory, so once processing is finished, they should be
+deleted by the caller, or moved to a more permanent location.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.getId">
+<code class="descname">getId</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getId" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the store’s ID.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -614,8 +377,8 @@ following can be used:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getLayer">
-<code class="descname">getLayer</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getLayer" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getLayer">
+<code class="descname">getLayer</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getLayer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a layer definition.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -632,8 +395,8 @@ following can be used:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getLayerIds">
-<code class="descname">getLayerIds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getLayerIds" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getLayerIds">
+<code class="descname">getLayerIds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getLayerIds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of layer IDs (annotation ‘types’).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -648,8 +411,8 @@ following can be used:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getLayers">
-<code class="descname">getLayers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getLayers" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getLayers">
+<code class="descname">getLayers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getLayers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of layer definitions.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -664,8 +427,107 @@ following can be used:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getMatchingAnnotations">
-<code class="descname">getMatchingAnnotations</code><span class="sig-paren">(</span><em>expression</em>, <em>pageLength=None</em>, <em>pageNumber=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getMatchingAnnotations" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getMatchAnnotations">
+<code class="descname">getMatchAnnotations</code><span class="sig-paren">(</span><em>matchIds</em>, <em>layerIds</em>, <em>targetOffset=0</em>, <em>annotationsPerLayer=1</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getMatchAnnotations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets annotations on selected layers related to search results returned by a previous
+call to getMatches(threadId).</p>
+<p>The returned list of lists contains dictionaries that represent individual
+annotations, with the following entries:</p>
+<ul class="simple">
+<li>“id” : The annotation’s unique ID</li>
+<li>“layerId” : The layer the annotation comes from</li>
+<li>“label” : The annotation’s label or value</li>
+<li>“startId” : The ID of the annotations start anchor</li>
+<li>“endId” : The ID of the annotations end anchor</li>
+<li>“parentId” : The annotation’s parent annotation ID</li>
+<li>“ordinal” : The annotation’s position amongst its peers</li>
+<li><dl class="first docutils">
+<dt>“confidence” <span class="classifier-delimiter">:</span> <span class="classifier">A rating of confidence in the label accuracy, from 0 (no</span></dt>
+<dd>confidence) to 100 (absolute confidence / manually annotated)</dd>
+</dl>
+</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>matchIds</strong> (<em>list of str</em><em> or </em><em>list of dict</em>) – A list of MatchId strings, or a list of match dictionaries</li>
+<li><strong>layerIds</strong> (<em>list of str</em>) – A vector of layer IDs.</li>
+<li><strong>targetOffset</strong> (<em>int</em>) – The distance from the original target of the match, e.g.
+-  0 : find annotations of the match target itself
+-  1 : find annotations of the token immediately <em>after</em> match target
+- -1 : find annotations of the token immediately <em>before</em> match target</li>
+<li><strong>annotationsPerLayer</strong> (<em>int</em>) – The number of annotations on the given layer to
+retrieve. In most cases, there’s only one annotation available. However, tokens may,
+for example, be annotated with ‘all possible phonemic transcriptions’, in which case
+using a value of greater than 1 for this parameter provides other phonemic
+transcriptions, for tokens that have more than one.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">An array of arrays of Annotations, of dimensions 
+len(<em>matchIds</em>) x (len(<em>layerIds</em>) x <em>annotationsPerLayer</em>). The first index matches the
+corresponding index in <em>matchIds</em>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of list of dictionary</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.getMatches">
+<code class="descname">getMatches</code><span class="sig-paren">(</span><em>threadId</em>, <em>wordsContext=0</em>, <em>pageLength=None</em>, <em>pageNumber=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getMatches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of tokens that were matched by search(pattern)</p>
+<p>If the task is still running, then this function will wait for it to finish.</p>
+<p>This function returns a list of match dictionaries, where each item has the
+following entries:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>“MatchId” <span class="classifier-delimiter">:</span> <span class="classifier">An ID whichencodes which token in which utterance by which</span></dt>
+<dd>participant of which transcript matched.</dd>
+</dl>
+</li>
+<li>“Transcript” : The name of the transcript document that the match is from.</li>
+<li>“Participant” :  The name of the participant who uttered the match.</li>
+<li>“Corpus” : The corpus the match comes from.</li>
+<li>“Line” : The start time of the utterance.</li>
+<li>“LineEnd” : The end time of the utterance.</li>
+<li>“BeforeMatch” : The context before the match.</li>
+<li>“Text” : The match text.</li>
+<li>“AfterMatch” : The context after the match.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>threadId</strong> (<em>str</em>) – A task ID returned by search(pattern).</li>
+<li><strong>wordsContext</strong> (<em>int</em>) – Number of words context to include in the &lt;q&gt;Before Match&lt;/q&gt;
+and &lt;q&gt;After Match&lt;/q&gt; columns in the results.</li>
+<li><strong>pageLength</strong> (<em>int</em><em> or </em><em>None</em>) – The maximum number of matches to return, or None to return all.</li>
+<li><strong>pageNumber</strong> (<em>int</em><em> or </em><em>None</em>) – The zero-based page number to return, or null to return the
+first page.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of IDs that can be used to identify utterances/tokens that were
+matched by search(pattern), or None if the task was cancelled.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.getMatchingAnnotations">
+<code class="descname">getMatchingAnnotations</code><span class="sig-paren">(</span><em>expression</em>, <em>pageLength=None</em>, <em>pageNumber=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getMatchingAnnotations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of annotations that match a particular pattern.</p>
 <p>The expression language is loosely based on JavaScript; expressions such as the
 following can be used:</p>
@@ -700,8 +562,8 @@ following can be used:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getMatchingParticipantIds">
-<code class="descname">getMatchingParticipantIds</code><span class="sig-paren">(</span><em>expression</em>, <em>pageLength=None</em>, <em>pageNumber=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getMatchingParticipantIds" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getMatchingParticipantIds">
+<code class="descname">getMatchingParticipantIds</code><span class="sig-paren">(</span><em>expression</em>, <em>pageLength=None</em>, <em>pageNumber=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getMatchingParticipantIds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of IDs of participants that match a particular pattern.</p>
 <p>The expression language is loosely based on JavaScript; expressions such as the
 following can be used:</p>
@@ -738,8 +600,8 @@ following can be used:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getMatchingTranscriptIds">
-<code class="descname">getMatchingTranscriptIds</code><span class="sig-paren">(</span><em>expression</em>, <em>pageLength=None</em>, <em>pageNumber=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getMatchingTranscriptIds" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getMatchingTranscriptIds">
+<code class="descname">getMatchingTranscriptIds</code><span class="sig-paren">(</span><em>expression</em>, <em>pageLength=None</em>, <em>pageNumber=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getMatchingTranscriptIds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of IDs of transcripts that match a particular pattern.</p>
 <p>The results can be exhaustive, by omitting pageLength and pageNumber, or they can
 be a subset (a ‘page’) of results, by given pageLength and pageNumber values.</p>
@@ -789,8 +651,8 @@ or null for transcript ID order.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getMedia">
-<code class="descname">getMedia</code><span class="sig-paren">(</span><em>id</em>, <em>trackSuffix</em>, <em>mimeType</em>, <em>startOffset=None</em>, <em>endOffset=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getMedia" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getMedia">
+<code class="descname">getMedia</code><span class="sig-paren">(</span><em>id</em>, <em>trackSuffix</em>, <em>mimeType</em>, <em>startOffset=None</em>, <em>endOffset=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getMedia" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a given media track for a given transcript.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -801,9 +663,9 @@ or null for transcript ID order.</li>
 <li><strong>trackSuffix</strong> (<em>str</em>) – The track suffix of the media.</li>
 <li><strong>mimeType</strong> (<em>str</em>) – The MIME type of the media, which may include parameters for type
 conversion, e.g. ‘text/wav; samplerate=16000’</li>
-<li><strong>startOffset</strong> (<em>int</em><em> or </em><em>None</em>) – The start offset of the media sample, or null for the start of
+<li><strong>startOffset</strong> (<em>float</em><em> or </em><em>None</em>) – The start offset of the media sample, or null for the start of
 the whole recording.</li>
-<li><strong>endOffset</strong> (<em>int</em><em> or </em><em>None</em>) – The end offset of the media sample, or null for the end of the
+<li><strong>endOffset</strong> (<em>float</em><em> or </em><em>None</em>) – The end offset of the media sample, or null for the end of the
 whole recording.</li>
 </ul>
 </td>
@@ -820,8 +682,8 @@ media doesn’t exist.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getMediaTracks">
-<code class="descname">getMediaTracks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getMediaTracks" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getMediaTracks">
+<code class="descname">getMediaTracks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getMediaTracks" title="Permalink to this definition">¶</a></dt>
 <dd><p>List the predefined media tracks available for transcripts.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -836,8 +698,8 @@ media doesn’t exist.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getParticipant">
-<code class="descname">getParticipant</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getParticipant" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getParticipant">
+<code class="descname">getParticipant</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getParticipant" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the participant record specified by the given identifier.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -856,8 +718,35 @@ was not found.</td>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getParticipantIds">
-<code class="descname">getParticipantIds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getParticipantIds" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getParticipantAttributes">
+<code class="descname">getParticipantAttributes</code><span class="sig-paren">(</span><em>participantIds</em>, <em>layerIds</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getParticipantAttributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets participant attribute values.</p>
+<p>Retrieves participant attribute values for given participant IDs, saves them
+to a CSV file, and returns the name of the file.</p>
+<p>In general, participant attributes are layers whose ID is prefixed ‘participant’,
+however formally it’s any layer where layer.parentId == ‘participant’ and
+layer.alignment == 0.</p>
+<p>The resulting file is the responsibility of the caller to delete when finished.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>participantIds</strong> (<em>list of str.</em>) – A list of participant IDs</li>
+<li><strong>layerIds</strong> (<em>list of str.</em>) – A list of layer IDs corresponding to participant attributes.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.getParticipantIds">
+<code class="descname">getParticipantIds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getParticipantIds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of participant IDs.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -872,8 +761,66 @@ was not found.</td>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getTranscript">
-<code class="descname">getTranscript</code><span class="sig-paren">(</span><em>id</em>, <em>layerIds=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getTranscript" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getSoundFragments">
+<code class="descname">getSoundFragments</code><span class="sig-paren">(</span><em>transcriptIds</em>, <em>startOffsets=None</em>, <em>endOffsets=None</em>, <em>sampleRate=None</em>, <em>dir=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getSoundFragments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downloads WAV sound fragments.</p>
+<p>The intervals to extract can be defined in two possible ways:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>transcriptIds is a list of strings, and startOffsets and endOffsets are lists
+of floats</li>
+<li>transcriptIds is a list of dict objects returned by getMatches(threadId), and
+startOffsets and endOffsets are None</li>
+</ol>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>transcriptIds</strong> (<em>list of str</em><em> or </em><em>list of dict</em>) – A list of transcript IDs (transcript names), or a list of
+dictionaries returned by getMatches(threadId).</li>
+<li><strong>startOffsets</strong> (<em>list of float</em><em> or </em><em>None</em>) – A list of start offsets, with one element for each element in
+<em>transcriptIds</em>.</li>
+<li><strong>endOffsets</strong> (<em>list of float</em><em> or </em><em>None</em>) – A list of end offsets, with one element for each element in
+<em>transcriptIds</em>.</li>
+<li><strong>sampleRate</strong> (<em>int</em>) – The desired sample rate, or null for no preference.</li>
+<li><strong>dir</strong> (<em>str</em>) – A directory in which the files should be stored, or null for a temporary
+folder.  If specified, and the directory doesn’t exist, it will be created.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of WAV files. If <em>dir</em> is None, these files will be stored
+under the system’s temporary directory, so once processing is finished, they should
+be deleted by the caller, or moved to a more permanent location.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.getTasks">
+<code class="descname">getTasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getTasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of all tasks on the server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of all task statuses.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dictionaries</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.getTranscript">
+<code class="descname">getTranscript</code><span class="sig-paren">(</span><em>id</em>, <em>layerIds=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getTranscript" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a transcript given its ID.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -897,8 +844,35 @@ required.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getTranscriptIds">
-<code class="descname">getTranscriptIds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getTranscriptIds" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getTranscriptAttributes">
+<code class="descname">getTranscriptAttributes</code><span class="sig-paren">(</span><em>transcriptIds</em>, <em>layerIds</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getTranscriptAttributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get transcript attribute values.</p>
+<p>Retrieves transcript attribute values for given transcript IDs, saves them to
+a CSV file, and returns the name of the file.</p>
+<p>In general, transcript attributes are layers whose ID is prefixed ‘transcript’,
+however formally it’s any layer where layer.parentId == ‘graph’ and layer.alignment
+== 0, which includes ‘corpus’ as well as transcript attribute layers.</p>
+<p>The resulting file is the responsibility of the caller to delete when finished.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>transcriptIds</strong> (<em>list of str.</em>) – A list of transcript IDs</li>
+<li><strong>layerIds</strong> (<em>list of str.</em>) – A list of layer IDs corresponding to transcript attributes.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.getTranscriptIds">
+<code class="descname">getTranscriptIds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getTranscriptIds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of transcript IDs.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -913,8 +887,8 @@ required.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getTranscriptIdsInCorpus">
-<code class="descname">getTranscriptIdsInCorpus</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getTranscriptIdsInCorpus" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getTranscriptIdsInCorpus">
+<code class="descname">getTranscriptIdsInCorpus</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getTranscriptIdsInCorpus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of transcript IDs in the given corpus.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -931,8 +905,8 @@ required.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="labbcat.GraphStoreQuery.getTranscriptIdsWithParticipant">
-<code class="descname">getTranscriptIdsWithParticipant</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.GraphStoreQuery.getTranscriptIdsWithParticipant" title="Permalink to this definition">¶</a></dt>
+<dt id="labbcat.LabbcatView.getTranscriptIdsWithParticipant">
+<code class="descname">getTranscriptIdsWithParticipant</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getTranscriptIdsWithParticipant" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of IDs of transcripts that include the given participant.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -948,8 +922,279 @@ required.</li>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="labbcat.LabbcatView.releaseTask">
+<code class="descname">releaseTask</code><span class="sig-paren">(</span><em>threadId</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.releaseTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release a finished task, to free up server resources.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>threadId</strong> (<em>str.</em>) – The ID of the task.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
+<dl class="method">
+<dt id="labbcat.LabbcatView.search">
+<code class="descname">search</code><span class="sig-paren">(</span><em>pattern</em>, <em>participantIds=None</em>, <em>transcriptTypes=None</em>, <em>mainParticipant=True</em>, <em>aligned=False</em>, <em>matchesPerTranscript=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Searches for tokens that match the given pattern.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pattern</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;columns&quot;</span><span class="p">:[{</span><span class="s2">&quot;layers&quot;</span><span class="p">:{</span><span class="s2">&quot;orthography&quot;</span><span class="p">:{</span><span class="s2">&quot;pattern&quot;</span><span class="p">:</span><span class="s2">&quot;the&quot;</span><span class="p">}}}]}</span>
+</pre></div>
+</div>
+<p>Strictly speaking, <em>pattern</em> should be a dictionary that matches the structure of
+the search matrix in the browser interface of LaBB-CAT; i.e. a dictionary with
+with one entrye called “columns”, which is a list of dictionaries.</p>
+<p>Each element in the “columns” list contains a dictionary with an entry named
+“layers”, whose value is a dictionary for patterns to match on each layer, and
+optionally an element named “adj”, whose value is a number representing the
+maximum distance, in tokens, between this column and the next column - if “adj”
+is not specified, the value defaults to 1, so tokens are contiguous.</p>
+<p>Each element in the “layers” dictionary is named after the layer it matches, and
+the value is a dictionary with the following possible entries:</p>
+<ul class="simple">
+<li>“pattern” : A regular expression to match against the label</li>
+<li>“min” : An inclusive minimum numeric value for the label</li>
+<li>“max” : An exclusive maximum numeric value for the label</li>
+<li>“not” : True to negate the match</li>
+<li>“anchorStart” : True to anchor to the start of the annotation on this layer</li>
+</ul>
+<p>(i.e. the matching word token will be the first at/after the start of the matching
+annotation on this layer)
+- “anchorEnd” : True to anchor to the end of the annotation on this layer
+(i.e. the matching word token will be the last before/at the end of the matching
+annotation on this layer)
+- “target” : True to make this layer the target of the search; the results will
+contain one row for each match on the target layer</p>
+<p>Some examples of valid pattern objects are shown below.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## words starting with &#39;ps...&#39;</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;columns&quot;</span><span class="p">:[{</span><span class="s2">&quot;layers&quot;</span><span class="p">:{</span><span class="s2">&quot;orthography&quot;</span><span class="p">:{</span><span class="s2">&quot;pattern&quot;</span><span class="p">:</span><span class="s2">&quot;ps.*&quot;</span><span class="p">}}}]}</span>
+
+<span class="c1">## the word &#39;the&#39; followed immediately or with one intervening word by</span>
+<span class="c1">## a hapax legomenon (word with a frequency of 1) that doesn&#39;t start with a vowel</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;columns&quot;</span> <span class="p">:</span> <span class="p">[</span>
+  <span class="p">{</span> <span class="s2">&quot;layers&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;orthography&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;pattern&quot;</span> <span class="p">:</span> <span class="s2">&quot;the&quot;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="s2">&quot;adj&quot;</span> <span class="p">:</span> <span class="mi">2</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="s2">&quot;layers&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;phonemes&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;not&quot;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;pattern&quot;</span> <span class="p">:</span> <span class="s2">&quot;[cCEFHiIPqQuUV0123456789~#\$@].*&quot;</span> <span class="p">},</span>
+      <span class="s2">&quot;frequency&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="nb">max</span> <span class="p">:</span> <span class="s2">&quot;2&quot;</span> <span class="p">}</span> <span class="p">}</span> <span class="p">}</span> <span class="p">]</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>For ease of use, the function will also accept the following abbreviated forms;
+some examples are shown below.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## a single list representing a &#39;one column&#39; search, </span>
+<span class="c1">## and string values, representing regular expression pattern matching</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;orthography&quot;</span> <span class="p">:</span> <span class="s2">&quot;ps.*&quot;</span> <span class="p">}</span>
+
+<span class="c1">## a list containing the columns (adj defaults to 1, so matching tokens are contiguous)...</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span> <span class="s2">&quot;orthography&quot;</span> <span class="p">:</span> <span class="s2">&quot;the&quot;</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="s2">&quot;phonemes&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;not&quot;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;pattern&quot;</span> <span class="p">:</span> <span class="s2">&quot;[cCEFHiIPqQuUV0123456789~#\$@].*&quot;</span> <span class="p">},</span>
+    <span class="s2">&quot;frequency&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;max&quot;</span> <span class="p">:</span> <span class="s2">&quot;2&quot;</span> <span class="p">}</span> <span class="p">}</span> <span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pattern</strong> – An object representing the pattern to search for, which mirrors the
+Search Matrix in the browser interface.</li>
+<li><strong>participantIds</strong> – An optional list of participant IDs to search the utterances
+of. If null, all utterances in the corpus will be searched.</li>
+<li><strong>transcriptTypes</strong> – An optional list of transcript types to limit the results
+to. If null, all transcript types will be searched.</li>
+<li><strong>mainParticipant</strong> – true to search only main-participant utterances, false to
+search all utterances.</li>
+<li><strong>aligned</strong> – true to include only words that are aligned (i.e. have anchor
+confidence &amp;ge; 50, false to search include un-aligned words as well.</li>
+<li><strong>matchesPerTranscript</strong> – Optional maximum number of matches per transcript to
+return. <em>None</em> means all matches.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The threadId of the resulting task, which can be passed in to
+getMatches(), taskStatus(), waitForTask(), etc.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.taskStatus">
+<code class="descname">taskStatus</code><span class="sig-paren">(</span><em>threadId</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.taskStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the current state of the given task.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>threadId</strong> (<em>str.</em>) – The ID of the task.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The status of the task.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionary</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.waitForTask">
+<code class="descname">waitForTask</code><span class="sig-paren">(</span><em>threadId</em>, <em>maxSeconds=0</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.waitForTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for the given task to finish.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>threadId</strong> (<em>str</em>) – The task ID.</li>
+<li><strong>maxSeconds</strong> (<em>int</em>) – The maximum time to wait for the task, or 0 for forever.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The final task status. To determine whether the task finished or waiting
+timed out, check <em>result.running</em>, which will be false if the task finished.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dictionary</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="labbcatedit-class">
+<h2>LabbcatEdit class<a class="headerlink" href="#labbcatedit-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="labbcat.LabbcatEdit">
+<em class="property">class </em><code class="descclassname">labbcat.</code><code class="descname">LabbcatEdit</code><span class="sig-paren">(</span><em>labbcatUrl</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit" title="Permalink to this definition">¶</a></dt>
+<dd><p>API for querying and updating a <a class="reference external" href="https://labbcat.canterbury.ac.nz">LaBB-CAT</a>
+annotation graph store; a database of linguistic transcripts represented using 
+<a class="reference external" href="https://nzilbb.github.io/ag/">Annotation Graphs</a></p>
+<p>This class inherits the <em>read-only</em> operations of LabbcatView and adds some <em>write</em>
+operations for updating data, i.e. those that can be performed by users with “edit”
+permission.</p>
+<p>Constructor arguments:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>labbcatUrl</strong> (<em>str</em>) – The ‘home’ URL of the LaBB-CAT server.</li>
+<li><strong>username</strong> (<em>str</em><em> or </em><em>None</em>) – The username for logging in to the server, if necessary.</li>
+<li><strong>password</strong> (<em>str</em><em> or </em><em>None</em>) – The password for logging in to the server, if necessary.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="labbcat.LabbcatEdit.deleteTranscript">
+<code class="descname">deleteTranscript</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.deleteTranscript" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the given transcript, and all associated files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>str</em>) – The ID transcript to save.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatEdit.newTranscript">
+<code class="descname">newTranscript</code><span class="sig-paren">(</span><em>transcript</em>, <em>media</em>, <em>mediaSuffix</em>, <em>transcriptType</em>, <em>corpus</em>, <em>episode</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.newTranscript" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uploads a new transcript.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>transcript</strong> (<em>str</em>) – The path to the transcript to upload.</li>
+<li><strong>media</strong> (<em>str</em>) – The path to media to upload, if any.</li>
+<li><strong>mediaSuffix</strong> (<em>str</em>) – The media suffix for the media.</li>
+<li><strong>transcriptType</strong> – The transcript type.</li>
+<li><strong>type</strong> – str</li>
+<li><strong>corpus</strong> (<em>str</em>) – The corpus for the transcript.</li>
+<li><strong>episode</strong> (<em>str</em>) – The episode the transcript belongs to.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The task ID of the resulting annotation layer generation task. The
+task status can be updated using Labbcat.taskStatus(taskId).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatEdit.updateTranscript">
+<code class="descname">updateTranscript</code><span class="sig-paren">(</span><em>transcript</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.updateTranscript" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uploads a new transcript.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>transcript</strong> (<em>str</em>) – The path to the transcript to upload.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A dictionary of transcript IDs (transcript names) to task threadIds. The
+task status can be updated using Labbcat.taskStatus(taskId).</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionary of str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<p>The LabbcatEdit class inherits from the LabbcatView class.</p>
+</div>
+<div class="section" id="labbcatadmin-class">
+<h2>LabbcatAdmin class<a class="headerlink" href="#labbcatadmin-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="labbcat.LabbcatAdmin">
+<em class="property">class </em><code class="descclassname">labbcat.</code><code class="descname">LabbcatAdmin</code><span class="sig-paren">(</span><em>labbcatUrl</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin" title="Permalink to this definition">¶</a></dt>
+<dd><p>API for querying, updating, and administering a <a class="reference external" href="https://labbcat.canterbury.ac.nz">LaBB-CAT</a> annotation graph store; a database of linguistic
+transcripts represented using <a class="reference external" href="https://nzilbb.github.io/ag/">Annotation Graphs</a></p>
+<p>This class inherits the <em>read-write</em> operations of GraphStore
+and adds some administration operations, including definition of layers,
+registration of converters, etc., i.e. those that can be performed by users with
+“admin” permission.</p>
+<p>Constructor arguments:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>labbcatUrl</strong> (<em>str</em>) – The ‘home’ URL of the LaBB-CAT server.</li>
+<li><strong>username</strong> (<em>str</em><em> or </em><em>None</em>) – The username for logging in to the server, if necessary.</li>
+<li><strong>password</strong> (<em>str</em><em> or </em><em>None</em>) – The password for logging in to the server, if necessary.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The LabbcatAdmin class also inherits the LabbcatEdit class.</p>
 </div>
 <div class="section" id="responseexception-class">
 <h2>ResponseException class<a class="headerlink" href="#responseexception-class" title="Permalink to this headline">¶</a></h2>
