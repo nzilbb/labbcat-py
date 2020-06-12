@@ -1,8 +1,10 @@
+import json
+import os
 import requests
 import tempfile
-import os
 import time
 from labbcat.Response import Response
+from labbcat.ResponseException import ResponseException
 from labbcat import __version__
 
 class LabbcatView:
@@ -165,6 +167,13 @@ class LabbcatView:
             
         response = Response(requests.post(
             url=url, data=params, files=files, auth=auth, headers={"Accept":"application/json"}))
+        
+        # close the files
+        for param in files:
+            name, fd = files[param]
+            fd.close()
+        
+        # check for errors
         response.checkForErrors()
         
         if self.verbose: print("model: " + str(response.model))
@@ -644,6 +653,16 @@ class LabbcatView:
             "threadId" : threadId, "command" : "release" })
         return()
 
+    def cancelTask(self, threadId):
+        """ Cancels (but does not release) a running task.
+
+        :param threadId: The ID of the task.
+        :type threadId: str.
+        """
+        self._getRequest(self._labbcatUrl("threads"), {
+            "threadId" : threadId, "command" : "cancel" })
+        return()
+
     def getTasks(self):
         """ Gets a list of all tasks on the server. 
         
@@ -940,7 +959,7 @@ pattern = { "columns" : [ { "layers" : { "orthography" : { "pattern" : "the" } }
                 matchIds = [ m["MatchId"] for m in matchIds ]
 
         # save MatchIds as a CSV file
-        fd, fileName = tempfile.mkstemp(".csv", "labbcat-py-getMatchAnnotations")
+        fd, fileName = tempfile.mkstemp(".csv", "labbcat-py-getMatchAnnotations-")
         if self.verbose: print("MatchId file: " + fileName)
         with open(fileName, "w") as file:
             file.write("MatchId")
@@ -1049,7 +1068,7 @@ pattern = { "columns" : [ { "layers" : { "orthography" : { "pattern" : "the" } }
         
         return(fragments)
     
-    def getFragments(self, transcriptIds, layerIds, mimeType, startOffsets=None, endOffsets=None, dir=None):
+    def getFragments(self, transcriptIds, layerIds, mimeType, dir=None, startOffsets=None, endOffsets=None):
         """
         Get transcript fragments in a specified format.
 

@@ -8,7 +8,7 @@ username = "labbcat"
 password = "labbcat"
 
 class TestLabbcatView(unittest.TestCase):
-    """ Unit tests for GraphStoreQuery.
+    """ Unit tests for LabbcatView.
 
     These tests test the functionality of the client library, not the server. 
 
@@ -286,6 +286,151 @@ class TestLabbcatView(unittest.TestCase):
         self.assertTrue(fileName.endswith(".csv"), "CSV file returned: " + fileName)
         self.assertTrue(os.path.isfile(fileName), "CSV file exists: " + fileName)
         os.remove(fileName)            
-          
+    
+    def test_searchInvalidPattern(self):
+        try:
+            threadId = self.store.search({})
+            fail("Search with invalid pattern fails")
+        except:
+            pass
+    
+    def test_searchAndCancelTask(self):
+        # start a long-running search - all words
+        pattern = { "orthography" : ".*" }
+        threadId = self.store.search(pattern)
+        self.store.cancelTask(threadId)
+    
+    def test_searchAndGetMatchesAndGetMatchAnnotations(self):
+        # get a participant ID to use
+        ids = self.store.getParticipantIds()
+        self.assertTrue(len(ids) > 0, "getParticipantIds: Some IDs are returned")
+        participantId = [ ids[0] ]
+
+        # all instances of "and"
+        pattern = {"orthography" : "and" }
+        threadId = self.store.search(pattern, participantId, None, False, False, None)
+        try:
+            task = self.store.waitForTask(threadId, 30)
+            # if the task is still running, it's taking too long, so cancel it
+            if task["running"]:
+                try:
+                    self.store.cancelTask(threadId)
+                except:
+                    pass
+            self.assertFalse(task["running"], "Search task finished in a timely manner")
+         
+            matches = self.store.getMatches(threadId, 2)
+            if len(matches) == 0:
+                print("getMatches: No matches were returned, cannot test getMatchAnnotations")
+            else:
+                upTo = min(10, len(matches))
+                
+                matches = self.store.getMatches(threadId, 2, upTo, 0)
+                self.assertEqual(upTo, len(matches), "pagination works ("+str(upTo)+")")
+                
+                layerIds = [ "orthography" ]
+                annotations = self.store.getMatchAnnotations(matches, layerIds, 0, 1)
+                self.assertEqual(len(matches), len(annotations),
+                                  "annotations array is same size as matches array")
+                self.assertEqual(1, len(annotations[0]), "row arrays are the right size")
+                
+                layerIds = [ "invalid layer ID" ]
+                try:
+                    self.store.getMatchAnnotations(matches, layerIds, 0, 1)
+                    fail("getMatchAnnotations with invalid layerId should fail")
+                except:
+                    pass
+        finally:
+            self.store.releaseTask(threadId)
+
+    def test_getSoundFragments(self):
+        # get a participant ID to use
+        ids = self.store.getParticipantIds()
+        self.assertTrue(len(ids) > 0, "getParticipantIds: Some IDs are returned")
+        participantId = { ids[0] }      
+        
+        # all instances of "and"
+        pattern = { "orthography" : "and" }
+        threadId = self.store.search(pattern, participantId, None, False, False, None)
+        try:
+            task = self.store.waitForTask(threadId, 30)
+            # if the task is still running, it's taking too long, so cancel it
+            if task["running"]:
+                try:
+                    self.store.cancelTask(threadId)
+                except:
+                    pass
+            self.assertFalse(task["running"], "Search task finished in a timely manner")
+         
+            matches = self.store.getMatches(threadId, 2)
+            if len(matches) == 0:
+                print("getMatches: No matches were returned, cannot test getSoundFragments")
+            else:
+                upTo = min(5, len(matches))
+                subset = matches[:upTo]
+                
+                wavs = self.store.getSoundFragments(subset)
+                try:
+                    self.assertEqual(len(subset), len(wavs))
+                    
+                    for m in range(upTo):
+                        self.assertIsNotNone(wavs[m], "Non-None file: " + str(subset[m]))
+                        self.assertTrue(len(wavs[m]) > 0, "Non-zero sized file: " + str(subset[m]))
+                finally:
+                    for wav in wavs:
+                        if wav != None:
+                            # duplicate names can exist, so the file may have already been deleted
+                            if os.path.exists(wav): 
+                                os.remove(wav)
+            
+        finally:
+            self.store.releaseTask(threadId)
+
+    def test_getFragments(self):
+        # get a participant ID to use
+        ids = self.store.getParticipantIds()
+        self.assertTrue(len(ids) > 0, "getParticipantIds: Some IDs are returned")
+        participantId = [ ids[0] ]
+        
+        # all instances of "and"
+        threadId = self.store.search({ "orthography" : "and" }, participantId)
+        try:
+            task = self.store.waitForTask(threadId, 30)
+            # if the task is still running, it's taking too long, so cancel it
+            if task["running"]:
+                try:
+                    self.store.cancelTask(threadId)
+                except:
+                    pass
+            self.assertFalse(task["running"], "Search task finished in a timely manner")
+            
+            matches = self.store.getMatches(threadId, 2)
+            if len(matches) == 0:
+                print("getMatches: No matches were returned, cannot test getFragments")
+            else:
+                upTo = min(5, len(matches))
+                subset = matches[:upTo]
+                
+                dir = "getFragments"
+                layerIds = [ "orthography" ]
+                fragments = self.store.getFragments(subset, layerIds, "text/praat-textgrid", dir)
+                try:
+                    self.assertEqual(len(subset), len(fragments),
+                                      "files array is same size as matches array")
+                    
+                    for m in range(upTo):
+                        self.assertIsNotNone(fragments[m], "Non-None file: " + str(subset[m]))
+                        self.assertTrue(len(fragments[m]) > 0,
+                                        "Non-zero sized file: " + str(subset[m]))
+                finally:
+                    for fragment in fragments:
+                        if fragment != None:
+                            # duplicate names can exist, so the file may have already been deleted
+                            if os.path.exists(fragment): 
+                                os.remove(fragment)
+                    #os.rmdir(dir)
+        finally:
+            self.store.releaseTask(threadId)
+
 if __name__ == '__main__':
     unittest.main()
