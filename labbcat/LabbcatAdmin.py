@@ -1,13 +1,14 @@
-from labbcat.GraphStore import GraphStore
+from labbcat.LabbcatEdit import LabbcatEdit
 
-class GraphStoreAdministration(GraphStore):
+class LabbcatAdmin(LabbcatEdit):
     """ API for querying, updating, and administering a `LaBB-CAT
     <https://labbcat.canterbury.ac.nz>`_ annotation graph store; a database of linguistic
     transcripts represented using `Annotation Graphs <https://nzilbb.github.io/ag/>`_
 
     This class inherits the *read-write* operations of GraphStore
     and adds some administration operations, including definition of layers,
-    registration of converters, etc.
+    registration of converters, etc., i.e. those that can be performed by users with
+    "admin" permission.
     
     Constructor arguments:    
     

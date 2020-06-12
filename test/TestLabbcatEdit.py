@@ -1,5 +1,4 @@
 import unittest
-import os
 import labbcat
 
 # YOU MUST ENSURE THE FOLLOWING SETTINGS ARE VALID FOR YOU TEST LABB-CAT SERVER:
@@ -7,8 +6,8 @@ labbcatUrl = "http://localhost:8080/labbcat/"
 username = "labbcat"
 password = "labbcat"
 
-class TestLabbcat(unittest.TestCase):
-    """ Unit tests for Labbcat.
+class TestLabbcatEdit(unittest.TestCase):
+    """ Unit tests for GraphStore.
 
     These tests test the functionality of the client library, not the server. 
 
@@ -20,20 +19,12 @@ class TestLabbcat(unittest.TestCase):
     """
 
     def setUp(self):
-        self.store = labbcat.Labbcat(labbcatUrl, username, password)
+        self.store = labbcat.LabbcatEdit(labbcatUrl, username, password)
         
-    def test_getTasks(self):
-        tasks = self.store.getTasks()
-        # there may be none
-        if len(tasks) == 0:
-            print("\nThere are no tasks, can't test for well-formed response.")
-        else:
-            for taskId in tasks:
-                task = tasks[taskId]
-                for key in ["threadId", "threadName", "running", "percentComplete", "status"]:
-                    with self.subTest(key=key):
-                        self.assertIn(key, task, "Has " + key)
-            
+    def test_deleteNonexistentTranscript(self):
+        with self.assertRaises(labbcat.ResponseException):
+            self.store.deleteTranscript("nonexistent transcript ID")    
+    
     def test_newTranscript_updateTranscript_deleteTranscript(self):
         transcriptName = "labbcat-py.test.txt"
         transcriptPath = "/home/robert/nzilbb/labbcat-py/test/" + transcriptName
@@ -78,26 +69,6 @@ class TestLabbcat(unittest.TestCase):
         # make sure it was deleted
         count = self.store.countMatchingTranscriptIds("id = '"+transcriptName+"'")
         self.assertEqual(0, count, "Transcript is gone")
-            
-    def test_getTrascriptAttributes(self):
-        ids = self.store.getTranscriptIds()
-        self.assertTrue(len(ids) > 0, "At least 3 transcripts in the corpus")
-        ids = ids[:3]
-        layerIds = ["transcript_type", "corpus"]
-        fileName = self.store.getTranscriptAttributes(ids, layerIds)
-        self.assertTrue(fileName.endswith(".csv"), "CSV file returned")
-        self.assertTrue(os.path.isfile(fileName), "CSV file exists")
-        os.remove(fileName)
-            
-    def test_getParticipantAttributes(self):
-        ids = self.store.getParticipantIds()
-        self.assertTrue(len(ids) > 0, "At least 3 participants in the corpus")
-        ids = ids[:3]
-        layerIds = ["participant_gender", "participant_notes"]
-        fileName = self.store.getParticipantAttributes(ids, layerIds)
-        self.assertTrue(fileName.endswith(".csv"), "CSV file returned: " + fileName)
-        self.assertTrue(os.path.isfile(fileName), "CSV file exists: " + fileName)
-        os.remove(fileName)
             
 if __name__ == '__main__':
     unittest.main()

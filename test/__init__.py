@@ -1,3 +1,2 @@
-from test.TestGraphStoreQuery import TestGraphStoreQuery
-from test.TestGraphStore import TestGraphStore
-from test.TestLabbcat import TestLabbcat
+from test.TestLabbcatView import TestLabbcatView
+from test.TestLabbcatEdit import TestLabbcatEdit

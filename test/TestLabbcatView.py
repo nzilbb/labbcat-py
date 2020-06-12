@@ -1,4 +1,5 @@
 import unittest
+import os
 import labbcat
 
 # YOU MUST ENSURE THE FOLLOWING SETTINGS ARE VALID FOR YOU TEST LABB-CAT SERVER:
@@ -6,7 +7,7 @@ labbcatUrl = "http://localhost:8080/labbcat/"
 username = "labbcat"
 password = "labbcat"
 
-class TestGraphStoreQuery(unittest.TestCase):
+class TestLabbcatView(unittest.TestCase):
     """ Unit tests for GraphStoreQuery.
 
     These tests test the functionality of the client library, not the server. 
@@ -19,7 +20,7 @@ class TestGraphStoreQuery(unittest.TestCase):
     """
 
     def setUp(self):
-        self.store = labbcat.GraphStoreQuery(labbcatUrl, username, password)
+        self.store = labbcat.LabbcatView(labbcatUrl, username, password)
         
     def test_getId(self):
         id = self.store.getId()
@@ -253,6 +254,38 @@ class TestGraphStoreQuery(unittest.TestCase):
           for key in ["name", "mimeType", "url", "trackSuffix"]:
               with self.subTest(key=key):
                   self.assertIn(key, file, "Has " + key)
+    
+    def test_getTasks(self):
+        tasks = self.store.getTasks()
+        # there may be none
+        if len(tasks) == 0:
+            print("\nThere are no tasks, can't test for well-formed response.")
+        else:
+            for taskId in tasks:
+                task = tasks[taskId]
+                for key in ["threadId", "threadName", "running", "percentComplete", "status"]:
+                    with self.subTest(key=key):
+                        self.assertIn(key, task, "Has " + key)
+            
+    def test_getTrascriptAttributes(self):
+        ids = self.store.getTranscriptIds()
+        self.assertTrue(len(ids) > 0, "At least 3 transcripts in the corpus")
+        ids = ids[:3]
+        layerIds = ["transcript_type", "corpus"]
+        fileName = self.store.getTranscriptAttributes(ids, layerIds)
+        self.assertTrue(fileName.endswith(".csv"), "CSV file returned")
+        self.assertTrue(os.path.isfile(fileName), "CSV file exists")
+        os.remove(fileName)
+            
+    def test_getParticipantAttributes(self):
+        ids = self.store.getParticipantIds()
+        self.assertTrue(len(ids) > 0, "At least 3 participants in the corpus")
+        ids = ids[:3]
+        layerIds = ["participant_gender", "participant_notes"]
+        fileName = self.store.getParticipantAttributes(ids, layerIds)
+        self.assertTrue(fileName.endswith(".csv"), "CSV file returned: " + fileName)
+        self.assertTrue(os.path.isfile(fileName), "CSV file exists: " + fileName)
+        os.remove(fileName)            
           
 if __name__ == '__main__':
     unittest.main()
