@@ -9,7 +9,7 @@ e.g.
 import labbcat
 
 # Connect to the LaBB-CAT corpus
-corpus = labbcat.LabbcatEdit("https://labbcat.canterbury.ac.nz", "demo", "demo")
+corpus = labbcat.LabbcatView("https://labbcat.canterbury.ac.nz", "demo", "demo")
 
 # Find all tokens of a word
 matches = corpus.getMatches({"orthography":"quake"})
