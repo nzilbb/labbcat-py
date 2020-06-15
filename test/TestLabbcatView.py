@@ -343,6 +343,32 @@ class TestLabbcatView(unittest.TestCase):
         finally:
             self.store.releaseTask(threadId)
 
+    def test_getMatchesWithPattern(self):
+        # all instances of "then"
+        pattern = {"orthography" : "end" }
+        self.store.verbose = True
+        threadId = self.store.search(pattern)
+        try:
+            task = self.store.waitForTask(threadId, 30)
+            # if the task is still running, it's taking too long, so cancel it
+            if task["running"]:
+                try:
+                    self.store.cancelTask(threadId)
+                except:
+                    pass
+            self.assertFalse(task["running"], "Search task finished in a timely manner")
+         
+            matchesWithThreadId = self.store.getMatches(threadId, 2)
+            if len(matchesWithThreadId) == 0:
+                print("getMatches: No matches were returned, cannot test getMatches with pattern")
+            else:
+                matchesWithPattern = self.store.getMatches(pattern)
+                self.assertEqual(
+                    len(matchesWithThreadId), len(matchesWithPattern),
+                    "matches returns the same number of results with threadId and pattern")
+        finally:
+            self.store.releaseTask(threadId)
+
     def test_getSoundFragments(self):
         # get a participant ID to use
         ids = self.store.getParticipantIds()

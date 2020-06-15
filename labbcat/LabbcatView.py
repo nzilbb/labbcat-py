@@ -793,7 +793,7 @@ class LabbcatView:
             { "phonemes" : { "not" : True, "pattern" : "[cCEFHiIPqQuUV0123456789~#\\$@].*" },
               "frequency" : { "max" : "2" } } ]
         
-        :param pattern: An object representing the pattern to search for, which mirrors the
+        :param pattern: A dict representing the pattern to search for, which mirrors the
           Search Matrix in the browser interface.
         :type dictionary:
         
@@ -862,11 +862,33 @@ class LabbcatView:
         model = self._getRequest(self._labbcatUrl("search"), parameters)
         return(model["threadId"])
     
-    def getMatches(self, threadId, wordsContext=0, pageLength=None, pageNumber=None):
+    def getMatches(self, search, wordsContext=0, pageLength=None, pageNumber=None):
         """
         Gets a list of tokens that were matched by search(pattern)
         
-        If the task is still running, then this function will wait for it to finish.
+        The *search* parameter can be *either* 
+        - a threadId returned from a previous call to search() *or* 
+        - a dict representing a pattern to search for.
+        
+        If it is a threadId, and the task is still running, then this function will wait
+        for it to finish. 
+        
+        If it is a pattern dict, then search() is called for the given pattern, the
+        matches are retrieved, and releaseTask() is called to free the search
+        resources. Some example patterns are shown below; for more detailed information,
+        see search().
+        
+        Example:: 
+          
+          ## a single list representing a 'one column' search, 
+          ## and string values, representing regular expression pattern matching
+          pattern = { "orthography" : "ps.*" }
+          
+          ## a list containing the columns (adj defaults to 1, so matching tokens are contiguous)...
+          pattern = [
+            { "orthography" : "the" },
+            { "phonemes" : { "not" : True, "pattern" : "[cCEFHiIPqQuUV0123456789~#\\$@].*" },
+              "frequency" : { "max" : "2" } } ]
         
         This function returns a list of match dictionaries, where each item has the
         following entries:
@@ -882,8 +904,9 @@ class LabbcatView:
         - "Text" : The match text.
         - "AfterMatch" : The context after the match.
         
-        :param threadId: A task ID returned by search(pattern).
-        :type threadId: str
+        :param search: This can be *either* a threadId returned from a previous call to
+          search() *or* a dict representing a pattern to search for.
+        :type search: str or dict
         
         :param wordsContext: Number of words context to include in the <q>Before Match</q>
           and <q>After Match</q> columns in the results.
@@ -900,6 +923,13 @@ class LabbcatView:
           matched by search(pattern), or None if the task was cancelled. 
         :rtype: list of dict
         """
+        # is search a dict or str?
+        threadId = search
+        releaseThread = False
+        if not isinstance(search, str):
+            threadId = self.search(search)
+            releaseThread = True
+        
         # ensure it's finished
         self.waitForTask(threadId)
         
@@ -915,6 +945,11 @@ class LabbcatView:
 
         # send request
         model = self._getRequest(self._labbcatUrl("resultsStream"), parameters)
+        
+        # if search matrix was passed, releaseTask
+        if releaseThread:
+            self.releaseTask(threadId)
+        
         return(model["matches"])
     
     def getMatchAnnotations(self, matchIds, layerIds, targetOffset=0, annotationsPerLayer=1):
