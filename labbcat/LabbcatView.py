@@ -753,13 +753,13 @@ class LabbcatView:
         - "max" : An exclusive maximum numeric value for the label
         - "not" : True to negate the match
         - "anchorStart" : True to anchor to the start of the annotation on this layer
-        (i.e. the matching word token will be the first at/after the start of the matching
-        annotation on this layer)
+           (i.e. the matching word token will be the first at/after the start of the matching
+           annotation on this layer)
         - "anchorEnd" : True to anchor to the end of the annotation on this layer
-        (i.e. the matching word token will be the last before/at the end of the matching
-        annotation on this layer)
+           (i.e. the matching word token will be the last before/at the end of the matching
+           annotation on this layer)
         - "target" : True to make this layer the target of the search; the results will
-        contain one row for each match on the target layer
+           contain one row for each match on the target layer
         
         Some examples of valid pattern objects are shown below.
         
@@ -818,7 +818,10 @@ class LabbcatView:
         :type int:
         
         :returns: The threadId of the resulting task, which can be passed in to
-          getMatches(), taskStatus(), waitForTask(), etc. 
+          `getMatches() <#labbcat.LabbcatView.getMatches>`_, 
+          `taskStatus() <#labbcat.LabbcatView.taskStatus>`_, 
+          `waitForTask() <#labbcat.LabbcatView.waitForTask>`_
+          `releaseTask() <#labbcat.LabbcatView.releaseTask>`_, etc. 
         :rtype: str
         """
 
@@ -867,16 +870,19 @@ class LabbcatView:
         Gets a list of tokens that were matched by search(pattern)
         
         The *search* parameter can be *either* 
-        - a threadId returned from a previous call to search() *or* 
+        
+        - a threadId returned from a previous call to `search() <#labbcat.LabbcatView.search>`_ 
+          *or* 
         - a dict representing a pattern to search for.
         
         If it is a threadId, and the task is still running, then this function will wait
         for it to finish. 
         
-        If it is a pattern dict, then search() is called for the given pattern, the
-        matches are retrieved, and releaseTask() is called to free the search
-        resources. Some example patterns are shown below; for more detailed information,
-        see search().
+        If it is a pattern dict, then `search() <#labbcat.LabbcatView.search>`_ is called
+        for the given pattern, the matches are retrieved, and
+        `releaseTask() <#labbcat.LabbcatView.releaseTask>`_ is called to
+        free the search resources. Some example patterns are shown below; for more
+        detailed information, see `search() <#labbcat.LabbcatView.search>`_.
         
         Example:: 
           
@@ -905,7 +911,8 @@ class LabbcatView:
         - "AfterMatch" : The context after the match.
         
         :param search: This can be *either* a threadId returned from a previous call to
-          search() *or* a dict representing a pattern to search for.
+          `search() <#labbcat.LabbcatView.search>`_ *or* a dict representing a pattern to
+          search for. 
         :type search: str or dict
         
         :param wordsContext: Number of words context to include in the <q>Before Match</q>

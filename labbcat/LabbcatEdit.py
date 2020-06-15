@@ -54,8 +54,9 @@ class LabbcatEdit(LabbcatView):
         :param episode: The episode the transcript belongs to.
         :type episode: str
         
-        :returns: The task ID of the resulting annotation layer generation task. The
-                  task status can be updated using Labbcat.taskStatus(taskId).
+        :returns: The taskId of the resulting annotation layer generation task. The
+                  task status can be updated using
+                  `taskStatus() <#labbcat.LabbcatView.taskStatus>`_.
         :rtype: str
         """
         params = {
@@ -98,7 +99,8 @@ class LabbcatEdit(LabbcatView):
         :type transcript: str
         
         :returns: A dictionary of transcript IDs (transcript names) to task threadIds. The
-                  task status can be updated using Labbcat.taskStatus(taskId).
+                  task status can be updated using
+                  `taskStatus() <#labbcat.LabbcatView.taskStatus>`_.
         :rtype: dictionary of str
         """
         params = {

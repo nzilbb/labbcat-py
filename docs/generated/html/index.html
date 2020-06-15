@@ -480,9 +480,33 @@ corresponding index in <em>matchIds</em>.</p>
 
 <dl class="method">
 <dt id="labbcat.LabbcatView.getMatches">
-<code class="descname">getMatches</code><span class="sig-paren">(</span><em>threadId</em>, <em>wordsContext=0</em>, <em>pageLength=None</em>, <em>pageNumber=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getMatches" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getMatches</code><span class="sig-paren">(</span><em>search</em>, <em>wordsContext=0</em>, <em>pageLength=None</em>, <em>pageNumber=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getMatches" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of tokens that were matched by search(pattern)</p>
-<p>If the task is still running, then this function will wait for it to finish.</p>
+<p>The <em>search</em> parameter can be <em>either</em></p>
+<ul class="simple">
+<li>a threadId returned from a previous call to <a class="reference external" href="#labbcat.LabbcatView.search">search()</a> 
+<em>or</em></li>
+<li>a dict representing a pattern to search for.</li>
+</ul>
+<p>If it is a threadId, and the task is still running, then this function will wait
+for it to finish.</p>
+<p>If it is a pattern dict, then <a class="reference external" href="#labbcat.LabbcatView.search">search()</a> is called
+for the given pattern, the matches are retrieved, and
+<a class="reference external" href="#labbcat.LabbcatView.releaseTask">releaseTask()</a> is called to
+free the search resources. Some example patterns are shown below; for more
+detailed information, see <a class="reference external" href="#labbcat.LabbcatView.search">search()</a>.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## a single list representing a &#39;one column&#39; search, </span>
+<span class="c1">## and string values, representing regular expression pattern matching</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;orthography&quot;</span> <span class="p">:</span> <span class="s2">&quot;ps.*&quot;</span> <span class="p">}</span>
+
+<span class="c1">## a list containing the columns (adj defaults to 1, so matching tokens are contiguous)...</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span> <span class="s2">&quot;orthography&quot;</span> <span class="p">:</span> <span class="s2">&quot;the&quot;</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="s2">&quot;phonemes&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;not&quot;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;pattern&quot;</span> <span class="p">:</span> <span class="s2">&quot;[cCEFHiIPqQuUV0123456789~#\$@].*&quot;</span> <span class="p">},</span>
+    <span class="s2">&quot;frequency&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;max&quot;</span> <span class="p">:</span> <span class="s2">&quot;2&quot;</span> <span class="p">}</span> <span class="p">}</span> <span class="p">]</span>
+</pre></div>
+</div>
 <p>This function returns a list of match dictionaries, where each item has the
 following entries:</p>
 <ul class="simple">
@@ -505,7 +529,10 @@ following entries:</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>threadId</strong> (<em>str</em>) – A task ID returned by search(pattern).</li>
+<li><strong>search</strong> (<em>str</em><em> or </em><em>dict</em>) – <p>This can be <em>either</em> a threadId returned from a previous call to
+<a class="reference external" href="#labbcat.LabbcatView.search">search()</a> <em>or</em> a dict representing a pattern to
+search for.</p>
+</li>
 <li><strong>wordsContext</strong> (<em>int</em>) – Number of words context to include in the &lt;q&gt;Before Match&lt;/q&gt;
 and &lt;q&gt;After Match&lt;/q&gt; columns in the results.</li>
 <li><strong>pageLength</strong> (<em>int</em><em> or </em><em>None</em>) – The maximum number of matches to return, or None to return all.</li>
@@ -959,15 +986,24 @@ the value is a dictionary with the following possible entries:</p>
 <li>“min” : An inclusive minimum numeric value for the label</li>
 <li>“max” : An exclusive maximum numeric value for the label</li>
 <li>“not” : True to negate the match</li>
-<li>“anchorStart” : True to anchor to the start of the annotation on this layer</li>
+<li><dl class="first docutils">
+<dt>“anchorStart” <span class="classifier-delimiter">:</span> <span class="classifier">True to anchor to the start of the annotation on this layer</span></dt>
+<dd>(i.e. the matching word token will be the first at/after the start of the matching
+annotation on this layer)</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>“anchorEnd” <span class="classifier-delimiter">:</span> <span class="classifier">True to anchor to the end of the annotation on this layer</span></dt>
+<dd>(i.e. the matching word token will be the last before/at the end of the matching
+annotation on this layer)</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>“target” <span class="classifier-delimiter">:</span> <span class="classifier">True to make this layer the target of the search; the results will</span></dt>
+<dd>contain one row for each match on the target layer</dd>
+</dl>
+</li>
 </ul>
-<p>(i.e. the matching word token will be the first at/after the start of the matching
-annotation on this layer)
-- “anchorEnd” : True to anchor to the end of the annotation on this layer
-(i.e. the matching word token will be the last before/at the end of the matching
-annotation on this layer)
-- “target” : True to make this layer the target of the search; the results will
-contain one row for each match on the target layer</p>
 <p>Some examples of valid pattern objects are shown below.</p>
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## words starting with &#39;ps...&#39;</span>
@@ -1003,7 +1039,7 @@ some examples are shown below.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>pattern</strong> – An object representing the pattern to search for, which mirrors the
+<li><strong>pattern</strong> – A dict representing the pattern to search for, which mirrors the
 Search Matrix in the browser interface.</li>
 <li><strong>participantIds</strong> – An optional list of participant IDs to search the utterances
 of. If null, all utterances in the corpus will be searched.</li>
@@ -1018,8 +1054,12 @@ return. <em>None</em> means all matches.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The threadId of the resulting task, which can be passed in to
-getMatches(), taskStatus(), waitForTask(), etc.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>The threadId of the resulting task, which can be passed in to
+<a class="reference external" href="#labbcat.LabbcatView.getMatches">getMatches()</a>, 
+<a class="reference external" href="#labbcat.LabbcatView.taskStatus">taskStatus()</a>, 
+<a class="reference external" href="#labbcat.LabbcatView.waitForTask">waitForTask()</a>
+<a class="reference external" href="#labbcat.LabbcatView.releaseTask">releaseTask()</a>, etc.</p>
+</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
@@ -1133,8 +1173,10 @@ permission.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The task ID of the resulting annotation layer generation task. The
-task status can be updated using Labbcat.taskStatus(taskId).</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>The taskId of the resulting annotation layer generation task. The
+task status can be updated using
+<a class="reference external" href="#labbcat.LabbcatView.taskStatus">taskStatus()</a>.</p>
+</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
@@ -1155,7 +1197,8 @@ task status can be updated using Labbcat.taskStatus(taskId).</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>transcript</strong> (<em>str</em>) – The path to the transcript to upload.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A dictionary of transcript IDs (transcript names) to task threadIds. The
-task status can be updated using Labbcat.taskStatus(taskId).</td>
+task status can be updated using
+<a class="reference external" href="#labbcat.LabbcatView.taskStatus">taskStatus()</a>.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionary of str</td>
 </tr>
