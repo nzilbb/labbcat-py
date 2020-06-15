@@ -1173,7 +1173,7 @@ class LabbcatView:
         fragments = []        
         tempFiles = False
         if dir == None:
-            dir = tempfile.mkdtemp("_wav", "getFragments_")
+            dir = tempfile.mkdtemp("_frag", "getFragments_")
             tempFiles = True
         elif not os.path.exists(dir):
             os.mkdir(dir)
