@@ -3,6 +3,26 @@
 Client library for communicating with [LaBB-CAT](https://labbcat.canterbury.ac.nz/)
 servers using Python.
 
+e.g.
+
+```python
+import labbcat
+
+# Connect to the LaBB-CAT corpus
+corpus = labbcat.LabbcatEdit("https://labbcat.canterbury.ac.nz", "demo", "demo")
+
+# Find all tokens of a word
+matches = corpus.getMatches({"orthography":"quake"})
+
+# Get the recording of that utterance
+audio = corpus.getSoundFragments(matches)
+
+# Get Praat TextGrids for the utterances
+textgrids = corpus.getFragments(
+    matches, ["utterances", "transcript","segments"],
+    "text/praat-textgrid")
+```
+
 LaBB-CAT is a web-based linguistic annotation store that stores audio or video
 recordings, text transcripts, and other annotations.
 
