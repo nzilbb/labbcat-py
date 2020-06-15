@@ -346,7 +346,6 @@ class TestLabbcatView(unittest.TestCase):
     def test_getMatchesWithPattern(self):
         # all instances of "then"
         pattern = {"orthography" : "end" }
-        self.store.verbose = True
         threadId = self.store.search(pattern)
         try:
             task = self.store.waitForTask(threadId, 30)
@@ -458,5 +457,22 @@ class TestLabbcatView(unittest.TestCase):
         finally:
             self.store.releaseTask(threadId)
 
+    def test_tweetCode(self):
+        # get a participant ID to use
+        matches = self.store.getMatches({"orthography":"earthquake"})
+        audio = self.store.getSoundFragments(matches)
+        textgrids = self.store.getFragments(
+            matches, ["utterances", "transcript","segments"], 
+	    "text/praat-textgrid")
+        # tidily delete files
+        for f in audio:
+            # duplicate names can exist, so the file may have already been deleted
+            if os.path.exists(f): 
+                os.remove(f)
+        for f in textgrids:
+            # duplicate names can exist, so the file may have already been deleted
+            if os.path.exists(f): 
+                os.remove(f)
+    
 if __name__ == '__main__':
     unittest.main()
