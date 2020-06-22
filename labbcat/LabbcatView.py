@@ -85,8 +85,8 @@ class LabbcatView:
         if self.verbose: print("response: " + str(response.text))
         return(response.model)
         
-    def _postRequest(self, url, params):
-        if self.verbose: print("_postRequest " + url + " : " + str(params))
+    def _postRequest(self, url, params, json=None):
+        if self.verbose: print("_postRequest " + url + " : " + str(params) + " : " + str(json))
         if self.username == None:
             auth = None
         else:
@@ -94,7 +94,39 @@ class LabbcatView:
             
         response = Response(
             requests.post(
-                url=url, params=params, auth=auth, headers={"Accept":"application/json"}),
+                url=url, params=params, json=json, auth=auth, headers={"Accept":"application/json"}),
+            self.verbose)
+        response.checkForErrors()
+        
+        if self.verbose: print("model: " + str(response.model))
+        return(response.model)
+         
+    def _putRequest(self, url, params, json=None):
+        if self.verbose: print("_putRequest " + url + " : " + str(params) + " : " + str(json))
+        if self.username == None:
+            auth = None
+        else:
+            auth = (self.username, self.password)
+            
+        response = Response(
+            requests.put(
+                url=url, params=params, json=json, auth=auth, headers={"Accept":"application/json"}),
+            self.verbose)
+        response.checkForErrors()
+        
+        if self.verbose: print("model: " + str(response.model))
+        return(response.model)
+         
+    def _deleteRequest(self, url, params, json=None):
+        if self.verbose: print("_deleteRequest " + url + " : " + str(params) + " : " + str(json))
+        if self.username == None:
+            auth = None
+        else:
+            auth = (self.username, self.password)
+            
+        response = Response(
+            requests.delete(
+                url=url, params=params, json=json, auth=auth, headers={"Accept":"application/json"}),
             self.verbose)
         response.checkForErrors()
         

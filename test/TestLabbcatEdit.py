@@ -7,7 +7,7 @@ username = "labbcat"
 password = "labbcat"
 
 class TestLabbcatEdit(unittest.TestCase):
-    """ Unit tests for GraphStore.
+    """ Unit tests for TextLabbcatEdit.
 
     These tests test the functionality of the client library, not the server. 
 
