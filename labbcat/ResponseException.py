@@ -23,6 +23,6 @@ class ResponseException(Exception):
                     message = "Response code " + str(response.code);
                 else:
                     if response.httpStatus > 0:
-                        message = "HTTP status " + str(response.httpStatus)
+                        message = "HTTP status " + str(response.httpStatus) + " : " + response.text
         super().__init__(message)
         

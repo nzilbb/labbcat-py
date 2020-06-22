@@ -58,7 +58,7 @@ class Response:
                 if self.verbose: print("model " + str(json["model"]))
                 self.model = json["model"]
         except Exception as x:
-            if self.verbose: print("EXCEPTION " + x)
+            if self.verbose: print("EXCEPTION " + str(x))
             errors = [ "Response not JSON:" + self.text ]
 
     def checkForErrors(self):
@@ -66,6 +66,7 @@ class Response:
 
         If so, a corresponding ResponseException will be thrown.
         """
+        if self.verbose: print("response " + self.text)
         if self.errors != None and len(self.errors) > 0:
             raise ResponseException(self)
         if self.code > 0:
