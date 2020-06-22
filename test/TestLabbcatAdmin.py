@@ -91,6 +91,67 @@ class TestLabbcatAdmin(unittest.TestCase):
         except:
             pass
 
+    def test_projects_CRUD(self):
+        
+        project_name = "unit-test"
+        project_description = "Temporary project for unit testing"
+
+        # ensure the project doesn't exist to start with
+        try:
+            self.store.deleteProject(project_name)
+        except labbcat.ResponseException as x:
+            pass
+                    
+        # create project
+        project = self.store.createProject(project_name, project_description)
+        self.assertEqual(project["project"], project_name,
+                         "project name saved")
+        self.assertEqual(project["description"], project_description,
+                         "project description saved")
+        
+        # read projects
+        projects = self.store.readProjects()
+        foundNewProject = False
+        for c in projects:
+            if c["project"] == project_name:
+                foundNewProject = True
+        self.assertTrue(foundNewProject, "New project is present in list")
+        
+        # can't create an existing record
+        try:
+            self.store.createProject(project_name, project_language, project_description)
+            fail("Delete non-existent project")
+        except:
+            pass
+        
+        # update project
+        new_project_language = "es";
+        new_project_description = "Changed description";
+        updatedProject = self.store.updateProject(
+            project_name, new_project_description)
+        self.assertEqual(updatedProject["project"], project_name,
+                         "project name unchanged");
+        self.assertEqual(updatedProject["description"], new_project_description,
+                         "project description changed");
+                
+        # delete it
+        self.store.deleteProject(project_name)
+        
+        # make sure it was deleted
+        projects = self.store.readProjects()
+        foundNewProject = False
+        for c in projects:
+            if c["project"] == project_name:
+                foundNewProject = True
+        self.assertFalse(foundNewProject, "New project is gone from list")
+
+        # can't delete a nonexistent record
+        try:
+            self.store.deleteProject(project_name)            
+            fail("Delete non-existent project")
+        except:
+            pass
+
             
 if __name__ == '__main__':
     unittest.main()

@@ -127,3 +127,90 @@ class LabbcatAdmin(LabbcatEdit):
         """
         return(self._deleteRequest(self._labbcatUrl("api/admin/corpora/"+corpus_name), {}))
     
+    def createProject(self, project, description):
+        """ Creates a new project record.
+        
+        The dictionary returned has the following entries:
+        
+        - "project_id"  : The database key for the record.
+        - "project"     : The name/id of the project.
+        - "description" : The description of the project.
+        - "_cantDelete" : This is not a database field, but rather is present in records
+                          returned from the server that can not currently be deleted; a
+                          string representing the reason the record can't be deleted.  
+        
+        :param project: The name/id of the project.
+        :type project: str
+        
+        :param description: The description of the project.
+        :type description: str
+        
+        :returns: A copy of the project record
+        :rtype: dict
+        """
+        return(self._postRequest(self._labbcatUrl("api/admin/projects"), {}, {
+            "project" : project,
+            "description" : description }))
+    
+    def readProjects(self, pageNumber=None, pageLength=None):
+        """ Reads a list of project records.
+        
+        The dictionaries in the returned list have the following entries:
+        
+        - "project_id"  : The database key for the record.
+        - "project"     : The name/id of the project.
+        - "description" : The description of the project.
+        - "_cantDelete" : This is not a database field, but rather is present in records
+                          returned from the server that can not currently be deleted; a
+                          string representing the reason the record can't be deleted.  
+        
+        :param pageNumber: The zero-based page number to return, or null to return the first page.
+        :type pageNumber: int or None
+
+        :param pageLength: The maximum number of records to return, or null to return all.
+        :type pageLength: int or None
+        
+        :returns: A list of project records.
+        :rtype: list of dict
+        """
+        # define request parameters
+        parameters = {}
+        if pageNumber != None:
+            parameters["pageNumber"] = pageNumber
+        if pageLength != None:
+            parameters["pageLength"] = pageLength
+        return(self._getRequest(self._labbcatUrl("api/admin/projects"), parameters))
+        
+    def updateProject(self, project, description):
+        """ Updates an existing project record.
+        
+        The dictionary returned has the following entries:
+        
+        - "project_id"  : The database key for the record.
+        - "project"     : The name/id of the project.
+        - "description" : The description of the project.
+        - "_cantDelete" : This is not a database field, but rather is present in records
+                          returned from the server that can not currently be deleted; a
+                          string representing the reason the record can't be deleted.  
+        
+        :param project: The name/id of the project.
+        :type project: str
+        
+        :param description: The description of the project.
+        :type description: str
+        
+        :returns: A copy of the project record
+        :rtype: dict
+        """
+        return(self._putRequest(self._labbcatUrl("api/admin/projects"), {}, {
+            "project" : project,
+            "description" : description }))
+    
+    def deleteProject(self, project):
+        """ Deletes an existing project record.
+        
+        :param project: The name/id of the project.
+        :type project: str        
+        """
+        return(self._deleteRequest(self._labbcatUrl("api/admin/projects/"+project), {}))
+    
