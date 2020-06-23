@@ -214,3 +214,98 @@ class LabbcatAdmin(LabbcatEdit):
         """
         return(self._deleteRequest(self._labbcatUrl("api/admin/projects/"+project), {}))
     
+    def createMediaTrack(self, suffix, description, display_order):
+        """ Creates a new media track record.
+        
+        The dictionary returned has the following entries:
+        
+        - "suffix"        : The suffix associated with the media track.
+        - "description"   : The description of the media track.
+        - "display_order" : The position of the track amongst other tracks.
+        - "_cantDelete"   : This is not a database field, but rather is present in records
+                            returned from the server that can not currently be deleted; a
+                            string representing the reason the record can't be deleted.  
+        
+        :param suffix: The suffix associated with the media track.
+        :type suffix: str
+        
+        :param description: The description of the media track.
+        :type description: str
+        
+        :param display_order: The position of the track amongst other tracks.
+        :type display_order: str
+        
+        :returns: A copy of the media track record
+        :rtype: dict
+        """
+        return(self._postRequest(self._labbcatUrl("api/admin/mediatracks"), {}, {
+            "suffix" : suffix,
+            "description" : description,
+            "display_order" : display_order }))
+    
+    def readMediaTracks(self, pageNumber=None, pageLength=None):
+        """ Reads a list of media track records.
+        
+        The dictionaries in the returned list have the following entries:
+        
+        - "suffix"        : The suffix associated with the media track.
+        - "description"   : The description of the media track.
+        - "display_order" : The position of the track amongst other tracks.
+        - "_cantDelete"   : This is not a database field, but rather is present in records
+                            returned from the server that can not currently be deleted; a
+                            string representing the reason the record can't be deleted.  
+        
+        :param pageNumber: The zero-based page number to return, or null to return the first page.
+        :type pageNumber: int or None
+
+        :param pageLength: The maximum number of records to return, or null to return all.
+        :type pageLength: int or None
+        
+        :returns: A list of media track records.
+        :rtype: list of dict
+        """
+        # define request parameters
+        parameters = {}
+        if pageNumber != None:
+            parameters["pageNumber"] = pageNumber
+        if pageLength != None:
+            parameters["pageLength"] = pageLength
+        return(self._getRequest(self._labbcatUrl("api/admin/mediatracks"), parameters))
+        
+    def updateMediaTrack(self, suffix, description, display_order):
+        """ Updates an existing media track record.
+        
+        The dictionary returned has the following entries:
+        
+        - "suffix"        : The suffix associated with the media track.
+        - "description"   : The description of the media track.
+        - "display_order" : The position of the track amongst other tracks.
+        - "_cantDelete"   : This is not a database field, but rather is present in records
+                            returned from the server that can not currently be deleted; a
+                            string representing the reason the record can't be deleted.  
+        
+        :param suffix: The suffix assocaited with the media track.
+        :type suffix: str
+        
+        :param description: The description of the media track.
+        :type description: str
+        
+        :param display_order: The position of the track amongst other tracks.
+        :type display_order: str
+        
+        :returns: A copy of the media track record
+        :rtype: dict
+        """
+        return(self._putRequest(self._labbcatUrl("api/admin/mediatracks"), {}, {
+            "suffix" : suffix,
+            "description" : description,
+            "display_order" : display_order }))
+    
+    def deleteMediaTrack(self, suffix):
+        """ Deletes an existing media track record.
+        
+        :param suffix: The suffix associated with the media track.
+        :type suffix: str        
+        """
+        return(self._deleteRequest(self._labbcatUrl("api/admin/mediatracks/"+suffix), {}))
+    

@@ -119,7 +119,7 @@ class TestLabbcatAdmin(unittest.TestCase):
         
         # can't create an existing record
         try:
-            self.store.createProject(project_name, project_language, project_description)
+            self.store.createProject(project_name, project_description)
             fail("Delete non-existent project")
         except:
             pass
@@ -149,6 +149,73 @@ class TestLabbcatAdmin(unittest.TestCase):
         try:
             self.store.deleteProject(project_name)            
             fail("Delete non-existent project")
+        except:
+            pass
+
+    def test_mediaTracks_CRUD(self):
+        
+        suffix = "unit-test"
+        description = "Temporary mediaTrack for unit testing"
+        display_order = 99
+
+        # ensure the mediaTrack doesn't exist to start with
+        try:
+            self.store.deleteMediaTrack(suffix)
+        except labbcat.ResponseException as x:
+            pass
+                    
+        # create mediaTrack
+        mediaTrack = self.store.createMediaTrack(suffix, description, display_order)
+        self.assertEqual(mediaTrack["suffix"], suffix,
+                         "mediaTrack suffix saved")
+        self.assertEqual(mediaTrack["description"], description,
+                         "mediaTrack description saved")
+        self.assertEqual(mediaTrack["display_order"], display_order,
+                         "mediaTrack display_order saved")
+        
+        # read mediaTracks
+        mediaTracks = self.store.readMediaTracks()
+        foundNewMediaTrack = False
+        for c in mediaTracks:
+            if c["suffix"] == suffix:
+                foundNewMediaTrack = True
+        self.assertTrue(foundNewMediaTrack, "New mediaTrack is present in list")
+        
+        # can't create an existing record
+        try:
+            self.store.createMediaTrack(suffix, description, display_order)
+            fail("Delete non-existent mediaTrack")
+        except:
+            pass
+        
+        # update mediaTrack
+        new_language = "es";
+        new_description = "Changed description";
+        new_display_order = 100
+        updatedMediaTrack = self.store.updateMediaTrack(
+            suffix, new_description, new_display_order)
+        self.assertEqual(updatedMediaTrack["suffix"], suffix,
+                         "mediaTrack suffix unchanged");
+        self.assertEqual(updatedMediaTrack["description"], new_description,
+                         "mediaTrack description changed");
+        self.assertEqual(updatedMediaTrack["display_order"], new_display_order,
+                         "mediaTrack display_order changed");
+                
+        # delete it
+        self.store.deleteMediaTrack(suffix)
+        
+        # make sure it was deleted
+        mediaTracks = self.store.readMediaTracks()
+        foundNewMediaTrack = False
+        for c in mediaTracks:
+            if c["suffix"] == suffix:
+                foundNewMediaTrack = True
+        self.assertFalse(foundNewMediaTrack, "New mediaTrack is gone from list")
+
+        # can't delete a nonexistent record
+        try:
+            self.store.deleteMediaTrack(suffix)
+            fail("Delete non-existent mediaTrack")
         except:
             pass
 
