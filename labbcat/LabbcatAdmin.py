@@ -35,10 +35,9 @@ class LabbcatAdmin(LabbcatEdit):
         - "corpus_name"        : The name/id of the corpus.
         - "corpus_language"    : The ISO 639-1 code for the default language.
         - "corpus_description" : The description of the corpus.
-        - "_cantDelete"        : This is not a database field, but rather is present
-                                 in records returned from the server that can not
-                                 currently be deleted; a string representing the reason
-                                 the record can't be deleted.  
+        - "_cantDelete"        : This is not a database field, but rather is present in
+          records returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted. 
         
         :param corpus_name: The name/id of the corpus.
         :type corpus_name: str
@@ -66,10 +65,9 @@ class LabbcatAdmin(LabbcatEdit):
         - "corpus_name"        : The name/id of the corpus.
         - "corpus_language"    : The ISO 639-1 code for the default language.
         - "corpus_description" : The description of the corpus.
-        - "_cantDelete"        : This is not a database field, but rather is present
-                                 in records returned from the server that can not
-                                 currently be deleted; a string representing the reason
-                                 the record can't be deleted.  
+        - "_cantDelete"        : This is not a database field, but rather is present in
+          records returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.  
         
         :param pageNumber: The zero-based page number to return, or null to return the first page.
         :type pageNumber: int or None
@@ -97,10 +95,9 @@ class LabbcatAdmin(LabbcatEdit):
         - "corpus_name"        : The name/id of the corpus.
         - "corpus_language"    : The ISO 639-1 code for the default language.
         - "corpus_description" : The description of the corpus.
-        - "_cantDelete"        : This is not a database field, but rather is present
-                                 in records returned from the server that can not
-                                 currently be deleted; a string representing the reason
-                                 the record can't be deleted.  
+        - "_cantDelete"        : This is not a database field, but rather is present in
+          records returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.  
         
         :param corpus_name: The name/id of the corpus.
         :type corpus_name: str
@@ -136,8 +133,8 @@ class LabbcatAdmin(LabbcatEdit):
         - "project"     : The name/id of the project.
         - "description" : The description of the project.
         - "_cantDelete" : This is not a database field, but rather is present in records
-                          returned from the server that can not currently be deleted; a
-                          string representing the reason the record can't be deleted.  
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.   
         
         :param project: The name/id of the project.
         :type project: str
@@ -161,8 +158,8 @@ class LabbcatAdmin(LabbcatEdit):
         - "project"     : The name/id of the project.
         - "description" : The description of the project.
         - "_cantDelete" : This is not a database field, but rather is present in records
-                          returned from the server that can not currently be deleted; a
-                          string representing the reason the record can't be deleted.  
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.
         
         :param pageNumber: The zero-based page number to return, or null to return the first page.
         :type pageNumber: int or None
@@ -190,8 +187,8 @@ class LabbcatAdmin(LabbcatEdit):
         - "project"     : The name/id of the project.
         - "description" : The description of the project.
         - "_cantDelete" : This is not a database field, but rather is present in records
-                          returned from the server that can not currently be deleted; a
-                          string representing the reason the record can't be deleted.  
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.
         
         :param project: The name/id of the project.
         :type project: str
@@ -223,8 +220,8 @@ class LabbcatAdmin(LabbcatEdit):
         - "description"   : The description of the media track.
         - "display_order" : The position of the track amongst other tracks.
         - "_cantDelete"   : This is not a database field, but rather is present in records
-                            returned from the server that can not currently be deleted; a
-                            string representing the reason the record can't be deleted.  
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted. 
         
         :param suffix: The suffix associated with the media track.
         :type suffix: str
@@ -252,8 +249,8 @@ class LabbcatAdmin(LabbcatEdit):
         - "description"   : The description of the media track.
         - "display_order" : The position of the track amongst other tracks.
         - "_cantDelete"   : This is not a database field, but rather is present in records
-                            returned from the server that can not currently be deleted; a
-                            string representing the reason the record can't be deleted.  
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.
         
         :param pageNumber: The zero-based page number to return, or null to return the first page.
         :type pageNumber: int or None
@@ -281,8 +278,8 @@ class LabbcatAdmin(LabbcatEdit):
         - "description"   : The description of the media track.
         - "display_order" : The position of the track amongst other tracks.
         - "_cantDelete"   : This is not a database field, but rather is present in records
-                            returned from the server that can not currently be deleted; a
-                            string representing the reason the record can't be deleted.  
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.   
         
         :param suffix: The suffix assocaited with the media track.
         :type suffix: str

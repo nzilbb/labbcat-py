@@ -1235,6 +1235,352 @@ registration of converters, etc., i.e. those that can be performed by users with
 </tr>
 </tbody>
 </table>
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.createCorpus">
+<code class="descname">createCorpus</code><span class="sig-paren">(</span><em>corpus_name</em>, <em>corpus_language</em>, <em>corpus_description</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.createCorpus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new corpus record.</p>
+<p>The dictionary returned has the following entries:</p>
+<ul class="simple">
+<li>“corpus_id”          : The database key for the record.</li>
+<li>“corpus_name”        : The name/id of the corpus.</li>
+<li>“corpus_language”    : The ISO 639-1 code for the default language.</li>
+<li>“corpus_description” : The description of the corpus.</li>
+<li>“_cantDelete”        : This is not a database field, but rather is present in
+records returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>corpus_name</strong> (<em>str</em>) – The name/id of the corpus.</li>
+<li><strong>corpus_language</strong> (<em>str</em>) – The ISO 639-1 code for the default language.</li>
+<li><strong>corpus_description</strong> (<em>str</em>) – The description of the corpus.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the corpus record</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.createMediaTrack">
+<code class="descname">createMediaTrack</code><span class="sig-paren">(</span><em>suffix</em>, <em>description</em>, <em>display_order</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.createMediaTrack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new media track record.</p>
+<p>The dictionary returned has the following entries:</p>
+<ul class="simple">
+<li>“suffix”        : The suffix associated with the media track.</li>
+<li>“description”   : The description of the media track.</li>
+<li>“display_order” : The position of the track amongst other tracks.</li>
+<li>“_cantDelete”   : This is not a database field, but rather is present in records
+returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>suffix</strong> (<em>str</em>) – The suffix associated with the media track.</li>
+<li><strong>description</strong> (<em>str</em>) – The description of the media track.</li>
+<li><strong>display_order</strong> (<em>str</em>) – The position of the track amongst other tracks.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the media track record</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.createProject">
+<code class="descname">createProject</code><span class="sig-paren">(</span><em>project</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.createProject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new project record.</p>
+<p>The dictionary returned has the following entries:</p>
+<ul class="simple">
+<li>“project_id”  : The database key for the record.</li>
+<li>“project”     : The name/id of the project.</li>
+<li>“description” : The description of the project.</li>
+<li>“_cantDelete” : This is not a database field, but rather is present in records
+returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>project</strong> (<em>str</em>) – The name/id of the project.</li>
+<li><strong>description</strong> (<em>str</em>) – The description of the project.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the project record</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.deleteCorpus">
+<code class="descname">deleteCorpus</code><span class="sig-paren">(</span><em>corpus_name</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.deleteCorpus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes an existing corpus record.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>corpus_name</strong> (<em>str</em>) – The name/id of the corpus.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.deleteMediaTrack">
+<code class="descname">deleteMediaTrack</code><span class="sig-paren">(</span><em>suffix</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.deleteMediaTrack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes an existing media track record.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>suffix</strong> (<em>str</em>) – The suffix associated with the media track.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.deleteProject">
+<code class="descname">deleteProject</code><span class="sig-paren">(</span><em>project</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.deleteProject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes an existing project record.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>project</strong> (<em>str</em>) – The name/id of the project.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.readCorpora">
+<code class="descname">readCorpora</code><span class="sig-paren">(</span><em>pageNumber=None</em>, <em>pageLength=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.readCorpora" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a list of corpus records.</p>
+<p>The dictionaries in the returned list have the following entries:</p>
+<ul class="simple">
+<li>“corpus_id”          : The database key for the record.</li>
+<li>“corpus_name”        : The name/id of the corpus.</li>
+<li>“corpus_language”    : The ISO 639-1 code for the default language.</li>
+<li>“corpus_description” : The description of the corpus.</li>
+<li>“_cantDelete”        : This is not a database field, but rather is present in
+records returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pageNumber</strong> (<em>int</em><em> or </em><em>None</em>) – The zero-based page number to return, or null to return the first page.</li>
+<li><strong>pageLength</strong> (<em>int</em><em> or </em><em>None</em>) – The maximum number of records to return, or null to return all.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of corpus records.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.readMediaTracks">
+<code class="descname">readMediaTracks</code><span class="sig-paren">(</span><em>pageNumber=None</em>, <em>pageLength=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.readMediaTracks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a list of media track records.</p>
+<p>The dictionaries in the returned list have the following entries:</p>
+<ul class="simple">
+<li>“suffix”        : The suffix associated with the media track.</li>
+<li>“description”   : The description of the media track.</li>
+<li>“display_order” : The position of the track amongst other tracks.</li>
+<li>“_cantDelete”   : This is not a database field, but rather is present in records
+returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pageNumber</strong> (<em>int</em><em> or </em><em>None</em>) – The zero-based page number to return, or null to return the first page.</li>
+<li><strong>pageLength</strong> (<em>int</em><em> or </em><em>None</em>) – The maximum number of records to return, or null to return all.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of media track records.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.readProjects">
+<code class="descname">readProjects</code><span class="sig-paren">(</span><em>pageNumber=None</em>, <em>pageLength=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.readProjects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a list of project records.</p>
+<p>The dictionaries in the returned list have the following entries:</p>
+<ul class="simple">
+<li>“project_id”  : The database key for the record.</li>
+<li>“project”     : The name/id of the project.</li>
+<li>“description” : The description of the project.</li>
+<li>“_cantDelete” : This is not a database field, but rather is present in records
+returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pageNumber</strong> (<em>int</em><em> or </em><em>None</em>) – The zero-based page number to return, or null to return the first page.</li>
+<li><strong>pageLength</strong> (<em>int</em><em> or </em><em>None</em>) – The maximum number of records to return, or null to return all.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of project records.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.updateCorpus">
+<code class="descname">updateCorpus</code><span class="sig-paren">(</span><em>corpus_name</em>, <em>corpus_language</em>, <em>corpus_description</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.updateCorpus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates an existing corpus record.</p>
+<p>The dictionary returned has the following entries:</p>
+<ul class="simple">
+<li>“corpus_id”          : The database key for the record.</li>
+<li>“corpus_name”        : The name/id of the corpus.</li>
+<li>“corpus_language”    : The ISO 639-1 code for the default language.</li>
+<li>“corpus_description” : The description of the corpus.</li>
+<li>“_cantDelete”        : This is not a database field, but rather is present in
+records returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>corpus_name</strong> (<em>str</em>) – The name/id of the corpus.</li>
+<li><strong>corpus_language</strong> (<em>str</em>) – The ISO 639-1 code for the default language.</li>
+<li><strong>corpus_description</strong> (<em>str</em>) – The description of the corpus.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the corpus record</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.updateMediaTrack">
+<code class="descname">updateMediaTrack</code><span class="sig-paren">(</span><em>suffix</em>, <em>description</em>, <em>display_order</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.updateMediaTrack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates an existing media track record.</p>
+<p>The dictionary returned has the following entries:</p>
+<ul class="simple">
+<li>“suffix”        : The suffix associated with the media track.</li>
+<li>“description”   : The description of the media track.</li>
+<li>“display_order” : The position of the track amongst other tracks.</li>
+<li>“_cantDelete”   : This is not a database field, but rather is present in records
+returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>suffix</strong> (<em>str</em>) – The suffix assocaited with the media track.</li>
+<li><strong>description</strong> (<em>str</em>) – The description of the media track.</li>
+<li><strong>display_order</strong> (<em>str</em>) – The position of the track amongst other tracks.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the media track record</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.updateProject">
+<code class="descname">updateProject</code><span class="sig-paren">(</span><em>project</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.updateProject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates an existing project record.</p>
+<p>The dictionary returned has the following entries:</p>
+<ul class="simple">
+<li>“project_id”  : The database key for the record.</li>
+<li>“project”     : The name/id of the project.</li>
+<li>“description” : The description of the project.</li>
+<li>“_cantDelete” : This is not a database field, but rather is present in records
+returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>project</strong> (<em>str</em>) – The name/id of the project.</li>
+<li><strong>description</strong> (<em>str</em>) – The description of the project.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the project record</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <p>The LabbcatAdmin class also inherits the LabbcatEdit class.</p>
