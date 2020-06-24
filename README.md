@@ -101,6 +101,12 @@ To build, test, release, and document the module, the following prerequisites ar
 python -m unittest
 ```
 
+...or for specific tests:
+
+```
+python -m unittest test.TestLabbcatAdmin
+```
+
 ## Documentation generation
 
 ```
