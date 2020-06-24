@@ -125,7 +125,6 @@ class TestLabbcatAdmin(unittest.TestCase):
             pass
         
         # update project
-        new_project_language = "es";
         new_project_description = "Changed description";
         updatedProject = self.store.updateProject(
             project_name, new_project_description)
@@ -216,6 +215,66 @@ class TestLabbcatAdmin(unittest.TestCase):
         try:
             self.store.deleteMediaTrack(suffix)
             fail("Delete non-existent mediaTrack")
+        except:
+            pass
+
+    def test_roles_CRUD(self):
+        
+        role_id = "unit-test"
+        role_description = "Temporary role for unit testing"
+
+        # ensure the role doesn't exist to start with
+        try:
+            self.store.deleteRole(role_id)
+        except labbcat.ResponseException as x:
+            pass
+                    
+        # create role
+        role = self.store.createRole(role_id, role_description)
+        self.assertEqual(role["role_id"], role_id,
+                         "role name saved")
+        self.assertEqual(role["description"], role_description,
+                         "role description saved")
+        
+        # read roles
+        roles = self.store.readRoles()
+        foundNewRole = False
+        for c in roles:
+            if c["role_id"] == role_id:
+                foundNewRole = True
+        self.assertTrue(foundNewRole, "New role is present in list")
+        
+        # can't create an existing record
+        try:
+            self.store.createRole(role_id, role_description)
+            fail("Delete non-existent role")
+        except:
+            pass
+        
+        # update role
+        new_role_description = "Changed description";
+        updatedRole = self.store.updateRole(
+            role_id, new_role_description)
+        self.assertEqual(updatedRole["role_id"], role_id,
+                         "role name unchanged");
+        self.assertEqual(updatedRole["description"], new_role_description,
+                         "role description changed");
+                
+        # delete it
+        self.store.deleteRole(role_id)
+        
+        # make sure it was deleted
+        roles = self.store.readRoles()
+        foundNewRole = False
+        for c in roles:
+            if c["role_id"] == role_id:
+                foundNewRole = True
+        self.assertFalse(foundNewRole, "New role is gone from list")
+
+        # can't delete a nonexistent record
+        try:
+            self.store.deleteRole(role_id)            
+            fail("Delete non-existent role")
         except:
             pass
 

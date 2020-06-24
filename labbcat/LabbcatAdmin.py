@@ -306,3 +306,87 @@ class LabbcatAdmin(LabbcatEdit):
         """
         return(self._deleteRequest(self._labbcatUrl("api/admin/mediatracks/"+suffix), {}))
     
+    def createRole(self, role_id, description):
+        """ Creates a new role record.
+        
+        The dictionary returned has the following entries:
+        
+        - "role_id"     : The name/id of the role.
+        - "description" : The description of the role.
+        - "_cantDelete" : This is not a database field, but rather is present in records
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.   
+        
+        :param role_id: The name/id of the role.
+        :type role_id: str
+        
+        :param description: The description of the role.
+        :type description: str
+        
+        :returns: A copy of the role record
+        :rtype: dict
+        """
+        return(self._postRequest(self._labbcatUrl("api/admin/roles"), {}, {
+            "role_id" : role_id,
+            "description" : description }))
+    
+    def readRoles(self, pageNumber=None, pageLength=None):
+        """ Reads a list of role records.
+        
+        The dictionaries in the returned list have the following entries:
+        
+        - "role_id"     : The name/id of the role.
+        - "description" : The description of the role.
+        - "_cantDelete" : This is not a database field, but rather is present in records
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.
+        
+        :param pageNumber: The zero-based page number to return, or null to return the first page.
+        :type pageNumber: int or None
+
+        :param pageLength: The maximum number of records to return, or null to return all.
+        :type pageLength: int or None
+        
+        :returns: A list of role records.
+        :rtype: list of dict
+        """
+        # define request parameters
+        parameters = {}
+        if pageNumber != None:
+            parameters["pageNumber"] = pageNumber
+        if pageLength != None:
+            parameters["pageLength"] = pageLength
+        return(self._getRequest(self._labbcatUrl("api/admin/roles"), parameters))
+        
+    def updateRole(self, role_id, description):
+        """ Updates an existing role record.
+        
+        The dictionary returned has the following entries:
+        
+        - "role_id"     : The name/id of the role.
+        - "description" : The description of the role.
+        - "_cantDelete" : This is not a database field, but rather is present in records
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.
+        
+        :param role_id: The name/id of the role.
+        :type role_id: str
+        
+        :param description: The description of the role.
+        :type description: str
+        
+        :returns: A copy of the role record
+        :rtype: dict
+        """
+        return(self._putRequest(self._labbcatUrl("api/admin/roles"), {}, {
+            "role_id" : role_id,
+            "description" : description }))
+    
+    def deleteRole(self, role_id):
+        """ Deletes an existing role record.
+        
+        :param role_id: The name/id of the role.
+        :type role_id: str        
+        """
+        return(self._deleteRequest(self._labbcatUrl("api/admin/roles/"+role_id), {}))
+    
