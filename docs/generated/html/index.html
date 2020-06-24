@@ -1370,6 +1370,48 @@ representing the reason the record can’t be deleted.</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="labbcat.LabbcatAdmin.createRolePermission">
+<code class="descname">createRolePermission</code><span class="sig-paren">(</span><em>role_id</em>, <em>entity</em>, <em>layer</em>, <em>value_pattern</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.createRolePermission" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new role permission record.</p>
+<p>The dictionary returned has the following entries:</p>
+<ul class="simple">
+<li>“role_id”       : The ID of the role this permission applies to.</li>
+<li>“entity”        : The media entity this permission applies to - a string
+made up of “t” (transcript), “a” (audio), “v” (video), or “i” (image).</li>
+<li>“layer”         : ID of the layer for which the label determines access. This is
+either a valid transcript attribute layer ID, or “corpus”.</li>
+<li><dl class="first docutils">
+<dt>“value_pattern” <span class="classifier-delimiter">:</span> <span class="classifier">Regular expression for matching against the layerId label. If</span></dt>
+<dd>the regular expression matches the label, access is allowed.</dd>
+</dl>
+</li>
+<li>“_cantDelete”   : This is not a database field, but rather is present in records
+returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>role_id</strong> (<em>str</em>) – The ID of the role this permission applies to.</li>
+<li><strong>entity</strong> (<em>str</em>) – The media entity this permission applies to.</li>
+<li><strong>layer</strong> (<em>str</em>) – ID of the layer for which the label determines access.</li>
+<li><strong>value_pattern</strong> (<em>str</em>) – Regular expression for matching against.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the role permission record</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.LabbcatAdmin.deleteCorpus">
 <code class="descname">deleteCorpus</code><span class="sig-paren">(</span><em>corpus_name</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.deleteCorpus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes an existing corpus record.</p>
@@ -1420,6 +1462,24 @@ representing the reason the record can’t be deleted.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>role_id</strong> (<em>str</em>) – The name/id of the role.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.deleteRolePermission">
+<code class="descname">deleteRolePermission</code><span class="sig-paren">(</span><em>role_id</em>, <em>entity</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.deleteRolePermission" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes an existing role permission record.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>role_id</strong> (<em>str</em>) – The ID of the role this permission applies to.</li>
+<li><strong>entity</strong> (<em>str</em>) – The media entity this permission applies to.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -1516,6 +1576,47 @@ representing the reason the record can’t be deleted.</li>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of project records.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.readRolePermissions">
+<code class="descname">readRolePermissions</code><span class="sig-paren">(</span><em>role_id</em>, <em>pageNumber=None</em>, <em>pageLength=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.readRolePermissions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a list of role permission records.</p>
+<p>The dictionaries in the returned list have the following entries:</p>
+<ul class="simple">
+<li>“role_id”       : The ID of the role this permission applies to.</li>
+<li>“entity”        : The media entity this permission applies to - a string
+made up of “t” (transcript), “a” (audio), “v” (video), or “i” (image).</li>
+<li>“layer”         : ID of the layer for which the label determines access. This is
+either a valid transcript attribute layer ID, or “corpus”.</li>
+<li><dl class="first docutils">
+<dt>“value_pattern” <span class="classifier-delimiter">:</span> <span class="classifier">Regular expression for matching against the layerId label. If</span></dt>
+<dd>the regular expression matches the label, access is allowed.</dd>
+</dl>
+</li>
+<li>“_cantDelete”   : This is not a database field, but rather is present in records
+returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>role_id</strong> (<em>str</em>) – The ID of the role this permission applies to.</li>
+<li><strong>pageNumber</strong> (<em>int</em><em> or </em><em>None</em>) – The zero-based page number to return, or null to return the first page.</li>
+<li><strong>pageLength</strong> (<em>int</em><em> or </em><em>None</em>) – The maximum number of records to return, or null to return all.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of role permission records.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dict</p>
@@ -1682,6 +1783,48 @@ representing the reason the record can’t be deleted.</li>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the role record</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.updateRolePermission">
+<code class="descname">updateRolePermission</code><span class="sig-paren">(</span><em>role_id</em>, <em>entity</em>, <em>layer</em>, <em>value_pattern</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.updateRolePermission" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates an existing role permission record.</p>
+<p>The dictionary returned has the following entries:</p>
+<ul class="simple">
+<li>“role_id”       : The ID of the role this permission applies to.</li>
+<li>“entity”        : The media entity this permission applies to - a string
+made up of “t” (transcript), “a” (audio), “v” (video), or “i” (image).</li>
+<li>“layer”         : ID of the layer for which the label determines access. This is
+either a valid transcript attribute layer ID, or “corpus”.</li>
+<li><dl class="first docutils">
+<dt>“value_pattern” <span class="classifier-delimiter">:</span> <span class="classifier">Regular expression for matching against the layerId label. If</span></dt>
+<dd>the regular expression matches the label, access is allowed.</dd>
+</dl>
+</li>
+<li>“_cantDelete”   : This is not a database field, but rather is present in records
+returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>role_id</strong> (<em>str</em>) – The ID of the role this permission applies to.</li>
+<li><strong>entity</strong> (<em>str</em>) – The media entity this permission applies to.</li>
+<li><strong>layer</strong> (<em>str</em>) – ID of the layer for which the label determines access.</li>
+<li><strong>value_pattern</strong> (<em>str</em>) – Regular expression for matching against.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the role permission record</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>

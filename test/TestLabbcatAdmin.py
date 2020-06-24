@@ -278,6 +278,78 @@ class TestLabbcatAdmin(unittest.TestCase):
         except:
             pass
 
+    def test_rolePermissions_CRUD(self):
+        
+        role_id = "admin"
+        entity = "t"
+        layer = "corpus"
+        value_pattern = "unit-test.*"
+
+        # ensure the rolePermission doesn't exist to start with
+        try:
+            self.store.deleteRolePermission(role_id, entity)
+        except labbcat.ResponseException as x:
+            pass
+                    
+        # create rolePermission
+        rolePermission = self.store.createRolePermission(role_id, entity, layer, value_pattern)
+        self.assertEqual(rolePermission["role_id"], role_id,
+                         "role_id saved")
+        self.assertEqual(rolePermission["entity"], entity,
+                         "entity saved")
+        self.assertEqual(rolePermission["layer"], layer,
+                         "layer saved")
+        self.assertEqual(rolePermission["value_pattern"], value_pattern,
+                         "value_pattern saved")
+        
+        # read rolePermissions
+        rolePermissions = self.store.readRolePermissions(role_id)
+        foundNewRolePermission = False
+        for c in rolePermissions:
+            if c["role_id"] == role_id and c["entity"] == entity:
+                foundNewRolePermission = True
+        self.assertTrue(foundNewRolePermission, "New rolePermission is present in list")
+        
+        # can't create an existing record
+        try:
+            self.store.createRolePermission(role_id, entity, layer, value_pattern)
+            fail("Delete non-existent rolePermission")
+        except:
+            pass
+        
+        # update rolePermission
+        new_layer = "transcript_language";
+        new_value_pattern = "en.*";
+        updatedRolePermission = self.store.updateRolePermission(
+            role_id, entity, new_layer, new_value_pattern)
+        self.assertEqual(updatedRolePermission["role_id"], role_id,
+                         "role_id name unchanged")
+        self.assertEqual(updatedRolePermission["entity"], entity,
+                         "entity name unchange")
+        self.assertEqual(updatedRolePermission["layer"], new_layer,
+                         "layer name updated")
+        self.assertEqual(updatedRolePermission["value_pattern"], new_value_pattern,
+                         "value_pattern updated")
+        
+                
+        # delete it
+        self.store.deleteRolePermission(role_id, entity)
+        
+        # make sure it was deleted
+        rolePermissions = self.store.readRolePermissions(role_id)
+        foundNewRolePermission = False
+        for c in rolePermissions:
+            if c["rolePermission_id"] == rolePermission_id and c["entity"] == entity:
+                foundNewRolePermission = True
+        self.assertFalse(foundNewRolePermission, "New rolePermission is gone from list")
+
+        # can't delete a nonexistent record
+        try:
+            self.store.deleteRolePermission(role_id, entity)
+            fail("Delete non-existent rolePermission")
+        except:
+            pass
+
             
 if __name__ == '__main__':
     unittest.main()

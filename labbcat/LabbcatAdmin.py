@@ -390,3 +390,141 @@ class LabbcatAdmin(LabbcatEdit):
         """
         return(self._deleteRequest(self._labbcatUrl("api/admin/roles/"+role_id), {}))
     
+    def createRolePermission(self, role_id, entity, layer, value_pattern):
+        """ Creates a new role permission record.
+        
+        The dictionary returned has the following entries:
+        
+        - "role_id"       : The ID of the role this permission applies to.
+        - "entity"        : The media entity this permission applies to - a string
+          made up of "t" (transcript), "a" (audio), "v" (video), or "i" (image). 
+        - "layer"         : ID of the layer for which the label determines access. This is
+          either a valid transcript attribute layer ID, or "corpus". 
+        - "value_pattern" : Regular expression for matching against the layerId label. If
+           the regular expression matches the label, access is allowed.  
+        - "_cantDelete"   : This is not a database field, but rather is present in records
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.   
+        
+        :param role_id: The ID of the role this permission applies to.
+        :type role_id: str
+        
+        :param entity: The media entity this permission applies to.
+        :type entity: str
+        
+        :param layer: ID of the layer for which the label determines access.
+        :type layer: str
+        
+        :param value_pattern: Regular expression for matching against. 
+        :type value_pattern: str
+        
+        :returns: A copy of the role permission record
+        :rtype: dict
+        """
+        permission = self._postRequest(self._labbcatUrl("api/admin/roles/permissions"), {}, {
+            "role_id" : role_id,
+            "entity" : entity,
+            "attribute_name" : layer.replace("transcript_",""),
+            "value_pattern" : value_pattern })
+        if permission["attribute_name"] == "corpus":
+            permission["layer"] = permission["attribute_name"]
+        else:
+            permission["layer"] = "transcript_" + permission["attribute_name"]
+        return(permission)
+    
+    def readRolePermissions(self, role_id, pageNumber=None, pageLength=None):
+        """ Reads a list of role permission records.
+        
+        The dictionaries in the returned list have the following entries:
+        
+        - "role_id"       : The ID of the role this permission applies to.
+        - "entity"        : The media entity this permission applies to - a string
+          made up of "t" (transcript), "a" (audio), "v" (video), or "i" (image). 
+        - "layer"         : ID of the layer for which the label determines access. This is
+          either a valid transcript attribute layer ID, or "corpus". 
+        - "value_pattern" : Regular expression for matching against the layerId label. If
+           the regular expression matches the label, access is allowed.  
+        - "_cantDelete"   : This is not a database field, but rather is present in records
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.   
+        
+        :param role_id: The ID of the role this permission applies to.
+        :type role_id: str
+        
+        :param pageNumber: The zero-based page number to return, or null to return the first page.
+        :type pageNumber: int or None
+
+        :param pageLength: The maximum number of records to return, or null to return all.
+        :type pageLength: int or None
+        
+        :returns: A list of role permission records.
+        :rtype: list of dict
+        """
+        # define request parameters
+        parameters = {}
+        if pageNumber != None:
+            parameters["pageNumber"] = pageNumber
+        if pageLength != None:
+            parameters["pageLength"] = pageLength
+        permissions = self._getRequest(
+            self._labbcatUrl("api/admin/roles/permissions/"+role_id), parameters)
+        for permission in permissions:
+            if permission["attribute_name"] == "corpus":
+                permission["layer"] = permission["attribute_name"]
+            else:
+                permission["layer"] = "transcript_" + permission["attribute_name"]
+        return permissions
+        
+    def updateRolePermission(self, role_id, entity, layer, value_pattern):
+        """ Updates an existing role permission record.
+        
+        The dictionary returned has the following entries:
+        
+        - "role_id"       : The ID of the role this permission applies to.
+        - "entity"        : The media entity this permission applies to - a string
+          made up of "t" (transcript), "a" (audio), "v" (video), or "i" (image). 
+        - "layer"         : ID of the layer for which the label determines access. This is
+          either a valid transcript attribute layer ID, or "corpus". 
+        - "value_pattern" : Regular expression for matching against the layerId label. If
+           the regular expression matches the label, access is allowed.  
+        - "_cantDelete"   : This is not a database field, but rather is present in records
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.   
+        
+        :param role_id: The ID of the role this permission applies to.
+        :type role_id: str
+        
+        :param entity: The media entity this permission applies to.
+        :type entity: str
+        
+        :param layer: ID of the layer for which the label determines access.
+        :type layer: str
+        
+        :param value_pattern: Regular expression for matching against. 
+        :type value_pattern: str
+        
+        :returns: A copy of the role permission record
+        :rtype: dict
+        """
+        permission = self._putRequest(self._labbcatUrl("api/admin/roles/permissions"), {}, {
+            "role_id" : role_id,
+            "entity" : entity,
+            "attribute_name" : layer.replace("transcript_",""),
+            "value_pattern" : value_pattern })
+        if permission["attribute_name"] == "corpus":
+            permission["layer"] = permission["attribute_name"]
+        else:
+            permission["layer"] = "transcript_" + permission["attribute_name"]
+        return permission
+    
+    def deleteRolePermission(self, role_id, entity):
+        """ Deletes an existing role permission record.
+        
+        :param role_id: The ID of the role this permission applies to.
+        :type role_id: str
+        
+        :param entity: The media entity this permission applies to.
+        :type entity: str        
+        """
+        return(self._deleteRequest(self._labbcatUrl("api/admin/roles/permissions/"+role_id+"/"+entity), {}))
+    
