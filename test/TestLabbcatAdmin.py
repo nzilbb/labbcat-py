@@ -306,6 +306,7 @@ class TestLabbcatAdmin(unittest.TestCase):
         rolePermissions = self.store.readRolePermissions(role_id)
         foundNewRolePermission = False
         for c in rolePermissions:
+            self.assertEqual(c["role_id"], role_id, "only select role returned")
             if c["role_id"] == role_id and c["entity"] == entity:
                 foundNewRolePermission = True
         self.assertTrue(foundNewRolePermission, "New rolePermission is present in list")
