@@ -1338,6 +1338,38 @@ representing the reason the record can’t be deleted.</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="labbcat.LabbcatAdmin.createRole">
+<code class="descname">createRole</code><span class="sig-paren">(</span><em>role_id</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.createRole" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new role record.</p>
+<p>The dictionary returned has the following entries:</p>
+<ul class="simple">
+<li>“role_id”     : The name/id of the role.</li>
+<li>“description” : The description of the role.</li>
+<li>“_cantDelete” : This is not a database field, but rather is present in records
+returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>role_id</strong> (<em>str</em>) – The name/id of the role.</li>
+<li><strong>description</strong> (<em>str</em>) – The description of the role.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the role record</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.LabbcatAdmin.deleteCorpus">
 <code class="descname">deleteCorpus</code><span class="sig-paren">(</span><em>corpus_name</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.deleteCorpus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes an existing corpus record.</p>
@@ -1374,6 +1406,20 @@ representing the reason the record can’t be deleted.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>project</strong> (<em>str</em>) – The name/id of the project.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.deleteRole">
+<code class="descname">deleteRole</code><span class="sig-paren">(</span><em>role_id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.deleteRole" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes an existing role record.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>role_id</strong> (<em>str</em>) – The name/id of the role.</td>
 </tr>
 </tbody>
 </table>
@@ -1480,6 +1526,38 @@ representing the reason the record can’t be deleted.</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="labbcat.LabbcatAdmin.readRoles">
+<code class="descname">readRoles</code><span class="sig-paren">(</span><em>pageNumber=None</em>, <em>pageLength=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.readRoles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a list of role records.</p>
+<p>The dictionaries in the returned list have the following entries:</p>
+<ul class="simple">
+<li>“role_id”     : The name/id of the role.</li>
+<li>“description” : The description of the role.</li>
+<li>“_cantDelete” : This is not a database field, but rather is present in records
+returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pageNumber</strong> (<em>int</em><em> or </em><em>None</em>) – The zero-based page number to return, or null to return the first page.</li>
+<li><strong>pageLength</strong> (<em>int</em><em> or </em><em>None</em>) – The maximum number of records to return, or null to return all.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of role records.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.LabbcatAdmin.updateCorpus">
 <code class="descname">updateCorpus</code><span class="sig-paren">(</span><em>corpus_name</em>, <em>corpus_language</em>, <em>corpus_description</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.updateCorpus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates an existing corpus record.</p>
@@ -1572,6 +1650,38 @@ representing the reason the record can’t be deleted.</li>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the project record</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.updateRole">
+<code class="descname">updateRole</code><span class="sig-paren">(</span><em>role_id</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.updateRole" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates an existing role record.</p>
+<p>The dictionary returned has the following entries:</p>
+<ul class="simple">
+<li>“role_id”     : The name/id of the role.</li>
+<li>“description” : The description of the role.</li>
+<li>“_cantDelete” : This is not a database field, but rather is present in records
+returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>role_id</strong> (<em>str</em>) – The name/id of the role.</li>
+<li><strong>description</strong> (<em>str</em>) – The description of the role.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the role record</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
