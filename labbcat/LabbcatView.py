@@ -25,7 +25,10 @@ class LabbcatView:
     
     :param password: The password for logging in to the server, if necessary.
     :type password: str or None
-
+    
+    Attributes:
+        language: The language code for server message localization, e.g. "es-AR"
+    
     Example:: 
         
         import labbcat
@@ -60,6 +63,7 @@ class LabbcatView:
         self.username = username
         self.password = password
         self.verbose = False
+        self.language = "en"
 
     def _labbcatUrl(self, resource):
         return self.labbcatUrl + resource
@@ -78,6 +82,7 @@ class LabbcatView:
             requests.get(
                 url=url, params=params, auth=auth, headers={
                     "Accept":"application/json",
+                    "Accept-Language":self.language,
                     "user-agent": "labbcat-py/"+__version__}), 
             self.verbose)
         response.checkForErrors()
@@ -94,7 +99,10 @@ class LabbcatView:
             
         response = Response(
             requests.post(
-                url=url, params=params, json=json, auth=auth, headers={"Accept":"application/json"}),
+                url=url, params=params, json=json, auth=auth, headers={
+                    "Accept":"application/json",
+                    "Accept-Language":self.language,
+                    "user-agent": "labbcat-py/"+__version__}),
             self.verbose)
         response.checkForErrors()
         
@@ -110,7 +118,11 @@ class LabbcatView:
             
         response = Response(
             requests.put(
-                url=url, params=params, json=json, auth=auth, headers={"Accept":"application/json"}),
+                url=url, params=params, json=json, auth=auth, headers={
+                    "Accept":"application/json",
+                    "Accept-Language":self.language,
+                    "user-agent": "labbcat-py/"+__version__
+                }), 
             self.verbose)
         response.checkForErrors()
         
@@ -126,7 +138,11 @@ class LabbcatView:
             
         response = Response(
             requests.delete(
-                url=url, params=params, json=json, auth=auth, headers={"Accept":"application/json"}),
+                url=url, params=params, json=json, auth=auth, headers={
+                    "Accept":"application/json",
+                    "Accept-Language":self.language,
+                    "user-agent": "labbcat-py/"+__version__
+                }),
             self.verbose)
         response.checkForErrors()
         
@@ -141,7 +157,11 @@ class LabbcatView:
             auth = (self.username, self.password)
         
         response = requests.post(
-            url=url, params=params, auth=auth, headers={"Accept":"application/json"})
+            url=url, params=params, auth=auth, headers={
+                "Accept":"application/json",
+                    "Accept-Language":self.language,
+                    "user-agent": "labbcat-py/"+__version__
+                })
         # ensure status was ok
         response.raise_for_status();
         
@@ -198,7 +218,11 @@ class LabbcatView:
             auth = (self.username, self.password)
             
         response = Response(requests.post(
-            url=url, data=params, files=files, auth=auth, headers={"Accept":"application/json"}))
+            url=url, data=params, files=files, auth=auth, headers={
+                "Accept":"application/json",
+                    "Accept-Language":self.language,
+                    "user-agent": "labbcat-py/"+__version__
+                }))
         
         # close the files
         for param in files:

@@ -25,6 +25,26 @@ class TestLabbcatAdmin(unittest.TestCase):
         with self.assertRaises(labbcat.ResponseException):
             self.store.deleteTranscript("nonexistent transcript ID")    
     
+    def test_localization(self):
+        
+        # delete a corpus that doesn't exist, in English
+        try:
+            self.store.language = "en"
+            self.store.deleteCorpus("this-corpus-doesn't-exist")
+        except labbcat.ResponseException as x:
+            message = x.response.errors[0]
+            self.assertTrue(message.find("not found") >= 0, "Message is in English: " + message)
+            pass
+        
+        # delete a corpus that doesn't exist, in Spanish
+        try:
+            self.store.language = "es"
+            self.store.deleteCorpus("this-corpus-doesn't-exist")
+        except labbcat.ResponseException as x:
+            message = x.response.errors[0]
+            self.assertTrue(message.find("no existe") >= 0, "Message is in Spanish: " + message)
+            pass
+    
     def test_corpora_CRUD(self):
         
         corpus_name = "unit-test"
