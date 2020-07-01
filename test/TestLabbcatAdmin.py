@@ -371,6 +371,32 @@ class TestLabbcatAdmin(unittest.TestCase):
         except:
             pass
 
+    def test_systemAttributes_RU(self):
+        
+        # read systemAttributes
+        systemAttributes = self.store.readSystemAttributes()
+        titleAttribute = None
+        for a in systemAttributes:
+            if a["attribute"] == "title":
+                titleAttribute = a
+        self.assertIsNotNone(titleAttribute, "title attribute is present in list")
+        
+        # update systemAttribute
+        newValue = "unit-test";
+        updatedSystemAttribute = self.store.updateSystemAttribute("title", newValue)
+        self.assertEqual(updatedSystemAttribute["attribute"], "title", "attribute unchanged");
+        self.assertEqual(updatedSystemAttribute["value"], newValue, "value changed");
+
+        # restore original value
+        self.store.updateSystemAttribute("title", titleAttribute["value"])
+
+        # can't update a nonexistent record
+        try:
+            self.store.updateSystemAttribute("nonexistent", "unit-test")
+            fail("Update non-existent system attribute")
+        except:
+            pass
+
             
 if __name__ == '__main__':
     unittest.main()

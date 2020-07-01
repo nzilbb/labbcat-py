@@ -528,3 +528,47 @@ class LabbcatAdmin(LabbcatEdit):
         """
         return(self._deleteRequest(self._labbcatUrl("api/admin/roles/permissions/"+role_id+"/"+entity), {}))
     
+    def readSystemAttributes(self):
+        """ Reads a list of system attribute records.
+        
+        The dictionaries in the returned list have the following entries:
+        
+        - "attribute"   : ID of the attribute.
+        - "type"        : The type of the attribute - "string", "boolean", "select", etc.
+        - "style"       : UI style, which depends on "type".
+        - "label"       : User-facing label for the attribute.
+        - "description" : User-facing (long) description for the attribute.
+        - "options"     : If 'type" == "select", this is a dict defining possible values.
+        - "value"       : The value of the attribute.
+        
+        :returns: A list of system attribute records.
+        :rtype: list of dict
+        """
+        # define request parameters
+        return(self._getRequest(self._labbcatUrl("api/admin/systemattributes"), {}))
+        
+    def updateSystemAttribute(self, attribute, value):
+        """ Updates the value of a existing system attribute record.
+        
+        The dictionary returned has the following entries:
+        
+        - "attribute"   : ID of the attribute.
+        - "type"        : The type of the attribute - "string", "boolean", "select", etc.
+        - "style"       : UI style, which depends on "type".
+        - "label"       : User-facing label for the attribute.
+        - "description" : User-facing (long) description for the attribute.
+        - "options"     : If 'type" == "select", this is a dict defining possible values.
+        - "value"       : The value of the attribute.
+        
+        :param attribut: ID of the attribute.
+        :type systemAttribute: str
+        
+        :param value: The new value for the attribute.
+        :type value: str
+        
+        :returns: A copy of the systemAttribute record
+        :rtype: dict
+        """
+        return(self._putRequest(self._labbcatUrl("api/admin/systemattributes"), {}, {
+            "attribute" : attribute,
+            "value" : value }))

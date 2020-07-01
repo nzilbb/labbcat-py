@@ -1663,6 +1663,32 @@ representing the reason the record can’t be deleted.</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="labbcat.LabbcatAdmin.readSystemAttributes">
+<code class="descname">readSystemAttributes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.readSystemAttributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a list of system attribute records.</p>
+<p>The dictionaries in the returned list have the following entries:</p>
+<ul class="simple">
+<li>“attribute”   : ID of the attribute.</li>
+<li>“type”        : The type of the attribute - “string”, “boolean”, “select”, etc.</li>
+<li>“style”       : UI style, which depends on “type”.</li>
+<li>“label”       : User-facing label for the attribute.</li>
+<li>“description” : User-facing (long) description for the attribute.</li>
+<li>“options”     : If ‘type” == “select”, this is a dict defining possible values.</li>
+<li>“value”       : The value of the attribute.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of system attribute records.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.LabbcatAdmin.updateCorpus">
 <code class="descname">updateCorpus</code><span class="sig-paren">(</span><em>corpus_name</em>, <em>corpus_language</em>, <em>corpus_description</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.updateCorpus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates an existing corpus record.</p>
@@ -1829,6 +1855,40 @@ representing the reason the record can’t be deleted.</li>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the role permission record</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.updateSystemAttribute">
+<code class="descname">updateSystemAttribute</code><span class="sig-paren">(</span><em>attribute</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.updateSystemAttribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the value of a existing system attribute record.</p>
+<p>The dictionary returned has the following entries:</p>
+<ul class="simple">
+<li>“attribute”   : ID of the attribute.</li>
+<li>“type”        : The type of the attribute - “string”, “boolean”, “select”, etc.</li>
+<li>“style”       : UI style, which depends on “type”.</li>
+<li>“label”       : User-facing label for the attribute.</li>
+<li>“description” : User-facing (long) description for the attribute.</li>
+<li>“options”     : If ‘type” == “select”, this is a dict defining possible values.</li>
+<li>“value”       : The value of the attribute.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>attribut</strong> – ID of the attribute.</li>
+<li><strong>value</strong> (<em>str</em>) – The new value for the attribute.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the systemAttribute record</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
