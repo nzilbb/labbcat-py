@@ -1256,5 +1256,38 @@ class LabbcatView:
         
         return(fragments)
 
+    def getSerializerDescriptors(self):
+        """ Lists the descriptors of all registered serializers.        
+        
+        :returns: A list of the descriptors of all registered serializers. 
+        :rtype: list of dictionaries
+        """
+        return(self._getRequest(self._storeQueryUrl("getSerializerDescriptors"), None))
+        
+    def getDeserializerDescriptors(self):
+        """ Lists the descriptors of all registered serializers.        
+        
+        :returns: A list of the descriptors of all registered serializers. 
+        :rtype: list of dictionaries
+        """
+        return(self._getRequest(self._storeQueryUrl("getDeserializerDescriptors"), None))
+
+    def getSystemAttribute(self, attribute):
+        """ Gets the value of the given system attribute.
+        
+        :param attribute: Name of the attribute.
+        :type attribute: str
+        
+        :returns: The value of the given attribute, or None if the attribute doesn't exist.
+        :rtype: str
+        """
+        try:
+            return(self._getRequest(
+                self._labbcatUrl("api/systemattributes/"+attribute), None)["value"])
+        except ResponseException:
+            return(None)
+       
+        return(self._getRequest(self._labbcatUrl("api/systemattributes/"+attrbute), None))
+
     # TODO getFragment
     # TODO getFragmentSeries

@@ -457,6 +457,39 @@ class TestLabbcatView(unittest.TestCase):
         finally:
             self.store.releaseTask(threadId)
 
+    def test_getSerializerDescriptors(self):
+        descriptors = self.store.getSerializerDescriptors()
+        #for (String descriptor : descriptors) print("descriptor " + descriptor)
+        self.assertTrue(len(descriptors) > 0, "Some descriptors are returned")
+        idSet = []
+        for descriptor in descriptors:
+            idSet.append(descriptor["mimeType"])
+            
+            # does it look like a descriptor?
+            for key in ["name", "mimeType", "version", "icon", "numberOfInputs", "fileSuffixes", "minimumApiVersion"]:
+                with self.subTest(key=key):
+                    self.assertIn(key, descriptor, "Has " + key)
+        
+        self.assertIn("text/plain", idSet, "Has plain text descriptor")
+       
+    def test_getDeserializerDescriptors(self):
+        descriptors = self.store.getDeserializerDescriptors()
+        #for (String descriptor : descriptors) print("descriptor " + descriptor)
+        self.assertTrue(len(descriptors) > 0, "Some descriptors are returned")
+        idSet = []
+        for descriptor in descriptors:
+            idSet.append(descriptor["mimeType"])
+            
+            # does it look like a descriptor?
+            for key in ["name", "mimeType", "version", "icon", "numberOfInputs", "fileSuffixes", "minimumApiVersion"]:
+                with self.subTest(key=key):
+                    self.assertIn(key, descriptor, "Has " + key)
+                    
+    def test_getSystemAttribute(self):
+        value = self.store.getSystemAttribute("title")
+        #print("value " + value)
+        self.assertIsNotNone(value, "Value is returned")
+    
     def test_tweetCode(self):
         # get a participant ID to use
         matches = self.store.getMatches({"orthography":"earthquake"})
