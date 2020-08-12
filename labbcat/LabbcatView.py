@@ -1259,6 +1259,11 @@ class LabbcatView:
     def getSerializerDescriptors(self):
         """ Lists the descriptors of all registered serializers.        
         
+        Serializers are modules that export annotation structures as a specific file
+        format, e.g. Praat TextGrid, plain text, etc., so the mimeType of descriptors
+        reflects what mimeTypes can be specified for  
+        `getFragments() <#labbcat.LabbcatView.getFragments>`_
+        
         :returns: A list of the descriptors of all registered serializers. 
         :rtype: list of dictionaries
         """
@@ -1266,6 +1271,9 @@ class LabbcatView:
         
     def getDeserializerDescriptors(self):
         """ Lists the descriptors of all registered serializers.        
+        
+        Deserializers are modules that import annotation structures from a specific file
+        format, e.g. Praat TextGrid, plain text, etc.
         
         :returns: A list of the descriptors of all registered serializers. 
         :rtype: list of dictionaries

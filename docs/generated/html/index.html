@@ -303,6 +303,24 @@ following can be used:</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="labbcat.LabbcatView.getDeserializerDescriptors">
+<code class="descname">getDeserializerDescriptors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getDeserializerDescriptors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists the descriptors of all registered serializers.</p>
+<p>Deserializers are modules that import annotation structures from a specific file
+format, e.g. Praat TextGrid, plain text, etc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of the descriptors of all registered serializers.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dictionaries</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.LabbcatView.getEpisodeDocuments">
 <code class="descname">getEpisodeDocuments</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getEpisodeDocuments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of documents associated with the episode of the given transcript.</p>
@@ -792,6 +810,26 @@ layer.alignment == 0.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="labbcat.LabbcatView.getSerializerDescriptors">
+<code class="descname">getSerializerDescriptors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getSerializerDescriptors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists the descriptors of all registered serializers.</p>
+<p>Serializers are modules that export annotation structures as a specific file
+format, e.g. Praat TextGrid, plain text, etc., so the mimeType of descriptors
+reflects what mimeTypes can be specified for  
+<a class="reference external" href="#labbcat.LabbcatView.getFragments">getFragments()</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of the descriptors of all registered serializers.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dictionaries</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.LabbcatView.getSoundFragments">
 <code class="descname">getSoundFragments</code><span class="sig-paren">(</span><em>transcriptIds</em>, <em>startOffsets=None</em>, <em>endOffsets=None</em>, <em>sampleRate=None</em>, <em>dir=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getSoundFragments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Downloads WAV sound fragments.</p>
@@ -828,6 +866,24 @@ be deleted by the caller, or moved to a more permanent location.</p>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of str</p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.getSystemAttribute">
+<code class="descname">getSystemAttribute</code><span class="sig-paren">(</span><em>attribute</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getSystemAttribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the value of the given system attribute.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>attribute</strong> (<em>str</em>) – Name of the attribute.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The value of the given attribute, or None if the attribute doesn’t exist.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
 </tr>
 </tbody>
 </table>
@@ -948,6 +1004,23 @@ however formally it’s any layer where layer.parentId == ‘graph’ and layer.
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of transcript IDs.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.getUserInfo">
+<code class="descname">getUserInfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getUserInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets information about the current suer, including the roles or groups they are in.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The user record, including a “user” entry with the user ID, and a
+“roles” entry which is a list of str.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
 </tbody>
 </table>
@@ -1109,7 +1182,7 @@ return. <em>None</em> means all matches.</li>
 timed out, check <em>result.running</em>, which will be false if the task finished.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dictionary</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
 </td>
 </tr>
 </tbody>
