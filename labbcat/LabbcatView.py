@@ -685,7 +685,7 @@ class LabbcatView:
     
         :returns: The final task status. To determine whether the task finished or waiting
                   timed out, check *result.running*, which will be false if the task finished.
-        :rtype: dictionary
+        :rtype: dict
         """
         if maxSeconds == 0: maxSeconds = -1 
         status = self.taskStatus(threadId)
@@ -1286,8 +1286,15 @@ class LabbcatView:
                 self._labbcatUrl("api/systemattributes/"+attribute), None)["value"])
         except ResponseException:
             return(None)
-       
-        return(self._getRequest(self._labbcatUrl("api/systemattributes/"+attrbute), None))
-
+    
+    def getUserInfo(self):
+        """ Gets information about the current suer, including the roles or groups they are in.
+        
+        :returns: The user record, including a "user" entry with the user ID, and a
+         "roles" entry which is a list of str.
+        :rtype: dict
+        """
+        return(self._getRequest(self._labbcatUrl("api/user"), None))
+    
     # TODO getFragment
     # TODO getFragmentSeries

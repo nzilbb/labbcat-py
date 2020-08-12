@@ -490,6 +490,11 @@ class TestLabbcatView(unittest.TestCase):
         #print("value " + value)
         self.assertIsNotNone(value, "Value is returned")
     
+    def test_getUserInfo(self):
+        user = self.store.getUserInfo()
+        #print("user " + user)
+        self.assertIsNotNone(user, "User is returned")
+    
     def test_tweetCode(self):
         # get a participant ID to use
         matches = self.store.getMatches({"orthography":"earthquake"})
