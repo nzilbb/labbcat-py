@@ -26,6 +26,63 @@ class LabbcatAdmin(LabbcatEdit):
     def _storeAdminUrl(self, resource):
         return self.labbcatUrl + "api/admin/store/" + resource
     
+    def saveLayer(self, id, parentId, description, alignment,
+                  peers, peersOverlap, parentIncludes, saturated, type, validLabels, category):
+        """ Saves changes to a layer, or adds a new layer.
+                
+        :param id: The layer ID
+        :type id: str
+        
+        :param parentId: The layer's parent layer id.
+        :type parentId: str
+        
+        :param description: The description of the layer.
+        :type description: str
+        
+        :param alignment: The layer's alignment - 0 for none, 1 for point alignment,
+          2 for interval alignment. 
+        :type alignment: number
+        
+        :param peers: Whether children on this layer have peers or not.
+        :type peers: boolean
+        
+        :param peersOverlap: Whether child peers on this layer can overlap or not.
+        :type peersOverlap: boolean
+        
+        :param parentIncludes: Whether the parent temporally includes the child.
+        :type parentIncludes: boolean
+        
+        :param saturated: Whether children must temporally fill the entire parent duration (true)
+          or not (false).
+        :type saturated: boolean
+        
+        :param type: The type for labels on this layer, e.g. string, number, boolean, ipa.
+        :type type: str
+        
+        :param validLabels: List of valid label values for this layer, or Nothing if the layer
+          values are not restricted. The 'key' is the possible label value, and each key is
+          associated with a description of the value (e.g. for displaying to users). 
+        :type validLabels: dict
+        
+        :param category: Category for the layer, if any.
+        :type category: str        
+        
+        :returns: The resulting layer definition.
+        :rtype: dict
+        """
+        return(self._postRequest(self._storeAdminUrl("saveLayer"), {}, {
+            "id" : id,
+            "parentId" : parentId,
+            "description" : description,
+            "alignment" : alignment,
+            "peers" : peers,
+            "peersOverlap" : peersOverlap,
+            "parentIncludes" : parentIncludes,
+            "saturated" : saturated,
+            "type" : type,
+            "validLabels" : validLabels,
+            "category" : category }))
+    
     def createCorpus(self, corpus_name, corpus_language, corpus_description):
         """ Creates a new corpus record.
         

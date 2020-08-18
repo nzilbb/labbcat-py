@@ -397,6 +397,53 @@ class TestLabbcatAdmin(unittest.TestCase):
         except:
             pass
 
+    def test_saveLayer(self):
+        
+        # read systemAttributes
+        self.store.verbose = True
+        originalTranscriptType = self.store.getLayer("transcript_type")
+        
+        editedTranscriptType1 = originalTranscriptType.copy()
+        newOption1 = "unit-test-1"
+        editedTranscriptType1["validLabels"] = editedTranscriptType1["validLabels"].copy()
+        editedTranscriptType1["validLabels"][newOption1] = newOption1
+            
+        editedTranscriptType2 = originalTranscriptType.copy()
+        newOption2 = "unit-test-2"
+        editedTranscriptType2["validLabels"] = editedTranscriptType2["validLabels"].copy()
+        editedTranscriptType2["validLabels"][newOption2] = newOption2
+
+        # save first variant
+        savedTranscriptType1 = self.store.saveLayer(
+            editedTranscriptType1["id"], 
+            editedTranscriptType1["parentId"], editedTranscriptType1["description"],
+            editedTranscriptType1["alignment"], editedTranscriptType1["peers"],
+            editedTranscriptType1["peersOverlap"], editedTranscriptType1["parentIncludes"],
+            editedTranscriptType1["saturated"], editedTranscriptType1["type"],
+            editedTranscriptType1["validLabels"], editedTranscriptType1["category"])
+        self.assertTrue(newOption1 in savedTranscriptType1["validLabels"], "newOption1 set");
+        self.assertFalse(newOption2 in savedTranscriptType1["validLabels"], "newOption2 not set");
+
+        # save second variant
+        savedTranscriptType2 = self.store.saveLayer(
+            editedTranscriptType2["id"], 
+            editedTranscriptType2["parentId"], editedTranscriptType2["description"],
+            editedTranscriptType2["alignment"], editedTranscriptType2["peers"],
+            editedTranscriptType2["peersOverlap"], editedTranscriptType2["parentIncludes"],
+            editedTranscriptType2["saturated"], editedTranscriptType2["type"],
+            editedTranscriptType2["validLabels"], editedTranscriptType2["category"])
+        self.assertFalse(newOption1 in savedTranscriptType2["validLabels"], "newOption1 not set");
+        self.assertTrue(newOption2 in savedTranscriptType2["validLabels"], "newOption2 set");
+
+        # restore original value
+        self.store.saveLayer(
+            originalTranscriptType["id"], 
+            originalTranscriptType["parentId"], originalTranscriptType["description"],
+            originalTranscriptType["alignment"], originalTranscriptType["peers"],
+            originalTranscriptType["peersOverlap"], originalTranscriptType["parentIncludes"],
+            originalTranscriptType["saturated"], originalTranscriptType["type"],
+            originalTranscriptType["validLabels"], originalTranscriptType["category"])
+
             
 if __name__ == '__main__':
     unittest.main()
