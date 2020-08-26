@@ -400,7 +400,6 @@ class TestLabbcatAdmin(unittest.TestCase):
     def test_saveLayer(self):
         
         # read systemAttributes
-        self.store.verbose = True
         originalTranscriptType = self.store.getLayer("transcript_type")
         
         editedTranscriptType1 = originalTranscriptType.copy()
