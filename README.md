@@ -98,13 +98,13 @@ To build, test, release, and document the module, the following prerequisites ar
 ## Unit tests
 
 ```
-python -m unittest
+python3 -m unittest
 ```
 
 ...or for specific tests:
 
 ```
-python -m unittest test.TestLabbcatAdmin
+python3 -m unittest test.TestLabbcatAdmin
 ```
 
 ## Documentation generation
@@ -119,7 +119,7 @@ make
 
 ```
 rm dist/*
-python setup.py sdist bdist_wheel
+python3 setup.py sdist bdist_wheel
 twine check dist/*
 twine upload dist/*
 ```
