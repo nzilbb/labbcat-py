@@ -1235,7 +1235,7 @@ class LabbcatView:
             os.mkdir(dir)
 
         # loop through each triple, getting fragments individually
-        url = self._labbcatUrl("convertfragment")
+        url = self._labbcatUrl("api/serialize/fragment")
         for i in range(len(transcriptIds)):
             if transcriptIds[i] == None or startOffsets[i] == None or endOffsets[i] == None:
                 continue
