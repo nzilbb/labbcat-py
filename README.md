@@ -91,8 +91,8 @@ For batch uploading and other example code, see the *examples* subdirectory.
 # Developers
 
 To build, test, release, and document the module, the following prerequisites are required:
- - `pip install twine`
- - `pip install pathlib`
+ - `pip3 install twine`
+ - `pip3 install pathlib`
  - `apt install python3-sphinx`
 
 ## Unit tests
