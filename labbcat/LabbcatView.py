@@ -243,6 +243,14 @@ class LabbcatView:
         """
         return(self._getRequest(self._storeQueryUrl("getId"), None))
         
+    #TODO def getInfo(self):
+    #    """ Gets the store's information document.
+    #
+    #    :returns: An HTML document providing information about the corpus.
+    #    :rtype: str
+    #    """
+    #    return(self._getRequest(self._storeQueryUrl("getId"), None))
+        
     def getLayerIds(self):
         """ Gets a list of layer IDs (annotation 'types'). 
         
