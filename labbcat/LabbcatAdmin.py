@@ -629,3 +629,132 @@ class LabbcatAdmin(LabbcatEdit):
         return(self._putRequest(self._labbcatUrl("api/admin/systemattributes"), {}, {
             "attribute" : attribute,
             "value" : value }))
+    
+    def createUser(self, user, email, resetPassword, roles):
+        """ Creates a new user record.
+        
+        The dictionary returned has the following entries:
+        
+        - "user"          : The id of the user.
+        - "email"         : The email address of the user.
+        - "resetPassword" : Whether the user must reset their password when
+                            they next log in. 
+        - "roles"         : Roles or groups the user belongs to.
+        - "_cantDelete" : This is not a database field, but rather is present in records
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.   
+        
+        :param user: The ID of the user.
+        :type user: str
+        
+        :param email: The email address of the user.
+        :type email: str
+        
+        :param resetPassword: Whether the user must reset their password when
+                              they next log in. 
+        :type resetPassword: boolean
+        
+        :param roles: Roles or groups the user belongs to.
+        :type roles: list of str
+        
+        :returns: A copy of the user record
+        :rtype: dict
+        """
+        if resetPassword:
+            resetPassword = 1
+        else:
+            resetPassword = 0
+        return(self._postRequest(self._labbcatUrl("api/admin/users"), {}, {
+            "user" : user,
+            "email" : email,
+            "resetPassword" : resetPassword,
+            "roles" : roles }))
+    
+    def readUsers(self, pageNumber=None, pageLength=None):
+        """ Reads a list of user records.
+        
+        The dictionaries in the returned list have the following entries:
+        
+        - "user"          : The id of the user.
+        - "email"         : The email address of the user.
+        - "resetPassword" : Whether the user must reset their password when
+                            they next log in. 
+        - "roles"         : Roles or groups the user belongs to.
+        - "_cantDelete" : This is not a database field, but rather is present in records
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.   
+        
+        :param pageNumber: The zero-based page number to return, or null to return the first page.
+        :type pageNumber: int or None
+
+        :param pageLength: The maximum number of records to return, or null to return all.
+        :type pageLength: int or None
+        
+        :returns: A list of user records.
+        :rtype: list of dict
+        """
+        # define request parameters
+        parameters = {}
+        if pageNumber != None:
+            parameters["pageNumber"] = pageNumber
+        if pageLength != None:
+            parameters["pageLength"] = pageLength
+        return(self._getRequest(self._labbcatUrl("api/admin/users"), parameters))
+        
+    def updateUser(self, user, email, resetPassword, roles):
+        """ Updates an existing user record.
+        
+        The dictionary returned has the following entries:
+        
+        - "user"          : The id of the user.
+        - "email"         : The email address of the user.
+        - "resetPassword" : Whether the user must reset their password when
+                            they next log in. 
+        - "roles"         : Roles or groups the user belongs to.
+        - "_cantDelete" : This is not a database field, but rather is present in records
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.   
+        
+        :param user: The ID of the user.
+        :type user: str
+        
+        :param email: The email address of the user.
+        :type email: str
+        
+        :param resetPassword: Whether the user must reset their password when
+                              they next log in. 
+        :type resetPassword: boolean
+        
+        :param roles: Roles or groups the user belongs to.
+        :type roles: list of str
+        
+        :returns: A copy of the user record
+        :rtype: dict
+        """
+        if resetPassword:
+            resetPassword = 1
+        else:
+            resetPassword = 0
+        return(self._putRequest(self._labbcatUrl("api/admin/users"), {}, {
+            "user" : user,
+            "email" : email,
+            "resetPassword" : resetPassword,
+            "roles" : roles }))
+    
+    def deleteUser(self, user):
+        """ Deletes an existing user record.
+        
+        :param user: The ID of the user.
+        :type user: str        
+        """
+        return(self._deleteRequest(self._labbcatUrl("api/admin/users/"+user), {}))
+    
+    #TODO def updateInfo(self, html):
+    #    """ Saves the store's information document.
+    #    
+    #    :param html: An HTML document with information about the corpus as a whole.
+    #    :type html: str
+    #    """
+    #    return(self._putRequest(self._labbcatUrl("api/admin/info"), {}, {
+    #       "attribute" : attribute,
+    #       "value" : value }))#

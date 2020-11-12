@@ -443,6 +443,86 @@ class TestLabbcatAdmin(unittest.TestCase):
             originalTranscriptType["saturated"], originalTranscriptType["type"],
             originalTranscriptType["validLabels"], originalTranscriptType["category"])
 
+    def test_users_CRUD(self):
+        
+        role_id = "unit-test"
+        role_description = "Temporary role for unit testing"
+        
+        role = self.store.createRole(role_id, role_description)
+        self.assertEqual(role["role_id"], role_id,
+                         "role name saved")
+        self.assertEqual(role["description"], role_description,
+                         "role description saved")
+        user_id = "unit-test"
+        email = "unit-test@tld.org"
+        resetPassword = True
+        roles = [ role_id ]
+
+        # ensure the user doesn't exist to start with
+        try:
+            self.store.deleteUser(user_id)
+        except labbcat.ResponseException as x:
+            pass
+                    
+        # create user
+        user = self.store.createUser(user_id, email, resetPassword, roles)
+        self.assertEqual(user["user"], user_id,
+                         "user name saved")
+        self.assertEqual(user["email"], email,
+                         "user email saved")
+        self.assertEqual(user["resetPassword"], resetPassword,
+                         "user resetPassword saved")
+        self.assertEqual(user["roles"], roles,
+                         "user roles saved")
+        
+        # read users
+        users = self.store.readUsers()
+        foundNewUser = False
+        for c in users:
+            if c["user"] == user_id:
+                foundNewUser = True
+        self.assertTrue(foundNewUser, "New user is present in list")
+        
+        # can't create an existing record
+        try:
+            self.store.createUser(user_id, email, resetPassword, roles)
+            fail("Delete non-existent user")
+        except:
+            pass
+        
+        # update user
+        new_email = "new@tld.org";
+        new_resetPassword = False
+        new_roles = [ "view" ]
+        updatedUser = self.store.updateUser(
+            user_id, new_email, new_resetPassword, new_roles)
+        self.assertEqual(updatedUser["user"], user_id,
+                         "user name unchanged");
+        self.assertEqual(updatedUser["email"], new_email,
+                         "user email updated")
+        self.assertEqual(updatedUser["resetPassword"], new_resetPassword,
+                         "user resetPassword updated")
+        self.assertEqual(updatedUser["roles"], new_roles,
+                         "user roles updated")
+                
+        # delete it
+        self.store.deleteUser(user_id)
+        
+        # make sure it was deleted
+        users = self.store.readUsers()
+        foundNewUser = False
+        for c in users:
+            if c["user"] == user_id:
+                foundNewUser = True
+        self.assertFalse(foundNewUser, "New user is gone from list")
+
+        # can't delete a nonexistent record
+        try:
+            self.store.deleteUser(user_id)            
+            fail("Delete non-existent user")
+        except:
+            pass
+
             
 if __name__ == '__main__':
     unittest.main()
