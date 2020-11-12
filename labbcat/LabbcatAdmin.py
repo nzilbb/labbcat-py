@@ -637,8 +637,7 @@ class LabbcatAdmin(LabbcatEdit):
         
         - "user"          : The id of the user.
         - "email"         : The email address of the user.
-        - "resetPassword" : Whether the user must reset their password when
-                            they next log in. 
+        - "resetPassword" : Whether the user must reset their password when they next log in. 
         - "roles"         : Roles or groups the user belongs to.
         - "_cantDelete" : This is not a database field, but rather is present in records
           returned from the server that can not currently be deleted; a string
@@ -650,8 +649,7 @@ class LabbcatAdmin(LabbcatEdit):
         :param email: The email address of the user.
         :type email: str
         
-        :param resetPassword: Whether the user must reset their password when
-                              they next log in. 
+        :param resetPassword: Whether the user must reset their password when they next log in. 
         :type resetPassword: boolean
         
         :param roles: Roles or groups the user belongs to.
@@ -677,8 +675,7 @@ class LabbcatAdmin(LabbcatEdit):
         
         - "user"          : The id of the user.
         - "email"         : The email address of the user.
-        - "resetPassword" : Whether the user must reset their password when
-                            they next log in. 
+        - "resetPassword" : Whether the user must reset their password when they next log in. 
         - "roles"         : Roles or groups the user belongs to.
         - "_cantDelete" : This is not a database field, but rather is present in records
           returned from the server that can not currently be deleted; a string
@@ -708,8 +705,7 @@ class LabbcatAdmin(LabbcatEdit):
         
         - "user"          : The id of the user.
         - "email"         : The email address of the user.
-        - "resetPassword" : Whether the user must reset their password when
-                            they next log in. 
+        - "resetPassword" : Whether the user must reset their password when they next log in. 
         - "roles"         : Roles or groups the user belongs to.
         - "_cantDelete" : This is not a database field, but rather is present in records
           returned from the server that can not currently be deleted; a string
@@ -721,8 +717,7 @@ class LabbcatAdmin(LabbcatEdit):
         :param email: The email address of the user.
         :type email: str
         
-        :param resetPassword: Whether the user must reset their password when
-                              they next log in. 
+        :param resetPassword: Whether the user must reset their password when they next log in. 
         :type resetPassword: boolean
         
         :param roles: Roles or groups the user belongs to.
