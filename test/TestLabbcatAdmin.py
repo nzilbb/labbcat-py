@@ -419,7 +419,7 @@ class TestLabbcatAdmin(unittest.TestCase):
             editedTranscriptType1["alignment"], editedTranscriptType1["peers"],
             editedTranscriptType1["peersOverlap"], editedTranscriptType1["parentIncludes"],
             editedTranscriptType1["saturated"], editedTranscriptType1["type"],
-            editedTranscriptType1["validLabels"], editedTranscriptType1["category"])
+            editedTranscriptType1["validLabels"], None)
         self.assertTrue(newOption1 in savedTranscriptType1["validLabels"], "newOption1 set");
         self.assertFalse(newOption2 in savedTranscriptType1["validLabels"], "newOption2 not set");
 
@@ -430,7 +430,7 @@ class TestLabbcatAdmin(unittest.TestCase):
             editedTranscriptType2["alignment"], editedTranscriptType2["peers"],
             editedTranscriptType2["peersOverlap"], editedTranscriptType2["parentIncludes"],
             editedTranscriptType2["saturated"], editedTranscriptType2["type"],
-            editedTranscriptType2["validLabels"], editedTranscriptType2["category"])
+            editedTranscriptType2["validLabels"], None)
         self.assertFalse(newOption1 in savedTranscriptType2["validLabels"], "newOption1 not set");
         self.assertTrue(newOption2 in savedTranscriptType2["validLabels"], "newOption2 set");
 
@@ -441,7 +441,7 @@ class TestLabbcatAdmin(unittest.TestCase):
             originalTranscriptType["alignment"], originalTranscriptType["peers"],
             originalTranscriptType["peersOverlap"], originalTranscriptType["parentIncludes"],
             originalTranscriptType["saturated"], originalTranscriptType["type"],
-            originalTranscriptType["validLabels"], originalTranscriptType["category"])
+            originalTranscriptType["validLabels"], None)
 
     def test_users_CRUD(self):
         
