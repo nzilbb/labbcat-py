@@ -188,7 +188,7 @@ class TestLabbcatView(unittest.TestCase):
         self.assertEqual(participantId, participant["label"], "Correct participant") # not getId()
 
         # does it look like an annotation
-        for key in ["id", "label", "startId", "endId"]:
+        for key in ["id", "label"]:
             with self.subTest(key=key):
                 self.assertIn(key, participant, "Has " + key)
 
