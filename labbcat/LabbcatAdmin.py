@@ -744,6 +744,23 @@ class LabbcatAdmin(LabbcatEdit):
         """
         return(self._deleteRequest(self._labbcatUrl("api/admin/users/"+user), {}))
     
+    def setPassword(self, user, password, resetPassword):
+        """ Sets a given user's password.
+                
+        :param user: The ID of the user.
+        :type user: str
+        
+        :param password: The new password.
+        :type email: str
+        
+        :param resetPassword: Whether the user must reset their password when they next log in. 
+        :type resetPassword: boolean
+        """
+        return(self._putRequest(self._labbcatUrl("api/admin/password"), {}, {
+            "user" : user,
+            "password" : password,
+            "resetPassword" : resetPassword }))
+    
     #TODO def updateInfo(self, html):
     #    """ Saves the store's information document.
     #    

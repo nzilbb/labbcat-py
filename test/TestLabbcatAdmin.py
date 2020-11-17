@@ -443,7 +443,7 @@ class TestLabbcatAdmin(unittest.TestCase):
             originalTranscriptType["saturated"], originalTranscriptType["type"],
             originalTranscriptType["validLabels"], None)
 
-    def test_users_CRUD(self):
+    def test_users_CRUDPassword(self):
         
         role_id = "unit-test"
         role_description = "Temporary role for unit testing"
@@ -489,6 +489,9 @@ class TestLabbcatAdmin(unittest.TestCase):
             fail("Delete non-existent user")
         except:
             pass
+        
+        # set password
+        self.store.setPassword(user_id, "rglLkLt5PstyQWQFXXEG", True)
         
         # update user
         new_email = "new@tld.org";
