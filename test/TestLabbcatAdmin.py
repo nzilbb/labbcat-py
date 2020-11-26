@@ -397,7 +397,7 @@ class TestLabbcatAdmin(unittest.TestCase):
         except:
             pass
 
-    def test_saveLayer(self):
+    def test_saveLayerTranscriptType(self):
         
         # read systemAttributes
         originalTranscriptType = self.store.getLayer("transcript_type")
@@ -442,6 +442,59 @@ class TestLabbcatAdmin(unittest.TestCase):
             originalTranscriptType["peersOverlap"], originalTranscriptType["parentIncludes"],
             originalTranscriptType["saturated"], originalTranscriptType["type"],
             originalTranscriptType["validLabels"], None)
+
+    def test_newSaveDeleteLayer(self):
+        
+        layerId = "unit-test"
+        layerDescription = "Unit test layer"
+        layerParentId = "transcript" # TODO change to "word"
+        layerAlignment = 0
+        layerPeers = True
+        layerPeersOverlap = True
+        layerParentIncludes = True
+        layerSaturated = True
+        layerType = "string"
+        
+        # create layer
+        newLayer = self.store.newLayer(
+            layerId, layerParentId, layerDescription, layerAlignment,
+            layerPeers, layerPeersOverlap, layerParentIncludes, layerSaturated, layerType,
+            {}, None)
+        self.assertEqual(layerId, newLayer["id"], "ID set");
+        self.assertEqual(layerDescription, newLayer["description"], "description set");
+        self.assertEqual(layerParentId, newLayer["parentId"], "parentId set");
+        self.assertEqual(layerAlignment, newLayer["alignment"], "alignment set");
+        self.assertEqual(layerPeers, newLayer["peers"], "peers set");
+        self.assertEqual(layerPeersOverlap, newLayer["peersOverlap"], "peersOverlap set");
+        self.assertEqual(layerParentIncludes, newLayer["parentIncludes"], "parentIncludes set");
+        self.assertEqual(layerSaturated, newLayer["saturated"], "saturated set");
+        self.assertEqual(layerType, newLayer["type"], "type set");
+
+        # change it
+        layerDescription = "Changed description"
+        layerParentId = "turnes" # Not changed!
+        layerAlignment = 2
+        layerPeers = False
+        layerPeersOverlap = False
+        layerParentIncludes = False
+        layerSaturated = False
+        layerType = "number"
+        editedLayer = self.store.saveLayer(
+            layerId, layerParentId, layerDescription, layerAlignment,
+            layerPeers, layerPeersOverlap, layerParentIncludes, layerSaturated, layerType,
+            {}, None)
+        self.assertEqual(layerId, editedLayer["id"], "ID correct");
+        self.assertEqual(layerDescription, editedLayer["description"], "description changed");
+        self.assertEqual("transcript", editedLayer["parentId"], "parentId not changed");
+        self.assertEqual(layerAlignment, editedLayer["alignment"], "alignment changed");
+        self.assertEqual(layerPeers, editedLayer["peers"], "peers changed");
+        self.assertEqual(layerPeersOverlap, editedLayer["peersOverlap"], "peersOverlap changed");
+        self.assertEqual(layerParentIncludes, editedLayer["parentIncludes"], "parentIncludes changed");
+        self.assertEqual(layerSaturated, editedLayer["saturated"], "saturated changed");
+        self.assertEqual(layerType, editedLayer["type"], "type changed");
+        
+        # delete it
+        self.store.deleteLayer(layerId)
 
     def test_users_CRUDPassword(self):
         
