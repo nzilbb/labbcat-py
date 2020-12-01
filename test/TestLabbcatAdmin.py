@@ -447,7 +447,7 @@ class TestLabbcatAdmin(unittest.TestCase):
         
         layerId = "unit-test"
         layerDescription = "Unit test layer"
-        layerParentId = "transcript" # TODO change to "word"
+        layerParentId = "word"
         layerAlignment = 0
         layerPeers = True
         layerPeersOverlap = True
@@ -472,7 +472,7 @@ class TestLabbcatAdmin(unittest.TestCase):
 
         # change it
         layerDescription = "Changed description"
-        layerParentId = "turnes" # Not changed!
+        layerParentId = "turn" # Not changed!
         layerAlignment = 2
         layerPeers = False
         layerPeersOverlap = False
@@ -485,7 +485,7 @@ class TestLabbcatAdmin(unittest.TestCase):
             {}, None)
         self.assertEqual(layerId, editedLayer["id"], "ID correct");
         self.assertEqual(layerDescription, editedLayer["description"], "description changed");
-        self.assertEqual("transcript", editedLayer["parentId"], "parentId not changed");
+        self.assertEqual("word", editedLayer["parentId"], "parentId not changed");
         self.assertEqual(layerAlignment, editedLayer["alignment"], "alignment changed");
         self.assertEqual(layerPeers, editedLayer["peers"], "peers changed");
         self.assertEqual(layerPeersOverlap, editedLayer["peersOverlap"], "peersOverlap changed");

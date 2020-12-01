@@ -30,9 +30,9 @@ class TestLabbcatView(unittest.TestCase):
         ids = self.store.getLayerIds()
         #for id : ids: print("layer " + id)
         self.assertTrue(len(ids) > 0, "Some IDs are returned")
-        self.assertIn("transcript", ids, "Has transcript layer")
-        self.assertIn("turns", ids, "Has turns layer")
-        self.assertIn("utterances", ids, "Has utterances layer")
+        self.assertIn("word", ids, "Has word layer")
+        self.assertIn("turn", ids, "Has turn layer")
+        self.assertIn("utterance", ids, "Has utterance layer")
         self.assertIn("transcript_type", ids, "Has transcript_type layer")
 
     def test_getLayers(self):
@@ -43,9 +43,9 @@ class TestLabbcatView(unittest.TestCase):
         for layer in layers:
             layerIds.append(layer["id"])
         
-        self.assertIn("transcript", layerIds, "Has transcript layer")
-        self.assertIn("turns", layerIds, "Has turns layer")
-        self.assertIn("utterances", layerIds, "Has utterances layer")
+        self.assertIn("word", layerIds, "Has word layer")
+        self.assertIn("turn", layerIds, "Has turn layer")
+        self.assertIn("utterance", layerIds, "Has utterance layer")
         self.assertIn("transcript_type", layerIds, "Has transcript_type layer")
 
     def test_getCorpusIds(self):
