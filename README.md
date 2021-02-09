@@ -19,7 +19,7 @@ audio = corpus.getSoundFragments(matches)
 
 # Get Praat TextGrids for the utterances
 textgrids = corpus.getFragments(
-    matches, ["utterances", "transcript","segments"],
+    matches, ["utterance", "word","segment"],
     "text/praat-textgrid")
 ```
 
