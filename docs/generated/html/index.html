@@ -1539,6 +1539,20 @@ representing the reason the record can’t be deleted.</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="labbcat.LabbcatAdmin.deleteLayer">
+<code class="descname">deleteLayer</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.deleteLayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a layer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>str</em>) – The layer ID</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.LabbcatAdmin.deleteMediaTrack">
 <code class="descname">deleteMediaTrack</code><span class="sig-paren">(</span><em>suffix</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.deleteMediaTrack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes an existing media track record.</p>
@@ -1607,6 +1621,43 @@ representing the reason the record can’t be deleted.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user</strong> (<em>str</em>) – The ID of the user.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.newLayer">
+<code class="descname">newLayer</code><span class="sig-paren">(</span><em>id</em>, <em>parentId</em>, <em>description</em>, <em>alignment</em>, <em>peers</em>, <em>peersOverlap</em>, <em>parentIncludes</em>, <em>saturated</em>, <em>type</em>, <em>validLabels</em>, <em>category</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.newLayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves changes to a layer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<em>str</em>) – The layer ID</li>
+<li><strong>parentId</strong> (<em>str</em>) – The layer’s parent layer id.</li>
+<li><strong>description</strong> (<em>str</em>) – The description of the layer.</li>
+<li><strong>alignment</strong> (<em>number</em>) – The layer’s alignment - 0 for none, 1 for point alignment,
+2 for interval alignment.</li>
+<li><strong>peers</strong> (<em>boolean</em>) – Whether children on this layer have peers or not.</li>
+<li><strong>peersOverlap</strong> (<em>boolean</em>) – Whether child peers on this layer can overlap or not.</li>
+<li><strong>parentIncludes</strong> (<em>boolean</em>) – Whether the parent temporally includes the child.</li>
+<li><strong>saturated</strong> (<em>boolean</em>) – Whether children must temporally fill the entire parent duration (true)
+or not (false).</li>
+<li><strong>type</strong> (<em>str</em>) – The type for labels on this layer, e.g. string, number, boolean, ipa.</li>
+<li><strong>validLabels</strong> (<em>dict</em>) – List of valid label values for this layer, or Nothing if the layer
+values are not restricted. The ‘key’ is the possible label value, and each key is
+associated with a description of the value (e.g. for displaying to users).</li>
+<li><strong>category</strong> (<em>str</em>) – Category for the layer, if any.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The resulting layer definition.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -1848,7 +1899,7 @@ representing the reason the record can’t be deleted.</li>
 <dl class="method">
 <dt id="labbcat.LabbcatAdmin.saveLayer">
 <code class="descname">saveLayer</code><span class="sig-paren">(</span><em>id</em>, <em>parentId</em>, <em>description</em>, <em>alignment</em>, <em>peers</em>, <em>peersOverlap</em>, <em>parentIncludes</em>, <em>saturated</em>, <em>type</em>, <em>validLabels</em>, <em>category</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.saveLayer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Saves changes to a layer, or adds a new layer.</p>
+<dd><p>Saves changes to a layer.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1876,6 +1927,25 @@ associated with a description of the value (e.g. for displaying to users).</li>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.setPassword">
+<code class="descname">setPassword</code><span class="sig-paren">(</span><em>user</em>, <em>password</em>, <em>resetPassword</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.setPassword" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets a given user’s password.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>user</strong> (<em>str</em>) – The ID of the user.</li>
+<li><strong>password</strong> – The new password.</li>
+<li><strong>resetPassword</strong> (<em>boolean</em>) – Whether the user must reset their password when they next log in.</li>
+</ul>
 </td>
 </tr>
 </tbody>
@@ -2217,7 +2287,7 @@ response from the server, from which error messages etc. can be obtained.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2020, New Zealand Institute of Language, Brain and Behaviour.
+      &copy;<small><a rel="license" href="http://creativecommons.org/licenses/by-sa/2.0/"><img alt="CC-BY-SA Creative Commons Licence " src="/labbcat-py/cc-by-sa.svg" title="This work is licensed under a Creative Commons Attribution-ShareAlike 2.0 Generic License" style="vertical-align:middle;height:40px;display:inline-block;" /></a><a rel="author" href="https://www.canterbury.ac.nz/nzilbb/"><img src="/labbcat-py/nzilbb.svg" alt="Te Kāhui Roro Reo | The New Zealand Institute of Language, Brain and Behaviour" title="&copy; 2021 NZILBB" style="vertical-align:middle;height:40px;display:inline-block;"></a></small>.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
