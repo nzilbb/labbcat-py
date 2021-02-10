@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 # -- Project information -----------------------------------------------------
 
 project = 'nzilbb-labbcat'
-copyright = '2020, New Zealand Institute of Language, Brain and Behaviour'
+copyright = '<small><a rel="license" href="http://creativecommons.org/licenses/by-sa/2.0/"><img alt="CC-BY-SA Creative Commons Licence " src="/labbcat-py/cc-by-sa.svg" title="This work is licensed under a Creative Commons Attribution-ShareAlike 2.0 Generic License" style="vertical-align:middle;height:40px;display:inline-block;" /></a><a rel="author" href="https://www.canterbury.ac.nz/nzilbb/"><img src="/labbcat-py/nzilbb.svg" alt="Te Kāhui Roro Reo | The New Zealand Institute of Language, Brain and Behaviour" title="&copy; 2021 NZILBB" style="vertical-align:middle;height:40px;display:inline-block;"></a></small>'
 author = 'Robert Fromont'
 
 # The short X.Y version
