@@ -368,6 +368,24 @@ class TestLabbcatView(unittest.TestCase):
         finally:
             self.store.releaseTask(threadId)
 
+    def test_searchExcludingOverlappingSpeech(self):
+        # all instances of "mmm", which is common in overlapping speech
+        pattern = {"orthography" : "mmm" }
+        includeTaskId = self.store.search(pattern)
+        excludeTaskId = self.store.search(pattern, overlapThreshold=5)
+        try:
+            includeOverlapping = self.store.getMatches(includeTaskId)
+            if len(includeOverlapping) == 0:
+                print("getMatches: No matches were returned, cannot test overlapThreshold")
+            else:
+                excludeOverlapping = self.store.getMatches(excludeTaskId)
+                self.assertTrue(
+                    len(includeOverlapping) > len(excludeOverlapping),
+                    "excluding overlapping speech returns fewer results than including it")
+        finally:
+            self.store.releaseTask(includeTaskId)
+            self.store.releaseTask(excludeTaskId)
+
     def test_getSoundFragments(self):
         # get a participant ID to use
         ids = self.store.getParticipantIds()

@@ -791,7 +791,7 @@ class LabbcatView:
         return (self._postRequestToFile(self._labbcatUrl("participantsExport"), params))
         
 
-    def search(self, pattern, participantIds=None, transcriptTypes=None, mainParticipant=True, aligned=False, matchesPerTranscript=None):
+    def search(self, pattern, participantIds=None, transcriptTypes=None, mainParticipant=True, aligned=False, matchesPerTranscript=None, overlapThreshold=None):
         """
         Searches for tokens that match the given pattern.
         
@@ -881,6 +881,9 @@ class LabbcatView:
           return. *None* means all matches.
         :type int:
         
+        :param overlapThreshold: Optional percentage overlap with other utterances before
+          simultaneous speech is excluded. *None* means include all overlapping utterances.
+        
         :returns: The threadId of the resulting task, which can be passed in to
           `getMatches() <#labbcat.LabbcatView.getMatches>`_, 
           `taskStatus() <#labbcat.LabbcatView.taskStatus>`_, 
@@ -926,6 +929,8 @@ class LabbcatView:
             parameters["participant_id"] = participantIds
         if transcriptTypes != None:
             parameters["transcript_type"] = transcriptTypes
+        if overlapThreshold != None:
+            parameters["overlap_threshold"] = overlapThreshold
         model = self._getRequest(self._labbcatUrl("search"), parameters)
         return(model["threadId"])
     
