@@ -28,7 +28,7 @@ class LabbcatEdit(LabbcatView):
     def deleteTranscript(self, id):
         """ Deletes the given transcript, and all associated files.
         
-        :param id: The ID transcript to save.
+        :param id: The ID transcript to delete.
         :type id: str
         """
         return(self._postRequest(self._storeEditUrl("deleteTranscript"), {"id":id}))
@@ -127,3 +127,12 @@ class LabbcatEdit(LabbcatView):
                     return(threadId)
         finally:
             f.close()
+    
+    def deleteParticipant(self, id):
+        """ Deletes the given participant, and all associated meta-data.
+        
+        :param id: The ID participant to delete.
+        :type id: str
+        """
+        return(self._postRequest(self._storeEditUrl("deleteParticipant"), {"id":id}))
+    

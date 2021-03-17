@@ -25,13 +25,18 @@ class TestLabbcatEdit(unittest.TestCase):
         with self.assertRaises(labbcat.ResponseException):
             self.store.deleteTranscript("nonexistent transcript ID")    
     
-    def test_newTranscript_updateTranscript_deleteTranscript(self):
+    def test_newTranscript_updateTranscript_deleteTranscript_deleteParticipant(self):
         transcriptName = "labbcat-py.test.txt"
         transcriptPath = "/home/robert/nzilbb/labbcat-py/test/" + transcriptName
+        participantName = "UnitTester"
 
-        # ensure the transcript doesn't exist to start with
+        # ensure the transcript/participant don't exist to start with
         try:
             self.store.deleteTranscript(transcriptName)
+        except labbcat.ResponseException as x:
+            pass
+        try:
+            self.store.deleteParticipant(participantName)
         except labbcat.ResponseException as x:
             pass
             
@@ -48,9 +53,11 @@ class TestLabbcatEdit(unittest.TestCase):
         self.store.waitForTask(threadId)
         self.store.releaseTask(threadId)
         
-        # ensure the transcript is there
+        # ensure the transcript/participant are there
         count = self.store.countMatchingTranscriptIds("id = '"+transcriptName+"'")
         self.assertEqual(1, count, "Transcript is in the store")
+        count = self.store.countMatchingParticipantIds("id = '"+participantName+"'")
+        self.assertEqual(1, count, "Participant is in the store")
         
         # re-upload transcript (with no media)
         threadId = self.store.updateTranscript(transcriptPath)
@@ -63,12 +70,15 @@ class TestLabbcatEdit(unittest.TestCase):
         count = self.store.countMatchingTranscriptIds("id = '"+transcriptName+"'")
         self.assertEqual(1, count, "Transcript is in the store")
         
-        # delete it
+        # delete transcript/participant
         self.store.deleteTranscript(transcriptName)
+        self.store.deleteParticipant(participantName)
         
-        # make sure it was deleted
+        # make sure they were deleted
         count = self.store.countMatchingTranscriptIds("id = '"+transcriptName+"'")
         self.assertEqual(0, count, "Transcript is gone")
+        count = self.store.countMatchingParticipantIds("id = '"+participantName+"'")
+        self.assertEqual(0, count, "Participant is in the store")
             
 if __name__ == '__main__':
     unittest.main()
