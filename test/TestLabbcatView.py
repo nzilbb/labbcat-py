@@ -343,6 +343,35 @@ class TestLabbcatView(unittest.TestCase):
         finally:
             self.store.releaseTask(threadId)
 
+    def test_allUtterancesAndGetMatchesAndGetMatchAnnotations(self):
+        # get a participant ID to use
+        ids = self.store.getParticipantIds()
+        self.assertTrue(len(ids) > 0, "getParticipantIds: Some IDs are returned")
+        participantId = [ ids[0] ]
+
+        threadId = self.store.allUtterances(participantId, None, True)
+        try:
+            task = self.store.waitForTask(threadId, 30)
+            # if the task is still running, it's taking too long, so cancel it
+            if task["running"]:
+                try:
+                    self.store.cancelTask(threadId)
+                except:
+                    pass
+            self.assertFalse(task["running"], "Search task finished in a timely manner")
+         
+            matches = self.store.getMatches(threadId, 2)
+            if len(matches) == 0:
+                print("getMatches: No matches were returned, cannot test getMatchAnnotations")
+            else:
+                upTo = min(10, len(matches))
+                
+                matches = self.store.getMatches(threadId, 2, upTo, 0)
+                self.assertEqual(upTo, len(matches), "pagination works ("+str(upTo)+")")
+                
+        finally:
+            self.store.releaseTask(threadId)
+
     def test_getMatchesWithPattern(self):
         # all instances of "then"
         pattern = {"orthography" : "end" }

@@ -934,6 +934,41 @@ class LabbcatView:
         model = self._getRequest(self._labbcatUrl("search"), parameters)
         return(model["threadId"])
     
+    def allUtterances(self, participantIds, transcriptTypes=None, mainParticipant=True):
+        """
+        Identifies all utterances by the given participants.        
+        
+        :param participantIds: A list of participant IDs to identify the utterances of.
+        :type list of str:
+        
+        :param transcriptTypes: An optional list of transcript types to limit the results
+          to. If null, all transcript types will be searched. 
+        :type list of str:
+        
+        :param mainParticipant: true to search only main-participant utterances, false to
+          search all utterances. 
+        :type boolean:
+        
+        :returns: The threadId of the resulting task, which can be passed in to
+          `getMatches() <#labbcat.LabbcatView.getMatches>`_, 
+          `taskStatus() <#labbcat.LabbcatView.taskStatus>`_, 
+          `waitForTask() <#labbcat.LabbcatView.waitForTask>`_
+          `releaseTask() <#labbcat.LabbcatView.releaseTask>`_, etc. 
+        :rtype: str
+        """
+
+        # define request parameters
+        parameters = {
+            "list" : "search",
+            "id" : participantIds
+        }
+        if mainParticipant:
+            parameters["only_main_speaker"] = "true"
+        if transcriptTypes != None:
+            parameters["transcript_type"] = transcriptTypes
+        model = self._getRequest(self._labbcatUrl("allUtterances"), parameters)
+        return(model["threadId"])
+    
     def getMatches(self, search, wordsContext=0, pageLength=None, pageNumber=None):
         """
         Gets a list of tokens that were matched by search(pattern)
