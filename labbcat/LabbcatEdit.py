@@ -93,7 +93,7 @@ class LabbcatEdit(LabbcatView):
             f.close()
         
     def updateTranscript(self, transcript):
-        """ Uploads a new transcript.
+        """ Uploads a new version of an existing transcript.
         
         :param transcript: The path to the transcript to upload.
         :type transcript: str
