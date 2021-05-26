@@ -3,6 +3,7 @@ import os
 import requests
 import tempfile
 import time
+from zipfile import ZipFile
 from labbcat.Response import Response
 from labbcat.ResponseException import ResponseException
 from labbcat import __version__
@@ -157,11 +158,12 @@ class LabbcatView:
             auth = (self.username, self.password)
         
         response = requests.post(
-            url=url, params=params, auth=auth, headers={
+            url=url, data=params, auth=auth, headers={
                 "Accept":"application/json",
                     "Accept-Language":self.language,
                     "user-agent": "labbcat-py/"+__version__
                 })
+        if self.verbose: print(response.request.body)
         # ensure status was ok
         response.raise_for_status();
         
@@ -756,11 +758,9 @@ class LabbcatView:
         :rtype: str
         """
         params = {
-            "todo" : "export",
-            "exportType" : "csv",
-            "layer" : ["graph"]+layerIds,
+            "layer" : ["transcript"]+layerIds,
             "id" : transcriptIds }
-        return (self._postRequestToFile(self._labbcatUrl("transcripts"), params))
+        return (self._postRequestToFile(self._labbcatUrl("api/attributes"), params))
     
     def getParticipantAttributes(self, participantIds, layerIds):
         """ Gets participant attribute values.
@@ -1258,6 +1258,9 @@ class LabbcatView:
         :returns: A list of files. If *dir* is None, these files will be stored under the
          system's temporary directory, so once processing is finished, they should be
          deleted by the caller, or moved to a more permanent location. 
+         *NB* Although many formats will generate exactly one file for each interval, this
+         is not guaranted; some formats generate a single file or a fixed collection of
+         files regardless of how many fragments there are.
         :rtype: list of str
         """
         # have they passed matches as transcriptIds, instead of strings?
@@ -1282,25 +1285,43 @@ class LabbcatView:
         elif not os.path.exists(dir):
             os.mkdir(dir)
 
-        # loop through each triple, getting fragments individually
+        # send all triples in one request, we should get a zip file back
         url = self._labbcatUrl("api/serialize/fragment")
-        for i in range(len(transcriptIds)):
-            if transcriptIds[i] == None or startOffsets[i] == None or endOffsets[i] == None:
-                continue
+        params = {
+            "id" : transcriptIds,
+            "start" : startOffsets,
+            "end" : endOffsets,
+            "mimeType" : mimeType,
+            "layerId" : layerIds
+        }
+        try:
+            zipFileName = self._postRequestToFile(url, params, dir)
+            with ZipFile(zipFileName, 'r') as zipObj:
+                zipObj.extractall(dir)
+                fragments = [os.path.join(dir, fileName) for fileName in zipObj.namelist()]
+                
+            # delete the temporary zip file
+            os.remove(zipFileName)
             
-            params = {
-                "id" : transcriptIds[i],
-                "start" : startOffsets[i],
-                "end" : endOffsets[i],
-                "mimeType" : mimeType,
-                "layerId" : layerIds
-            }
-
-            try:
-                fileName = self._postRequestToFile(url, params, dir)
-                fragments.append(fileName)
-            except ResponseException:
-                fragments.append(None)
+        except ResponseException:
+            # fall back to looping through each triple, getting fragments individually
+            for i in range(len(transcriptIds)):
+                if transcriptIds[i] == None or startOffsets[i] == None or endOffsets[i] == None:
+                    continue
+                
+                params = {
+                    "id" : transcriptIds[i],
+                    "start" : startOffsets[i],
+                    "end" : endOffsets[i],
+                    "mimeType" : mimeType,
+                    "layerId" : layerIds
+                }
+                
+                try:
+                    fileName = self._postRequestToFile(url, params, dir)
+                    fragments.append(fileName)
+                except ResponseException:
+                    fragments.append(None)
         
         return(fragments)
 
