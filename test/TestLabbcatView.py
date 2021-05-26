@@ -465,7 +465,7 @@ class TestLabbcatView(unittest.TestCase):
         participantId = [ ids[0] ]
         
         # all instances of "and"
-        threadId = self.store.search({ "orthography" : "and" }, participantId)
+        threadId = self.store.search({ "orthography" : "quakes" }, participantId)
         try:
             task = self.store.waitForTask(threadId, 30)
             # if the task is still running, it's taking too long, so cancel it
@@ -547,7 +547,7 @@ class TestLabbcatView(unittest.TestCase):
         matches = self.store.getMatches({"orthography":"earthquake"})
         audio = self.store.getSoundFragments(matches)
         textgrids = self.store.getFragments(
-            matches, ["utterances", "transcript","segments"], 
+            matches, ["utterance", "word","segment"], 
 	    "text/praat-textgrid")
         # tidily delete files
         for f in audio:
