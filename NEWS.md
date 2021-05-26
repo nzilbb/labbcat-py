@@ -1,3 +1,11 @@
+# 0.4.0
+
+- New LabbcatAdmin CRUD operations for
+  + users (including *setPassword*)
+  + layers (*newLayer*/*deleteLayer*)
+- New LabbcatView function
+  + *allUtterances*
+
 # 0.3.0
 
 - New LabbcatAdmin CRUD operations for
