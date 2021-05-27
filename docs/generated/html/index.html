@@ -85,6 +85,37 @@ by users with “view” permission.</p>
 </pre></div>
 </div>
 <dl class="method">
+<dt id="labbcat.LabbcatView.allUtterances">
+<code class="descname">allUtterances</code><span class="sig-paren">(</span><em>participantIds</em>, <em>transcriptTypes=None</em>, <em>mainParticipant=True</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.allUtterances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identifies all utterances by the given participants.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>participantIds</strong> – A list of participant IDs to identify the utterances of.</li>
+<li><strong>transcriptTypes</strong> – An optional list of transcript types to limit the results
+to. If null, all transcript types will be searched.</li>
+<li><strong>mainParticipant</strong> – true to search only main-participant utterances, false to
+search all utterances.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The threadId of the resulting task, which can be passed in to
+<a class="reference external" href="#labbcat.LabbcatView.getMatches">getMatches()</a>, 
+<a class="reference external" href="#labbcat.LabbcatView.taskStatus">taskStatus()</a>, 
+<a class="reference external" href="#labbcat.LabbcatView.waitForTask">waitForTask()</a>
+<a class="reference external" href="#labbcat.LabbcatView.releaseTask">releaseTask()</a>, etc.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.LabbcatView.cancelTask">
 <code class="descname">cancelTask</code><span class="sig-paren">(</span><em>threadId</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.cancelTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cancels (but does not release) a running task.</p>
@@ -372,7 +403,10 @@ folder.  If specified, and the directory doesn’t exist, it will be created.</l
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of files. If <em>dir</em> is None, these files will be stored under the
 system’s temporary directory, so once processing is finished, they should be
-deleted by the caller, or moved to a more permanent location.</p>
+deleted by the caller, or moved to a more permanent location. 
+<em>NB</em> Although many formats will generate exactly one file for each interval, this
+is not guaranted; some formats generate a single file or a fixed collection of
+files regardless of how many fragments there are.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of str</p>
@@ -1042,7 +1076,7 @@ however formally it’s any layer where layer.parentId == ‘graph’ and layer.
 
 <dl class="method">
 <dt id="labbcat.LabbcatView.search">
-<code class="descname">search</code><span class="sig-paren">(</span><em>pattern</em>, <em>participantIds=None</em>, <em>transcriptTypes=None</em>, <em>mainParticipant=True</em>, <em>aligned=False</em>, <em>matchesPerTranscript=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.search" title="Permalink to this definition">¶</a></dt>
+<code class="descname">search</code><span class="sig-paren">(</span><em>pattern</em>, <em>participantIds=None</em>, <em>transcriptTypes=None</em>, <em>mainParticipant=True</em>, <em>aligned=False</em>, <em>matchesPerTranscript=None</em>, <em>overlapThreshold=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.search" title="Permalink to this definition">¶</a></dt>
 <dd><p>Searches for tokens that match the given pattern.</p>
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pattern</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;columns&quot;</span><span class="p">:[{</span><span class="s2">&quot;layers&quot;</span><span class="p">:{</span><span class="s2">&quot;orthography&quot;</span><span class="p">:{</span><span class="s2">&quot;pattern&quot;</span><span class="p">:</span><span class="s2">&quot;the&quot;</span><span class="p">}}}]}</span>
@@ -1128,6 +1162,8 @@ search all utterances.</li>
 confidence &amp;ge; 50, false to search include un-aligned words as well.</li>
 <li><strong>matchesPerTranscript</strong> – Optional maximum number of matches per transcript to
 return. <em>None</em> means all matches.</li>
+<li><strong>overlapThreshold</strong> – Optional percentage overlap with other utterances before
+simultaneous speech is excluded. <em>None</em> means include all overlapping utterances.</li>
 </ul>
 </td>
 </tr>
@@ -1218,6 +1254,20 @@ permission.</p>
 </tbody>
 </table>
 <dl class="method">
+<dt id="labbcat.LabbcatEdit.deleteParticipant">
+<code class="descname">deleteParticipant</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.deleteParticipant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the given participant, and all associated meta-data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>str</em>) – The ID participant to delete.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.LabbcatEdit.deleteTranscript">
 <code class="descname">deleteTranscript</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.deleteTranscript" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes the given transcript, and all associated files.</p>
@@ -1225,7 +1275,7 @@ permission.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>str</em>) – The ID transcript to save.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>str</em>) – The ID transcript to delete.</td>
 </tr>
 </tbody>
 </table>
@@ -1266,7 +1316,7 @@ task status can be updated using
 <dl class="method">
 <dt id="labbcat.LabbcatEdit.updateTranscript">
 <code class="descname">updateTranscript</code><span class="sig-paren">(</span><em>transcript</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.updateTranscript" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uploads a new transcript.</p>
+<dd><p>Uploads a new version of an existing transcript.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
