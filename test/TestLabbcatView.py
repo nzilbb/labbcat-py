@@ -500,7 +500,7 @@ class TestLabbcatView(unittest.TestCase):
                             # duplicate names can exist, so the file may have already been deleted
                             if os.path.exists(fragment): 
                                 os.remove(fragment)
-                    #os.rmdir(dir)
+                    os.rmdir(dir)
         finally:
             self.store.releaseTask(threadId)
 
@@ -541,23 +541,6 @@ class TestLabbcatView(unittest.TestCase):
         user = self.store.getUserInfo()
         #print("user " + user)
         self.assertIsNotNone(user, "User is returned")
-    
-    def test_tweetCode(self):
-        # get a participant ID to use
-        matches = self.store.getMatches({"orthography":"earthquake"})
-        audio = self.store.getSoundFragments(matches)
-        textgrids = self.store.getFragments(
-            matches, ["utterance", "word","segment"], 
-	    "text/praat-textgrid")
-        # tidily delete files
-        for f in audio:
-            # duplicate names can exist, so the file may have already been deleted
-            if os.path.exists(f): 
-                os.remove(f)
-        for f in textgrids:
-            # duplicate names can exist, so the file may have already been deleted
-            if os.path.exists(f): 
-                os.remove(f)
-    
+        
 if __name__ == '__main__':
     unittest.main()
