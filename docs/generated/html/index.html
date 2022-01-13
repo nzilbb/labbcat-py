@@ -509,7 +509,7 @@ annotations, with the following entries:</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>matchIds</strong> (<em>list of str</em><em> or </em><em>list of dict</em>) – A list of MatchId strings, or a list of match dictionaries</li>
-<li><strong>layerIds</strong> (<em>list of str</em>) – A vector of layer IDs.</li>
+<li><strong>layerIds</strong> (<em>list of str</em>) – A list of layer IDs.</li>
 <li><strong>targetOffset</strong> (<em>int</em>) – The distance from the original target of the match, e.g.
 -  0 : find annotations of the match target itself
 -  1 : find annotations of the token immediately <em>after</em> match target
@@ -1282,6 +1282,36 @@ permission.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="labbcat.LabbcatEdit.generateLayerUtterances">
+<code class="descname">generateLayerUtterances</code><span class="sig-paren">(</span><em>matchIds</em>, <em>layerId</em>, <em>collectionName=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.generateLayerUtterances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a layer for a given set of utterances.</p>
+<p>This function generates annotations on a given layer for a given set of
+utterances, e.g. force-align selected utterances of a participant.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>matchIds</strong> – A list of annotation IDs, e.g. the MatchId column, or the URL
+column, of a results set.</li>
+<li><strong>layerId</strong> (<em>str</em>) – The ID of the layer to generate.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>The taskId of the resulting annotation layer generation task. The
+task status can be updated using
+<a class="reference external" href="#labbcat.LabbcatView.taskStatus">taskStatus()</a>.</p>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.LabbcatEdit.newTranscript">
 <code class="descname">newTranscript</code><span class="sig-paren">(</span><em>transcript</em>, <em>media</em>, <em>mediaSuffix</em>, <em>transcriptType</em>, <em>corpus</em>, <em>episode</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.newTranscript" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uploads a new transcript.</p>
@@ -1308,6 +1338,28 @@ task status can be updated using
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatEdit.updateFragment">
+<code class="descname">updateFragment</code><span class="sig-paren">(</span><em>fragment</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.updateFragment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update a transcript fragment.</p>
+<p>This function uploads a file (e.g. Praat TextGrid) representing a fragment of a
+transcript, with annotations or alignments to update in LaBB-CAT’s version of the
+transcript.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fragment</strong> (<em>str</em>) – The path to the fragment to upload.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A dictionary with information about the fragment that was updated, including
+URL, start_time, and end_time</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionary of str</td>
 </tr>
 </tbody>
 </table>
@@ -1671,6 +1723,27 @@ representing the reason the record can’t be deleted.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user</strong> (<em>str</em>) – The ID of the user.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.generateLayer">
+<code class="descname">generateLayer</code><span class="sig-paren">(</span><em>layerId</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.generateLayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a layer.</p>
+<p>This function generates annotations on a given layer for all transcripts in the corpus.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layerId</strong> (<em>str</em>) – The ID of the layer to generate.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The taskId of the resulting annotation layer generation task. The
+task status can be updated using
+<a class="reference external" href="#labbcat.LabbcatView.taskStatus">taskStatus()</a>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
 </tr>
 </tbody>
 </table>

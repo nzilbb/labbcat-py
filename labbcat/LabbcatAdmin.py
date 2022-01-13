@@ -827,12 +827,22 @@ class LabbcatAdmin(LabbcatEdit):
             "password" : password,
             "resetPassword" : resetPassword }))
     
-    #TODO def updateInfo(self, html):
-    #    """ Saves the store's information document.
-    #    
-    #    :param html: An HTML document with information about the corpus as a whole.
-    #    :type html: str
-    #    """
-    #    return(self._putRequest(self._labbcatUrl("api/admin/info"), {}, {
-    #       "attribute" : attribute,
-    #       "value" : value }))#
+    def generateLayer(self, layerId):
+        """ Generates a layer.
+
+        This function generates annotations on a given layer for all transcripts in the corpus.
+        
+        :param layerId: The ID of the layer to generate.
+        :type layerId: str
+        
+        :returns: The taskId of the resulting annotation layer generation task. The
+                  task status can be updated using
+                  `taskStatus() <#labbcat.LabbcatView.taskStatus>`_.
+        :rtype: str
+        """
+        params = {
+            "layerId" : layerId,
+            "sure" : "true" }
+        model = self._postRequest(self._labbcatUrl("admin/layers/regenerate"), params)
+        return(model["threadId"])
+    

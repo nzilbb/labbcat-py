@@ -1,3 +1,11 @@
+# 0.5.0
+
+- New LabbcatAdmin function
+  + *generateLayer*
+- New LabbcatEdit functions
+  + *generateLayerUtterances*
+  + *updateFragment*
+
 # 0.4.0
 
 - New LabbcatAdmin CRUD operations for

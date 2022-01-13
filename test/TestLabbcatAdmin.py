@@ -578,7 +578,24 @@ class TestLabbcatAdmin(unittest.TestCase):
             fail("Delete non-existent user")
         except:
             pass
+    
+    def test_generateLayer(self):
+        
+        # generate orthography layer
+        threadId = self.store.generateLayer("orthography")
+        self.assertIsNotNone(threadId, "There is a threadId")
 
+        try:
+            task = self.store.waitForTask(threadId, 60)
+            # if the task is still running, it's taking too long, so cancel it
+            if task["running"]:
+                try:
+                    self.store.cancelTask(threadId)
+                except:
+                    pass
+            self.assertFalse(task["running"], "Search task finished in a timely manner")
+        finally:
+            self.store.releaseTask(threadId)
             
 if __name__ == '__main__':
     unittest.main()

@@ -128,6 +128,36 @@ class LabbcatEdit(LabbcatView):
         finally:
             f.close()
     
+    def updateFragment(self, fragment):
+        """ Update a transcript fragment.
+
+        This function uploads a file (e.g. Praat TextGrid) representing a fragment of a
+        transcript, with annotations or alignments to update in LaBB-CAT's version of the
+        transcript. 
+        
+        :param fragment: The path to the fragment to upload.
+        :type fragment: str
+        
+        :returns: A dictionary with information about the fragment that was updated, including
+                  URL, start_time, and end_time
+        :rtype: dictionary of str
+        """
+        params = {
+            "todo" : "upload",
+            "automaticMapping" : "true" }
+        
+        fragmentName = os.path.basename(fragment)
+        files = {}
+        f = open(fragment, 'rb')
+        files["uploadfile"] = (fragmentName, f)
+        
+        try:
+            model = self._postMultipartRequest(
+                self._labbcatUrl("edit/uploadFragment"), params, files)
+            return(model)
+        finally:
+            f.close()
+        
     def deleteParticipant(self, id):
         """ Deletes the given participant, and all associated meta-data.
         
@@ -136,3 +166,34 @@ class LabbcatEdit(LabbcatView):
         """
         return(self._postRequest(self._storeEditUrl("deleteParticipant"), {"id":id}))
     
+    def generateLayerUtterances(self, matchIds, layerId, collectionName=None):
+        """ Generates a layer for a given set of utterances.
+
+        This function generates annotations on a given layer for a given set of
+        utterances, e.g. force-align selected utterances of a participant.
+        
+        :param matchIds: A list of annotation IDs, e.g. the MatchId column, or the URL
+                         column, of a results set.  
+        :type layerId: list of str
+        
+        :param layerId: The ID of the layer to generate.
+        :type layerId: str
+        
+        :returns: The taskId of the resulting annotation layer generation task. The
+                  task status can be updated using
+                  `taskStatus() <#labbcat.LabbcatView.taskStatus>`_.
+        :rtype: str
+        """
+        # we need a list of strings, so if we've got a list of dictionaries, convert it
+        if len(matchIds) > 0:
+            if isinstance(matchIds[0], dict):
+                # map the dictionaries to their "MatchId" entry
+                matchIds = [ m["MatchId"] for m in matchIds ]
+        params = {
+            "todo" : "generate-now",
+            "generate_layer" : layerId,
+            "utterances" : matchIds }
+        if collectionName != None: params["collection_name"] = collectionName
+        
+        model = self._postRequest(self._labbcatUrl("generateLayerUtterances"), params)
+        return(model["threadId"])

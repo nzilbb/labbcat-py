@@ -1,4 +1,5 @@
 import unittest
+import os
 import labbcat
 
 # YOU MUST ENSURE THE FOLLOWING SETTINGS ARE VALID FOR YOU TEST LABB-CAT SERVER:
@@ -57,7 +58,7 @@ class TestLabbcatEdit(unittest.TestCase):
         count = self.store.countMatchingTranscriptIds("id = '"+transcriptName+"'")
         self.assertEqual(1, count, "Transcript is in the store")
         count = self.store.countMatchingParticipantIds("id = '"+participantName+"'")
-        self.assertEqual(1, count, "Participant is in the store")
+        self.assertEqual(1, count, "Participant '"+participantName+"' is in the store")
         
         # re-upload transcript (with no media)
         threadId = self.store.updateTranscript(transcriptPath)
@@ -79,6 +80,90 @@ class TestLabbcatEdit(unittest.TestCase):
         self.assertEqual(0, count, "Transcript is gone")
         count = self.store.countMatchingParticipantIds("id = '"+participantName+"'")
         self.assertEqual(0, count, "Participant is in the store")
+
+    def test_generateLayerUtterances(self):
+        
+        # get a participant ID to use
+        ids = self.store.getParticipantIds()
+        self.assertTrue(len(ids) > 0, "getParticipantIds: Some IDs are returned")
+        participantId = [ ids[0] ]
+
+        utterancesThreadId = self.store.allUtterances(participantId, None, True)
+        try:
+            task = self.store.waitForTask(utterancesThreadId, 30)
+            # if the task is still running, it's taking too long, so cancel it
+            if task["running"]:
+                try:
+                    self.store.cancelTask(utterancesThreadId)
+                except:
+                    pass
+            self.assertFalse(task["running"], "Search task finished in a timely manner")
+         
+            matches = self.store.getMatches(utterancesThreadId, 2)
+            if len(matches) == 0:
+                print("getMatches: No matches were returned, cannot test getMatchAnnotations")
+            else:
+                upTo = min(5, len(matches))
+                matches = matches[:upTo]
+                
+                # generate htk layer
+                threadId = self.store.generateLayerUtterances(matches, "htk", "unit-test")
+                self.assertIsNotNone(threadId, "There is a threadId")
+                
+                try:
+                    task = self.store.waitForTask(threadId, 60)
+                    self.assertIn("running", task, "Is a valid task " + str(threadId))
+                    
+                    # if the task is still running, it's taking too long, so cancel it
+                    if task["running"]:
+                        try:
+                            self.store.cancelTask(threadId)
+                        except:
+                            pass
+                    self.assertFalse(task["running"], "Task finished in a timely manner")
+                finally:
+                    self.store.releaseTask(threadId)
+        finally:
+            self.store.releaseTask(utterancesThreadId)
+
+    def test_updateFragment(self):
+        ids = self.store.getParticipantIds()
+        self.assertTrue(len(ids) > 0, "getParticipantIds: Some IDs are returned")
+        participantId = [ ids[0] ]
+        
+        # all instances of "and"
+        threadId = self.store.search({ "orthography" : "quakes" }, participantId)
+        try:
+            task = self.store.waitForTask(threadId, 30)
+            # if the task is still running, it's taking too long, so cancel it
+            if task["running"]:
+                try:
+                    self.store.cancelTask(threadId)
+                except:
+                    pass
+            self.assertFalse(task["running"], "Search task finished in a timely manner")
             
+            matches = self.store.getMatches(threadId, 2)
+            if len(matches) == 0:
+                print("getMatches: No matches were returned, cannot test getFragments")
+            else:
+                matches = matches[:2]
+                
+                dir = "getFragments"
+                layerIds = [ "utterance", "word" ]
+                fragments = self.store.getFragments(matches, layerIds, "text/praat-textgrid")
+                try:
+                    result = self.store.updateFragment(fragments[0])
+                    self.assertIn("url", result, "Result includes URL")
+                finally:
+                    for fragment in fragments:
+                        if fragment != None:
+                            # duplicate names can exist, so the file may have already been deleted
+                            if os.path.exists(fragment): 
+                                os.remove(fragment)
+                
+        finally:
+            self.store.releaseTask(threadId)
+
 if __name__ == '__main__':
     unittest.main()
