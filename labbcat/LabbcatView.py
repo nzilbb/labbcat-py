@@ -245,14 +245,6 @@ class LabbcatView:
         """
         return(self._getRequest(self._storeQueryUrl("getId"), None))
         
-    #TODO def getInfo(self):
-    #    """ Gets the store's information document.
-    #
-    #    :returns: An HTML document providing information about the corpus.
-    #    :rtype: str
-    #    """
-    #    return(self._getRequest(self._storeQueryUrl("getId"), None))
-        
     def getLayerIds(self):
         """ Gets a list of layer IDs (annotation 'types'). 
         
@@ -1084,7 +1076,7 @@ class LabbcatView:
         :param matchIds: A list of MatchId strings, or a list of match dictionaries
         :type matchIds: list of str or list of dict
         
-        :param layerIds: A vector of layer IDs.
+        :param layerIds: A list of layer IDs.
         :type layerIds: list of str
         
         :param targetOffset: The distance from the original target of the match, e.g.
