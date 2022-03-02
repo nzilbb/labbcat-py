@@ -2,10 +2,15 @@
 
 # This script uploads all transcript files it can find (and corresponsing media),
 # deleting pre-existing versions first, to the LaBB-CAT server below:
+#
+# Dependencies:
+#  - nzilbb-labbcat - run the following shell command: `pip install nzilbb-labbcat`
+#  - progressbar - run the following shell command: `pip install progressbar`
 
-import os
-import sys
 import labbcat
+import os
+import progressbar
+import sys
 
 # the following are specified by command-line arguments:
 ext = "trs"                                   # transcript file extension to look for
@@ -17,25 +22,14 @@ transcript_type = "interview"                 # transcript type to use
 store = None
 transcript_files = []
 
-def upload_next_transcript():
-    if len(transcript_files) > 0:
-        # delete it from the server first
-        delete_transcript(transcript_files.pop())
-    else:
-        print("Finished.");
-
 def delete_transcript(transcript):
-    print(transcript + " ...");
     transcript_name = os.path.basename(transcript)
     try:
         store.deleteTranscript(transcript_name)
     except labbcat.ResponseException as x:
         pass
-    
-    upload_transcript(transcript)
 
 def upload_transcript(transcript):
-    print("uploading " + transcript);
     possible_media = [
         transcript.replace(ext,".wav"),
         transcript.replace(ext,".mp4"),
@@ -44,9 +38,7 @@ def upload_transcript(transcript):
     for m in possible_media:
         if os.path.isfile(m):
             media = m
-    print("Media: " + media)
     store.newTranscript(transcript, media, None, transcript_type, corpus, None) 
-    upload_next_transcript()
 
 def main(argv):
     global ext
@@ -91,8 +83,15 @@ def main(argv):
                     transcript_files.insert(0, path)
     
         print("Uploading "+str(len(transcript_files))+" transcripts to "+url+" ...")
-        store = labbcat.Labbcat(url, username, password)
-        upload_next_transcript()
+        store = labbcat.LabbcatEdit(url, username, password)
+        bar = progressbar.ProgressBar(len(transcript_files)).start()
+        for t, transcript in enumerate(transcript_files):
+            delete_transcript(transcript)
+            upload_transcript(transcript)
+            bar.update(t)
+
+        bar.finish()
+        print("Upload complete.")
 
 if __name__ == "__main__":
     main(sys.argv)
