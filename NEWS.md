@@ -11,6 +11,8 @@
 - New parameter for LabbcatView.getFragments and LabbcatView.getSoundFragments:
   + *prefixNames* - to prefix (or not) file names with serial
 
+Requires LaBB-CAT version 20220302.1628
+
 # 0.4.0
 
 - New LabbcatAdmin CRUD operations for
