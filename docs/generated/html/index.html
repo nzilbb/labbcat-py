@@ -371,7 +371,7 @@ format, e.g. Praat TextGrid, plain text, etc.</p>
 
 <dl class="method">
 <dt id="labbcat.LabbcatView.getFragments">
-<code class="descname">getFragments</code><span class="sig-paren">(</span><em>transcriptIds</em>, <em>layerIds</em>, <em>mimeType</em>, <em>dir=None</em>, <em>startOffsets=None</em>, <em>endOffsets=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getFragments" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getFragments</code><span class="sig-paren">(</span><em>transcriptIds</em>, <em>layerIds</em>, <em>mimeType</em>, <em>dir=None</em>, <em>startOffsets=None</em>, <em>endOffsets=None</em>, <em>prefixNames=True</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getFragments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get transcript fragments in a specified format.</p>
 <p>The intervals to extract can be defined in two possible ways:</p>
 <blockquote>
@@ -398,6 +398,7 @@ dictionaries returned by getMatches(threadId).</li>
 TextGrids, “text/plain” for plain text, etc.</li>
 <li><strong>dir</strong> (<em>str</em>) – A directory in which the files should be stored, or null for a temporary
 folder.  If specified, and the directory doesn’t exist, it will be created.</li>
+<li><strong>prefixNames</strong> (<em>boolean</em>) – Whether to prefix fragment names with a numeric serial number or not.</li>
 </ul>
 </td>
 </tr>
@@ -865,7 +866,7 @@ reflects what mimeTypes can be specified for
 
 <dl class="method">
 <dt id="labbcat.LabbcatView.getSoundFragments">
-<code class="descname">getSoundFragments</code><span class="sig-paren">(</span><em>transcriptIds</em>, <em>startOffsets=None</em>, <em>endOffsets=None</em>, <em>sampleRate=None</em>, <em>dir=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getSoundFragments" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getSoundFragments</code><span class="sig-paren">(</span><em>transcriptIds</em>, <em>startOffsets=None</em>, <em>endOffsets=None</em>, <em>sampleRate=None</em>, <em>dir=None</em>, <em>prefixNames=True</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getSoundFragments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Downloads WAV sound fragments.</p>
 <p>The intervals to extract can be defined in two possible ways:</p>
 <blockquote>
@@ -890,6 +891,7 @@ dictionaries returned by getMatches(threadId).</li>
 <li><strong>sampleRate</strong> (<em>int</em>) – The desired sample rate, or null for no preference.</li>
 <li><strong>dir</strong> (<em>str</em>) – A directory in which the files should be stored, or null for a temporary
 folder.  If specified, and the directory doesn’t exist, it will be created.</li>
+<li><strong>prefixNames</strong> (<em>boolean</em>) – Whether to prefix fragment names with a numeric serial number or not.</li>
 </ul>
 </td>
 </tr>
@@ -1751,7 +1753,7 @@ task status can be updated using
 
 <dl class="method">
 <dt id="labbcat.LabbcatAdmin.newLayer">
-<code class="descname">newLayer</code><span class="sig-paren">(</span><em>id</em>, <em>parentId</em>, <em>description</em>, <em>alignment</em>, <em>peers</em>, <em>peersOverlap</em>, <em>parentIncludes</em>, <em>saturated</em>, <em>type</em>, <em>validLabels</em>, <em>category</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.newLayer" title="Permalink to this definition">¶</a></dt>
+<code class="descname">newLayer</code><span class="sig-paren">(</span><em>id</em>, <em>parentId</em>, <em>description</em>, <em>alignment</em>, <em>peers</em>, <em>peersOverlap</em>, <em>parentIncludes</em>, <em>saturated</em>, <em>type</em>, <em>validLabels={}</em>, <em>category=None</em>, <em>annotatorId=None</em>, <em>annotatorTaskParameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.newLayer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves changes to a layer.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1773,6 +1775,11 @@ or not (false).</li>
 values are not restricted. The ‘key’ is the possible label value, and each key is
 associated with a description of the value (e.g. for displaying to users).</li>
 <li><strong>category</strong> (<em>str</em>) – Category for the layer, if any.</li>
+<li><strong>annotatorId</strong> (<em>str</em>) – The ID of the layer manager that automatically fills in
+annotations on the layer, if any</li>
+<li><strong>annotatorTaskParameters</strong> (<em>str</em>) – The configuration the layer manager should use when
+filling the layer with annotations. This is a string whose format is specific to
+each layer manager.</li>
 </ul>
 </td>
 </tr>
