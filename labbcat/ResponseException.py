@@ -17,7 +17,7 @@ class ResponseException(Exception):
                 for error in response.errors:
                     if len(message) > 0:
                         message += "\n"
-                        message += error
+                    message += error
             else:
                 if response.code > 0:
                     message = "Response code " + str(response.code);

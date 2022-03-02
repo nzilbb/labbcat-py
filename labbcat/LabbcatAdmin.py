@@ -27,7 +27,8 @@ class LabbcatAdmin(LabbcatEdit):
         return self.labbcatUrl + "api/admin/store/" + resource
     
     def newLayer(self, id, parentId, description, alignment,
-                  peers, peersOverlap, parentIncludes, saturated, type, validLabels, category):
+                  peers, peersOverlap, parentIncludes, saturated, type,
+                 validLabels={}, category=None, annotatorId=None, annotatorTaskParameters=None):
         """ Saves changes to a layer.
                 
         :param id: The layer ID
@@ -67,6 +68,15 @@ class LabbcatAdmin(LabbcatEdit):
         :param category: Category for the layer, if any.
         :type category: str        
         
+        :param annotatorId: The ID of the layer manager that automatically fills in
+          annotations on the layer, if any
+        :type annotatorId: str        
+        
+        :param annotatorTaskParameters: The configuration the layer manager should use when
+          filling the layer with annotations. This is a string whose format is specific to
+          each layer manager.
+        :type annotatorTaskParameters: str        
+        
         :returns: The resulting layer definition.
         :rtype: dict
         """
@@ -81,7 +91,9 @@ class LabbcatAdmin(LabbcatEdit):
             "saturated" : saturated,
             "type" : type,
             "validLabels" : validLabels,
-            "category" : category }))
+            "category" : category,
+            "layer_manager_id" : annotatorId,
+            "extra" : annotatorTaskParameters }))
     
     def saveLayer(self, id, parentId, description, alignment,
                   peers, peersOverlap, parentIncludes, saturated, type, validLabels, category):
@@ -138,7 +150,7 @@ class LabbcatAdmin(LabbcatEdit):
             "saturated" : saturated,
             "type" : type,
             "validLabels" : validLabels,
-            "category" : category }))
+            "category" : category}))
     
     def deleteLayer(self, id):
         """ Deletes a layer.
@@ -846,3 +858,5 @@ class LabbcatAdmin(LabbcatEdit):
         model = self._postRequest(self._labbcatUrl("admin/layers/regenerate"), params)
         return(model["threadId"])
     
+# TODO loadLexicon
+# TODO deleteLexicon

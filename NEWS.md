@@ -5,6 +5,11 @@
 - New LabbcatEdit functions
   + *generateLayerUtterances*
   + *updateFragment*
+- New parameters for LabbcatAdmin.newLayer, to support creation of automated annotation layers:
+  + *annotatorId*
+  + *annotatorTaskParameters*
+- New parameter for LabbcatView.getFragments and LabbcatView.getSoundFragments:
+  + *prefixNames* - to prefix (or not) file names with serial
 
 # 0.4.0
 

@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import requests
 import tempfile
 import time
@@ -1134,7 +1135,7 @@ class LabbcatView:
         
         return(model)
 
-    def getSoundFragments(self, transcriptIds, startOffsets=None, endOffsets=None, sampleRate=None, dir=None):
+    def getSoundFragments(self, transcriptIds, startOffsets=None, endOffsets=None, sampleRate=None, dir=None, prefixNames=True):
         """
         Downloads WAV sound fragments.
 
@@ -1164,16 +1165,28 @@ class LabbcatView:
          folder.  If specified, and the directory doesn't exist, it will be created. 
         :type dir: str
         
+        :param prefixNames: Whether to prefix fragment names with a numeric serial number or not.
+        :type prefixNames: boolean
+        
         :returns: A list of WAV files. If *dir* is None, these files will be stored
          under the system's temporary directory, so once processing is finished, they should
          be deleted by the caller, or moved to a more permanent location. 
         :rtype: list of str
         """
+        prefixes = None
         # have they passed matches as transcriptIds, instead of strings?
         if len(transcriptIds) > 0:
             if isinstance(transcriptIds[0], dict) and startOffsets == None and endOffsets == None:
+                prefixExtractor = re.compile('.*prefix=([^;]+).*')
                 startOffsets = [ m["Line"] for m in transcriptIds ]
                 endOffsets = [ m["LineEnd"] for m in transcriptIds ]
+                prefixes = []
+                for m in transcriptIds:
+                    prefix = None
+                    match = prefixExtractor.match(m["MatchId"])
+                    if match != None:
+                        prefix = match.group(1)
+                    prefixes.append(prefix)
                 transcriptIds = [ m["Transcript"] for m in transcriptIds ]
         
         # validate parameters
@@ -1193,6 +1206,7 @@ class LabbcatView:
 
         # loop through each triple, getting fragments individually
         url = self._labbcatUrl("soundfragment")
+        prefixChars = len(str(len(transcriptIds)))
         for i in range(len(transcriptIds)):
             if transcriptIds[i] == None or startOffsets[i] == None or endOffsets[i] == None:
                 continue
@@ -1200,10 +1214,15 @@ class LabbcatView:
             params = {
                 "id" : transcriptIds[i],
                 "start" : startOffsets[i],
-                "end" : endOffsets[i]
+                "end" : endOffsets[i],
             }
             if sampleRate != None:
                 params["sampleRate"] = sampleRate
+            if prefixNames:
+                if prefixes != None and prefixes[i] != None:
+                    params["prefix"] = prefixes[i]
+                else:
+                    params["prefix"] = str(i+1).zfill(prefixChars)+"-"
 
             try:
                 fileName = self._postRequestToFile(url, params, dir)
@@ -1213,7 +1232,7 @@ class LabbcatView:
         
         return(fragments)
     
-    def getFragments(self, transcriptIds, layerIds, mimeType, dir=None, startOffsets=None, endOffsets=None):
+    def getFragments(self, transcriptIds, layerIds, mimeType, dir=None, startOffsets=None, endOffsets=None, prefixNames=True):
         """
         Get transcript fragments in a specified format.
 
@@ -1246,6 +1265,9 @@ class LabbcatView:
         :param dir: A directory in which the files should be stored, or null for a temporary
          folder.  If specified, and the directory doesn't exist, it will be created. 
         :type dir: str
+        
+        :param prefixNames: Whether to prefix fragment names with a numeric serial number or not.
+        :type prefixNames: boolean
         
         :returns: A list of files. If *dir* is None, these files will be stored under the
          system's temporary directory, so once processing is finished, they should be
@@ -1286,6 +1308,8 @@ class LabbcatView:
             "mimeType" : mimeType,
             "layerId" : layerIds
         }
+        if prefixNames:
+            params["prefix"] = True
         try:
             zipFileName = self._postRequestToFile(url, params, dir)
             with ZipFile(zipFileName, 'r') as zipObj:
@@ -1308,6 +1332,8 @@ class LabbcatView:
                     "mimeType" : mimeType,
                     "layerId" : layerIds
                 }
+                if prefixNames:
+                    params["prefix"] = True
                 
                 try:
                     fileName = self._postRequestToFile(url, params, dir)

@@ -454,12 +454,14 @@ class TestLabbcatAdmin(unittest.TestCase):
         layerParentIncludes = True
         layerSaturated = True
         layerType = "string"
+        annotatorId = "FlatFileDictionary"
+        annotatorTaskParameters = "tokenLayerId=orthography&tagLayerId=phonemes&dictionary=cmudict:Word→Pron"
         
         # create layer
         newLayer = self.store.newLayer(
             layerId, layerParentId, layerDescription, layerAlignment,
             layerPeers, layerPeersOverlap, layerParentIncludes, layerSaturated, layerType,
-            {}, None)
+            {}, None, annotatorId, annotatorTaskParameters)
         self.assertEqual(layerId, newLayer["id"], "ID set");
         self.assertEqual(layerDescription, newLayer["description"], "description set");
         self.assertEqual(layerParentId, newLayer["parentId"], "parentId set");
@@ -469,6 +471,9 @@ class TestLabbcatAdmin(unittest.TestCase):
         self.assertEqual(layerParentIncludes, newLayer["parentIncludes"], "parentIncludes set");
         self.assertEqual(layerSaturated, newLayer["saturated"], "saturated set");
         self.assertEqual(layerType, newLayer["type"], "type set");
+        # for now, the annotator comes back as "layer_manager_id" and the task configuration
+        # is in an automation task
+        self.assertEqual(annotatorId, newLayer["layer_manager_id"], "annotator set");
 
         # change it
         layerDescription = "Changed description"
