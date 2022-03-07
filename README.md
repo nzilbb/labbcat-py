@@ -32,7 +32,7 @@ LaBB-CAT servers are usually password-protected linguistic corpora, and can be
 accessed manually via a web browser, or programmatically using a client library like
 this one.
 
-The current version of this library requires LaBB-CAT version 20200608.1507.
+The current version of this library requires LaBB-CAT version 20220307.1126.
 
 ## Documentation
 

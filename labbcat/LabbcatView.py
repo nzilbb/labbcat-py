@@ -192,8 +192,10 @@ class LabbcatView:
         else:
             # save into the given directory...
             # use the name given by the server, if any
-            contentDisposition = response.headers["content-disposition"];
-            if self.verbose: print("contentDisposition: " + contentDisposition)
+            contentDisposition = None
+            if "content-disposition" in response.headers:
+                contentDisposition = response.headers["content-disposition"];
+                if self.verbose: print("contentDisposition: " + contentDisposition)
             if contentDisposition != None:                
                 # something like attachment; filename=blah.wav
                 equals = contentDisposition.find("=")
@@ -623,7 +625,7 @@ class LabbcatView:
             self._storeQueryUrl("getAvailableMedia"),
             { "id":id }))
         
-    def getMedia(self, id, trackSuffix, mimeType, startOffset=None, endOffset=None):
+    def getMedia(self, id, trackSuffix, mimeType, startOffset=None, endOffset=None): #TODO download media like getSoundFragments
         """ Gets a given media track for a given transcript. 
         
         :param id: The transcript ID.
@@ -702,6 +704,57 @@ class LabbcatView:
 
         return(status)
 
+    def taskResults(self, threadId, dir=None):
+        """ Gets the results of the given task, as a file or list of files.
+        
+        Some tasks produce a file for download when they're finished
+        (e.g. `getFragmentsAsync() <#labbcat.LabbcatView.getFragmentsAsync>`_)
+        so this function provides acces to this results file. If the results are
+        compressed into a zip file, this function automatically unpacks the contained files.
+
+        :param threadId: The ID of the task.
+        :type threadId: str.
+
+        :param dir: A directory in which the files should be stored, or null for a temporary
+         folder.  If specified, and the directory doesn't exist, it will be created. 
+        :type dir: str
+        
+        :returns: A list of files. If *dir* is None, these files will be stored under the
+         system's temporary directory, so once processing is finished, they should be
+         deleted by the caller, or moved to a more permanent location. 
+         If the task has no results (yet) this function returns None.
+        :rtype: list of str
+        """
+        status = self.taskStatus(threadId)
+        if "resultUrl" in status:
+            resultUrl = status["resultUrl"]
+            
+            fragments = []        
+            tempFiles = False
+            if dir == None:
+                dir = tempfile.mkdtemp("_"+str(threadId), "taskResults_")
+                tempFiles = True
+            elif not os.path.exists(dir):
+                os.mkdir(dir)
+
+            # get result
+            fileName = self._postRequestToFile(resultUrl, None, dir)
+            fileNames = [ fileName ]
+            
+            if fileName.endswith(".zip"):
+                # extract the zip file
+                with ZipFile(fileName, 'r') as zipObj:
+                    zipObj.extractall(dir)
+                    fileNames = [os.path.join(dir, fileName) for fileName in zipObj.namelist()]
+                
+                # delete the temporary zip file
+                os.remove(fileName)
+
+            return fileNames
+            
+        else: # no resultUrl
+            return None
+    
     def releaseTask(self, threadId):
         """ Release a finished task, to free up server resources.
 
@@ -1342,6 +1395,75 @@ class LabbcatView:
                     fragments.append(None)
         
         return(fragments)
+
+    def getFragmentsAsync(self, transcriptIds, layerIds, mimeType, startOffsets=None, endOffsets=None, prefixNames=True):
+        """
+        Starts a server task for getting transcript fragments in a specified format.
+
+        The intervals to extract can be defined in two possible ways:
+        
+         1. transcriptIds is a list of strings, and startOffsets and endOffsets are lists
+            of floats 
+         2. transcriptIds is a list of dict objects returned by getMatches(threadId), and
+            startOffsets and endOffsets are None
+
+        :param transcriptIds: A list of transcript IDs (transcript names), or a list of
+         dictionaries returned by getMatches(threadId).
+        :type transcriptIds: list of str or list of dict
+        
+        :param startOffsets: A list of start offsets, with one element for each element in
+         *transcriptIds*. 
+        :type startOffsets: list of float or None
+        
+        :param endOffsets: A list of end offsets, with one element for each element in
+         *transcriptIds*. 
+        :type endOffsets: list of float or None
+        
+        :param layerIds: A list of IDs of annotation layers to include in the fragment.
+        :type layerIds: list of str
+        
+        :param mimeType: The desired format, for example "text/praat-textgrid" for Praat
+         TextGrids, "text/plain" for plain text, etc.
+        :type mimeType: list of str
+        
+        :param prefixNames: Whether to prefix fragment names with a numeric serial number or not.
+        :type prefixNames: boolean
+        
+        :returns: The threadId of the resulting task, which can be passed in to
+          `taskStatus() <#labbcat.LabbcatView.taskStatus>`_, 
+          `waitForTask() <#labbcat.LabbcatView.waitForTask>`_
+          `releaseTask() <#labbcat.LabbcatView.releaseTask>`_, etc. 
+        :rtype: str
+        """
+        # have they passed matches as transcriptIds, instead of strings?
+        if len(transcriptIds) > 0:
+            if isinstance(transcriptIds[0], dict) and startOffsets == None and endOffsets == None:
+                startOffsets = [ m["Line"] for m in transcriptIds ]
+                endOffsets = [ m["LineEnd"] for m in transcriptIds ]
+                transcriptIds = [ m["Transcript"] for m in transcriptIds ]
+        
+        # validate parameters
+        if len(transcriptIds) != len(startOffsets) or len(transcriptIds) != len(endOffsets):
+            raise ResponseException(
+                "transcriptIds ("+str(len(transcriptIds))
+                +"), startOffsets ("+str(len(startOffsets))
+                +"), and endOffsets ("+str(len(endOffsets))+") must be lists of equal size.");
+        
+        # send all triples in one request, we should get a zip file back
+        url = self._labbcatUrl("api/serialize/fragment")
+        params = {
+            "id" : transcriptIds,
+            "start" : startOffsets,
+            "end" : endOffsets,
+            "mimeType" : mimeType,
+            "layerId" : layerIds,
+            "async" : "true"
+        }
+        if prefixNames:
+            params["prefix"] = True
+
+        model = self._postRequest(url, params)
+        return(model["threadId"])
 
     def getSerializerDescriptors(self):
         """ Lists the descriptors of all registered serializers.        

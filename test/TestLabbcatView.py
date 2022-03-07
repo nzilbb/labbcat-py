@@ -504,6 +504,64 @@ class TestLabbcatView(unittest.TestCase):
         finally:
             self.store.releaseTask(threadId)
 
+    def test_getFragmentsAsync_taskResults(self):
+        # get a participant ID to use
+        ids = self.store.getParticipantIds()
+        self.assertTrue(len(ids) > 0, "getParticipantIds: Some IDs are returned")
+        participantId = [ ids[0] ]
+        
+        # all instances of "and"
+        threadId = self.store.search({ "orthography" : "quakes" }, participantId)
+        try:
+            task = self.store.waitForTask(threadId, 30)
+            # if the task is still running, it's taking too long, so cancel it
+            if task["running"]:
+                try:
+                    self.store.cancelTask(threadId)
+                except:
+                    pass
+            self.assertFalse(task["running"], "Search task finished in a timely manner")
+            
+            matches = self.store.getMatches(threadId, 2)
+            if len(matches) == 0:
+                print("getMatches: No matches were returned, cannot test getFragments")
+            else:
+                upTo = min(5, len(matches))
+                subset = matches[:upTo]
+                
+                dir = "getFragments"
+                layerIds = [ "orthography" ]
+                fragmentsThreadId = self.store.getFragmentsAsync(
+                    subset, layerIds, "text/praat-textgrid")
+                fragmentsTask = self.store.waitForTask(fragmentsThreadId, 30)
+                # if the task is still running, it's taking too long, so cancel it
+                if fragmentsTask["running"]:
+                    try:
+                        self.store.cancelTask(fragmentsThreadId)
+                    except:
+                        pass
+                self.assertFalse(task["running"], "Fragments task finished in a timely manner")
+                
+                fragments = self.store.taskResults(fragmentsThreadId, dir)
+                self.store.releaseTask(fragmentsThreadId)
+                try:
+                    self.assertEqual(len(subset), len(fragments),
+                                      "files array is same size as matches array")
+                    
+                    for m in range(upTo):
+                        self.assertIsNotNone(fragments[m], "Non-None file: " + str(subset[m]))
+                        self.assertTrue(len(fragments[m]) > 0,
+                                        "Non-zero sized file: " + str(subset[m]))
+                finally:
+                    for fragment in fragments:
+                        if fragment != None:
+                            # duplicate names can exist, so the file may have already been deleted
+                            if os.path.exists(fragment): 
+                                os.remove(fragment)
+                    os.rmdir(dir)
+        finally:
+            self.store.releaseTask(threadId)
+
     def test_getSerializerDescriptors(self):
         descriptors = self.store.getSerializerDescriptors()
         #for (String descriptor : descriptors) print("descriptor " + descriptor)
