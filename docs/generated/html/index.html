@@ -418,6 +418,52 @@ files regardless of how many fragments there are.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="labbcat.LabbcatView.getFragmentsAsync">
+<code class="descname">getFragmentsAsync</code><span class="sig-paren">(</span><em>transcriptIds</em>, <em>layerIds</em>, <em>mimeType</em>, <em>startOffsets=None</em>, <em>endOffsets=None</em>, <em>prefixNames=True</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getFragmentsAsync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts a server task for getting transcript fragments in a specified format.</p>
+<p>The intervals to extract can be defined in two possible ways:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>transcriptIds is a list of strings, and startOffsets and endOffsets are lists
+of floats</li>
+<li>transcriptIds is a list of dict objects returned by getMatches(threadId), and
+startOffsets and endOffsets are None</li>
+</ol>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>transcriptIds</strong> (<em>list of str</em><em> or </em><em>list of dict</em>) – A list of transcript IDs (transcript names), or a list of
+dictionaries returned by getMatches(threadId).</li>
+<li><strong>startOffsets</strong> (<em>list of float</em><em> or </em><em>None</em>) – A list of start offsets, with one element for each element in
+<em>transcriptIds</em>.</li>
+<li><strong>endOffsets</strong> (<em>list of float</em><em> or </em><em>None</em>) – A list of end offsets, with one element for each element in
+<em>transcriptIds</em>.</li>
+<li><strong>layerIds</strong> (<em>list of str</em>) – A list of IDs of annotation layers to include in the fragment.</li>
+<li><strong>mimeType</strong> (<em>list of str</em>) – The desired format, for example “text/praat-textgrid” for Praat
+TextGrids, “text/plain” for plain text, etc.</li>
+<li><strong>prefixNames</strong> (<em>boolean</em>) – Whether to prefix fragment names with a numeric serial number or not.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>The threadId of the resulting task, which can be passed in to
+<a class="reference external" href="#labbcat.LabbcatView.taskStatus">taskStatus()</a>, 
+<a class="reference external" href="#labbcat.LabbcatView.waitForTask">waitForTask()</a>
+<a class="reference external" href="#labbcat.LabbcatView.taskResults">taskResults()</a>
+<a class="reference external" href="#labbcat.LabbcatView.releaseTask">releaseTask()</a>, etc.</p>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.LabbcatView.getId">
 <code class="descname">getId</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getId" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the store’s ID.</p>
@@ -736,8 +782,58 @@ or null for transcript ID order.</li>
 
 <dl class="method">
 <dt id="labbcat.LabbcatView.getMedia">
-<code class="descname">getMedia</code><span class="sig-paren">(</span><em>id</em>, <em>trackSuffix</em>, <em>mimeType</em>, <em>startOffset=None</em>, <em>endOffset=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getMedia" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a given media track for a given transcript.</p>
+<code class="descname">getMedia</code><span class="sig-paren">(</span><em>id</em>, <em>trackSuffix</em>, <em>mimeType</em>, <em>startOffset=None</em>, <em>endOffset=None</em>, <em>dir=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getMedia" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downloads a given media track URL for a given transcript.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<em>str</em>) – The transcript ID.</li>
+<li><strong>trackSuffix</strong> (<em>str</em>) – The track suffix of the media.</li>
+<li><strong>mimeType</strong> (<em>str</em>) – The MIME type of the media, which may include parameters for type
+conversion, e.g. ‘text/wav; samplerate=16000’</li>
+<li><strong>startOffset</strong> (<em>float</em><em> or </em><em>None</em>) – The start offset of the media sample, or null for the start of
+the whole recording.</li>
+<li><strong>endOffset</strong> (<em>float</em><em> or </em><em>None</em>) – The end offset of the media sample, or null for the end of the
+whole recording.</li>
+<li><strong>dir</strong> (<em>str</em>) – A directory in which the file should be stored, or null for a temporary
+folder.  If specified, and the directory doesn’t exist, it will be created.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The file name of the resulting file. If <em>dir</em> is None, this file will be stored
+under the system’s temporary directory, so once processing is finished, it should
+be deleted by the caller, or moved to a more permanent location.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.getMediaTracks">
+<code class="descname">getMediaTracks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getMediaTracks" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the predefined media tracks available for transcripts.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">An ordered list of media track definitions.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dictionaries</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.getMediaUrl">
+<code class="descname">getMediaUrl</code><span class="sig-paren">(</span><em>id</em>, <em>trackSuffix</em>, <em>mimeType</em>, <em>startOffset=None</em>, <em>endOffset=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getMediaUrl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a given media track URL for a given transcript.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -760,22 +856,6 @@ media doesn’t exist.</p>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
 </td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="labbcat.LabbcatView.getMediaTracks">
-<code class="descname">getMediaTracks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getMediaTracks" title="Permalink to this definition">¶</a></dt>
-<dd><p>List the predefined media tracks available for transcripts.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">An ordered list of media track definitions.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dictionaries</td>
 </tr>
 </tbody>
 </table>
@@ -1178,6 +1258,38 @@ simultaneous speech is excluded. <em>None</em> means include all overlapping utt
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.taskResults">
+<code class="descname">taskResults</code><span class="sig-paren">(</span><em>threadId</em>, <em>dir=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.taskResults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the results of the given task, as a file or list of files.</p>
+<p>Some tasks produce a file for download when they’re finished
+(e.g. <a class="reference external" href="#labbcat.LabbcatView.getFragmentsAsync">getFragmentsAsync()</a>)
+so this function provides acces to this results file. If the results are
+compressed into a zip file, this function automatically unpacks the contained files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>threadId</strong> (<em>str.</em>) – The ID of the task.</li>
+<li><strong>dir</strong> (<em>str</em>) – A directory in which the files should be stored, or null for a temporary
+folder.  If specified, and the directory doesn’t exist, it will be created.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of files. If <em>dir</em> is None, these files will be stored under the
+system’s temporary directory, so once processing is finished, they should be
+deleted by the caller, or moved to a more permanent location. 
+If the task has no results (yet) this function returns None.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of str</p>
 </td>
 </tr>
 </tbody>

@@ -1,3 +1,14 @@
+# 0.6.0
+
+- Changed LabbcatView function
+  + *getMedia* - now downloads the media to a file instead of just returning the URL
+- New LabbcatView functions
+  + *getMediaUrl* - returns the URL of the given media, as *getMedia* used to do.
+  + *getFragmentsAsync* - does what *getFragments* does, but asychronously by starting a task.
+  + *taskResults* - downloads the results file(s) of a given task.
+
+Requires LaBB-CAT version 20220307.1136
+
 # 0.5.0
 
 - New LabbcatAdmin function

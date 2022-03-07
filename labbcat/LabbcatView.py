@@ -1481,6 +1481,7 @@ class LabbcatView:
         :returns: The threadId of the resulting task, which can be passed in to
           `taskStatus() <#labbcat.LabbcatView.taskStatus>`_, 
           `waitForTask() <#labbcat.LabbcatView.waitForTask>`_
+          `taskResults() <#labbcat.LabbcatView.taskResults>`_
           `releaseTask() <#labbcat.LabbcatView.releaseTask>`_, etc. 
         :rtype: str
         """
