@@ -171,6 +171,7 @@ class TestLabbcatView(unittest.TestCase):
         self.assertIsNotNone(
             fileName, "There is some media (check the first graph listed) "+graphId+")")
         self.assertTrue(os.path.exists(fileName), "File downloaded")
+        self.assertTrue(fileName.endswith(".wav"), "File name correct")
         os.remove(fileName)
     
     def test_getMediaFragment(self):

@@ -178,6 +178,7 @@ class LabbcatView:
         elif contentType.startswith("text/html"): extension = ".html"
         elif contentType.startswith("application/zip"): extension = ".zip"
         elif contentType.startswith("audio/wav"): extension = ".wav"
+        elif contentType.startswith("audio/x-wav"): extension = ".wav"
         elif contentType.startswith("audio/mpeg"): extension = ".mp3"
         elif contentType.startswith("video/mpeg"): extension = ".mp4"
 
@@ -207,8 +208,14 @@ class LabbcatView:
                     else:
                         fileName = os.path.join(dir, fileName)
             if fileName == None:
-                fd, fileName = tempfile.mkstemp(extension, "labbcat-py-", dir)
-                os.close(fd)
+                lastSlash = url.rfind('/')
+                if lastSlash >= 0:
+                    fileName = url[lastSlash + 1:]
+                    if not fileName.endswith(extension): fileName = fileName + extension
+                    fileName = os.path.join(dir, fileName)
+                else:
+                    fd, fileName = tempfile.mkstemp(extension, "labbcat-py-", dir)
+                    os.close(fd)
             if self.verbose: print("file: " + fileName)
             with open(fileName, "wb") as file:
                 file.write(response.content)
