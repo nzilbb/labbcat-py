@@ -625,8 +625,8 @@ class LabbcatView:
             self._storeQueryUrl("getAvailableMedia"),
             { "id":id }))
         
-    def getMedia(self, id, trackSuffix, mimeType, startOffset=None, endOffset=None): #TODO download media like getSoundFragments
-        """ Gets a given media track for a given transcript. 
+    def getMediaUrl(self, id, trackSuffix, mimeType, startOffset=None, endOffset=None):
+        """ Gets a given media track URL for a given transcript. 
         
         :param id: The transcript ID.
         :type id: str
@@ -654,6 +654,48 @@ class LabbcatView:
             self._storeQueryUrl("getMedia"),
             { "id":id, "trackSuffix":trackSuffix, "mimeType":mimeType,
               "startOffset":startOffset, "endOffset":endOffset }))
+        
+    def getMedia(self, id, trackSuffix, mimeType, startOffset=None, endOffset=None, dir=None):
+        """ Downloads a given media track URL for a given transcript. 
+        
+        :param id: The transcript ID.
+        :type id: str
+        
+        :param trackSuffix: The track suffix of the media. 
+        :type trackSuffix: str
+        
+        :param mimeType: The MIME type of the media, which may include parameters for type
+            conversion, e.g. 'text/wav; samplerate=16000'
+        :type mimeType: str
+        
+        :param startOffset: The start offset of the media sample, or null for the start of
+            the whole recording. 
+        :type startOffset: float or None
+
+        :param endOffset: The end offset of the media sample, or null for the end of the
+            whole recording. 
+        :type endOffset: float or None
+
+        :param dir: A directory in which the file should be stored, or null for a temporary
+         folder.  If specified, and the directory doesn't exist, it will be created. 
+        :type dir: str
+        
+        :returns: The file name of the resulting file. If *dir* is None, this file will be stored
+         under the system's temporary directory, so once processing is finished, it should
+         be deleted by the caller, or moved to a more permanent location. 
+        :rtype: list of str
+        """
+
+        # get the URL of the media
+        url = self.getMediaUrl(id, trackSuffix, mimeType, startOffset, endOffset)
+
+        # download the content of the URL
+        if dir == None:
+            dir = tempfile.mkdtemp("_wav", "getMedia_")
+            tempFiles = True
+        elif not os.path.exists(dir):
+            os.mkdir(dir)
+        return(self._postRequestToFile(url, None, dir))
         
     def getEpisodeDocuments(self, id):
         """ Get a list of documents associated with the episode of the given transcript. 

@@ -154,13 +154,24 @@ class TestLabbcatView(unittest.TestCase):
                     with self.subTest(key=key):
                         self.assertIn(key, anchor, "Has " + key)
    
+    def test_getMediaUrl(self):
+        ids = self.store.getMatchingTranscriptIds("/AP511.+\\.eaf/.test(id)", 1, 0)
+        self.assertTrue(len(ids) > 0, "Some graph IDs are returned")
+        graphId = ids[0]
+        url = self.store.getMediaUrl(graphId, "", "audio/wav")
+        self.assertIsNotNone(
+            url, "There is some media (check the first graph listed) "+graphId+")")
+        self.assertTrue(url.startswith("http"), "Looks like a URL")
+    
     def test_getMedia(self):
         ids = self.store.getMatchingTranscriptIds("/AP511.+\\.eaf/.test(id)", 1, 0)
         self.assertTrue(len(ids) > 0, "Some graph IDs are returned")
         graphId = ids[0]
-        url = self.store.getMedia(graphId, "", "audio/wav")
+        fileName = self.store.getMedia(graphId, "", "audio/wav")
         self.assertIsNotNone(
-            url, "There is some media (check the first graph listed) "+graphId+")")
+            fileName, "There is some media (check the first graph listed) "+graphId+")")
+        self.assertTrue(os.path.exists(fileName), "File downloaded")
+        os.remove(fileName)
     
     def test_getMediaFragment(self):
       ids = self.store.getMatchingTranscriptIds("/AP511.+\\.eaf/.test(id)", 1, 0)
