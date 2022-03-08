@@ -101,7 +101,7 @@ class LabbcatView:
             
         response = Response(
             requests.post(
-                url=url, params=params, json=json, auth=auth, headers={
+                url=url, data=params, json=json, auth=auth, headers={
                     "Accept":"application/json",
                     "Accept-Language":self.language,
                     "user-agent": "labbcat-py/"+__version__}),
