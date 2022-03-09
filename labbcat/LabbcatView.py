@@ -1329,7 +1329,7 @@ class LabbcatView:
             try:
                 fileName = self._postRequestToFile(url, params, dir)
                 fragments.append(fileName)
-            except ResponseException:
+            except:
                 fragments.append(None)
         
         return(fragments)
