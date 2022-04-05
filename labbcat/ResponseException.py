@@ -6,23 +6,24 @@ class ResponseException(Exception):
     """
 
     response = None
+    message = None
     
     def __init__(self, response):
         if isinstance(response, str):
-            message = response
+            self.message = response
         else: # response is a Response object
             self.response = response        
-            message = ""
+            self.message = ""
             if response.errors != None and len(response.errors) > 0:
                 for error in response.errors:
-                    if len(message) > 0:
-                        message += "\n"
-                    message += error
+                    if len(self.message) > 0:
+                        self.message += "\n"
+                    self.message += error
             else:
                 if response.code > 0:
-                    message = "Response code " + str(response.code);
+                    self.message = "Response code " + str(response.code);
                 else:
                     if response.httpStatus > 0:
-                        message = "HTTP status " + str(response.httpStatus) + " : " + response.text
-        super().__init__(message)
+                        self.message = "HTTP status " + str(response.httpStatus) + " : " + response.text
+        super().__init__(self.message)
         
