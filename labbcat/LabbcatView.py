@@ -1589,8 +1589,8 @@ class LabbcatView:
         """ List the dictionaries available.
         
         :returns: A dictionary of lists, where keys are layer manager IDs, each of which 
-                  containing a list of IDs for dictionaries that the layer manager makes 
-                  available.
+         containing a list of IDs for dictionaries that the layer manager makes 
+         available.
         :rtype: dict of lists
         """
         return(self._getRequest(self._labbcatUrl("dictionaries"), None))
@@ -1599,19 +1599,19 @@ class LabbcatView:
         """ Lookup entries in a dictionary.
         
         :param managerId: The layer manager ID of the dictionary, as returned by 
-                          `getDictionaries() <#labbcat.LabbcatView.getDictionaries>`_).
+         `getDictionaries() <#labbcat.LabbcatView.getDictionaries>`_).
         :type managerId: str
         
         :param dictionaryId: The ID of the dictionary, as returned by 
-                          `getDictionaries() <#labbcat.LabbcatView.getDictionaries>`_).
+         `getDictionaries() <#labbcat.LabbcatView.getDictionaries>`_).
         :type managerId: str
         
         :param keys: A list of keys (words) identifying entries to look up.
         :type keys: list of str or list of dict
         
         :returns: A dictionary of lists, where keys are given keys, each of which
-        containing a list of entries. Keys with no corresponding entry in the given
-        dictionary will be present in the returned result, but will have no entries.
+         containing a list of entries. Keys with no corresponding entry in the given
+         dictionary will be present in the returned result, but will have no entries.
         :rtype: dict of lists
         """
         if self.verbose:

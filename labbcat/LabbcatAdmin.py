@@ -929,14 +929,14 @@ class LabbcatAdmin(LabbcatEdit):
                 while running:
                     time.sleep(1)
                     resp = self._getRequestRaw(
-                        self._labbcatUrl("edit/annotator/ext/FlatLexiconTagger/getRunning"), {})
+                        self._labbcatUrl("edit/annotator/ext/FlatLexiconTagger/getRunning"), None)
                     running = resp.text == "true"
                     resp = self._getRequestRaw(
-                        self._labbcatUrl("edit/annotator/ext/FlatLexiconTagger/getStatus"), {})
+                        self._labbcatUrl("edit/annotator/ext/FlatLexiconTagger/getStatus"), None)
                     status = resp.text
                     resp = self._getRequestRaw(
                         self._labbcatUrl(
-                            "edit/annotator/ext/FlatLexiconTagger/getPercentComplete"), {})
+                            "edit/annotator/ext/FlatLexiconTagger/getPercentComplete"), None)
                     percentComplete = int(resp.text)
                     if self.verbose: print("status: " + str(percentComplete) + "% " + status + " - " + str(running))
 

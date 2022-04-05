@@ -352,6 +352,54 @@ format, e.g. Praat TextGrid, plain text, etc.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="labbcat.LabbcatView.getDictionaries">
+<code class="descname">getDictionaries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getDictionaries" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the dictionaries available.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A dictionary of lists, where keys are layer manager IDs, each of which 
+containing a list of IDs for dictionaries that the layer manager makes 
+available.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict of lists</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.getDictionaryEntries">
+<code class="descname">getDictionaryEntries</code><span class="sig-paren">(</span><em>managerId</em>, <em>dictionaryId</em>, <em>keys</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getDictionaryEntries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lookup entries in a dictionary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>managerId</strong> (<em>str</em>) – The layer manager ID of the dictionary, as returned by 
+<a class="reference external" href="#labbcat.LabbcatView.getDictionaries">getDictionaries()</a>).</li>
+<li><strong>dictionaryId</strong> – <p>The ID of the dictionary, as returned by 
+<a class="reference external" href="#labbcat.LabbcatView.getDictionaries">getDictionaries()</a>).</p>
+</li>
+<li><strong>keys</strong> (<em>list of str</em><em> or </em><em>list of dict</em>) – A list of keys (words) identifying entries to look up.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A dictionary of lists, where keys are given keys, each of which
+containing a list of entries. Keys with no corresponding entry in the given
+dictionary will be present in the returned result, but will have no entries.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict of lists</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.LabbcatView.getEpisodeDocuments">
 <code class="descname">getEpisodeDocuments</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getEpisodeDocuments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of documents associated with the episode of the given transcript.</p>
@@ -1368,6 +1416,98 @@ permission.</p>
 </tbody>
 </table>
 <dl class="method">
+<dt id="labbcat.LabbcatEdit.addDictionaryEntry">
+<code class="descname">addDictionaryEntry</code><span class="sig-paren">(</span><em>managerId</em>, <em>dictionaryId</em>, <em>key</em>, <em>entry</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.addDictionaryEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an entry to a dictionary.</p>
+<p>This function adds a new entry to the given dictionary. Words can have multiple entries.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>managerId</strong> (<em>str</em>) – The layer manager ID of the dictionary, as returned by getDictionaries</li>
+<li><strong>dictionaryId</strong> (<em>str</em>) – <p>The ID of the dictionary, as returned by 
+<a class="reference external" href="#labbcat.LabbcatView.getDictionaries">getDictionaries()</a>.</p>
+</li>
+<li><strong>key</strong> (<em>str</em>) – The key (word) in the dictionary to add an entry for.</li>
+<li><strong>entry</strong> (<em>str</em>) – The value (definition) for the given key.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">None if the entry was added, or an error message if not.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str or None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatEdit.addLayerDictionaryEntry">
+<code class="descname">addLayerDictionaryEntry</code><span class="sig-paren">(</span><em>layerId</em>, <em>key</em>, <em>entry</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.addLayerDictionaryEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an entry to a layer dictionary.</p>
+<p>This function adds a new entry to the dictionary that manages a given layer,
+and updates all affected tokens in the corpus. Words can have multiple entries.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>layerId</strong> (<em>str</em>) – The ID of the layer with a dictionary configured to manage it.</li>
+<li><strong>key</strong> (<em>str</em>) – The key (word) in the dictionary to add an entry for.</li>
+<li><strong>entry</strong> (<em>str</em>) – The value (definition) for the given key.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">None if the entry was added, or an error message if not.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str or None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatEdit.annotatorExt">
+<code class="descname">annotatorExt</code><span class="sig-paren">(</span><em>annotatorId</em>, <em>resource</em>, <em>parameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.annotatorExt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve annotator’s “ext” resource.</p>
+<p>Retrieve a given resource from an annotator’s “ext” web app. Annotators are modules
+that perform different annotation tasks, and can optionally implement functionality for
+providing extra data or extending functionality in an annotator-specific way. If the
+annotator implements an “ext” web app, it can provide resources and implement a
+mechanism for iterrogating the annotator. This function provides a mechanism for
+accessing these resources via python.</p>
+<p>Details about the resources available for a given annotator are available by
+calling <a class="reference external" href="#labbcat.LabbcatEdit.getAnnotatorDescriptor">getAnnotatorDescriptor()</a>
+and checking “hasExtWebapp” attribute to ensure an ‘ext’ webapp is implemented,
+and checking details the “extApiInfo” attribute.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>annotatorId</strong> (<em>str</em>) – ID of the annotator to interrogate.</li>
+<li><strong>resource</strong> (<em>str</em>) – The name of the file to retrieve or instance method (function) to
+invoke. Possible values for this depend on the specific annotator being interrogated.</li>
+<li><strong>parameters</strong> (<em>str</em>) – Optional list of ordered parameters for the instance method (function).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The resource requested.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.LabbcatEdit.deleteParticipant">
 <code class="descname">deleteParticipant</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.deleteParticipant" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes the given participant, and all associated meta-data.</p>
@@ -1426,6 +1566,47 @@ task status can be updated using
 </dd></dl>
 
 <dl class="method">
+<dt id="labbcat.LabbcatEdit.getAnnotatorDescriptor">
+<code class="descname">getAnnotatorDescriptor</code><span class="sig-paren">(</span><em>annotatorId</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.getAnnotatorDescriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets annotator information.</p>
+<p>Retrieve information about an annotator. Annotators are modules that perform different
+annotation tasks. This function provides information about a given annotator, for
+example the currently installed version of the module, what configuration parameters it
+requires, etc.</p>
+<p>The retuned dictionary contains the following entries:</p>
+<ul class="simple">
+<li>“annotatorId” - The annotators’s unique ID</li>
+<li>“version” - The currently install version of the annotator.</li>
+<li>“info” - HTML-encoded description of the function of the annotator.</li>
+<li>“infoText” - A plain text version of $info (converted automatically).</li>
+<li>“hasConfigWebapp” - Determines whether the annotator includes a web-app for
+installation or general configuration.</li>
+<li>“configParameterInfo” - An HTML-encoded definition of the installation config parameters, including a list of all parameters, and the encoding of the parameter string.</li>
+<li>“hasTaskWebapp” - Determines whether the annotator includes a web-app for
+task parameter configuration.</li>
+<li>“taskParameterInfo” - An HTML-encoded definition of the task parameters,
+including a list of all parameters, and the encoding of the parameter string.</li>
+<li>“hasExtWebapp” - Determines whether the annotator includes an extras web-app
+which implements functionality for providing extra data or extending
+functionality in an annotator-specific way.</li>
+<li>“extApiInfo” - An HTML-encoded document containing information about what
+endpoints are published by the ext web-app.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>annotatorId</strong> (<em>str</em>) – ID of the annotator module.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The annotator info.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionary of str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.LabbcatEdit.newTranscript">
 <code class="descname">newTranscript</code><span class="sig-paren">(</span><em>transcript</em>, <em>media</em>, <em>mediaSuffix</em>, <em>transcriptType</em>, <em>corpus</em>, <em>episode</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.newTranscript" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uploads a new transcript.</p>
@@ -1451,6 +1632,63 @@ task status can be updated using
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatEdit.removeDictionaryEntry">
+<code class="descname">removeDictionaryEntry</code><span class="sig-paren">(</span><em>managerId</em>, <em>dictionaryId</em>, <em>key</em>, <em>entry=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.removeDictionaryEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes an entry from a dictionary.</p>
+<p>This function removes an existing entry from the given dictionary. Words can have 
+multiple entries.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>managerId</strong> (<em>str</em>) – The layer manager ID of the dictionary, as returned by getDictionaries</li>
+<li><strong>dictionaryId</strong> (<em>str</em>) – <p>The ID of the dictionary, as returned by 
+<a class="reference external" href="#labbcat.LabbcatView.getDictionaries">getDictionaries()</a>.</p>
+</li>
+<li><strong>key</strong> (<em>str</em>) – The key (word) in the dictionary to remove an entry for.</li>
+<li><strong>entry</strong> (<em>str</em>) – The value (definition) to remove, or None to remove all the entries for key.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">None if the entry was removed, or an error message if not.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str or None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatEdit.removeLayerDictionaryEntry">
+<code class="descname">removeLayerDictionaryEntry</code><span class="sig-paren">(</span><em>layerId</em>, <em>key</em>, <em>entry=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.removeLayerDictionaryEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes an entry from a layer dictionary.</p>
+<p>This function removes an existing entry from the dictionary that manages a given layer,
+and updates all affected tokens in the corpus. Words can have multiple entries.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>layerId</strong> (<em>str</em>) – The ID of the layer with a dictionary configured to manage it.</li>
+<li><strong>key</strong> (<em>str</em>) – The key (word) in the dictionary to remove an entry for.</li>
+<li><strong>entry</strong> (<em>str</em>) – The value (definition) to remove, or None to remove all the entries for key.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">None if the entry was removed, or an error message if not.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str or None</p>
 </td>
 </tr>
 </tbody>
@@ -1769,6 +2007,27 @@ representing the reason the record can’t be deleted.</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="labbcat.LabbcatAdmin.deleteLexicon">
+<code class="descname">deleteLexicon</code><span class="sig-paren">(</span><em>lexicon</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.deleteLexicon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a previously loaded lexicon.</p>
+<p>By default LaBB-CAT includes a layer manager called the Flat Lexicon Tagger, which can
+be configured to annotate words with data from a dictionary loaded from a plain text
+file (e.g. a CSV file).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>lexicon</strong> (<em>str</em>) – The name of the lexicon to delete. e.g. ‘cmudict’</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None if the deletion was successful, or an error message if not.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str or None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.LabbcatAdmin.deleteMediaTrack">
 <code class="descname">deleteMediaTrack</code><span class="sig-paren">(</span><em>suffix</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.deleteMediaTrack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes an existing media track record.</p>
@@ -1858,6 +2117,49 @@ task status can be updated using
 <a class="reference external" href="#labbcat.LabbcatView.taskStatus">taskStatus()</a>.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.loadLexicon">
+<code class="descname">loadLexicon</code><span class="sig-paren">(</span><em>file</em>, <em>lexicon</em>, <em>fieldDelimiter</em>, <em>fieldNames</em>, <em>quote=None</em>, <em>comment=None</em>, <em>skipFirstLine=False</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.loadLexicon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload a flat lexicon file for lexical tagging.</p>
+<p>By default LaBB-CAT includes a layer manager called the Flat Lexicon Tagger, which can
+be configured to annotate words with data from a dictionary loaded from a plain text
+file (e.g. a CSV file). The file must have a ‘flat’ structure in the sense that it’s a
+simple list of dictionary entries with a fixed number of columns/fields, rather than
+having a complex structure.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file</strong> – The full path name of the lexicon file.</li>
+<li><strong>lexicon</strong> (<em>str</em>) – The name for the resulting lexicon. If the named lexicon already exists,
+it will be completely replaced with the contents of the file (i.e. all 
+existing entries will be deleted befor adding new entries from the file).
+e.g. ‘cmudict’</li>
+<li><strong>fieldDelimiter</strong> (<em>str</em>) – The character used to delimit fields in the file.
+If this is ” - “, rows are split on only the <em>first</em> space, 
+in line with common dictionary formats.
+e.g. ‘,’ for Comma Separated Values (CSV) files.</li>
+<li><strong>fieldNames</strong> (<em>str</em>) – A list of field names, delimited by fieldDelimiter, 
+e.g. ‘Word,Pronunciation’.</li>
+<li><strong>quote</strong> (<em>str</em>) – The character used to quote field values (if any), e.g. ‘”’.</li>
+<li><strong>comment</strong> (<em>str</em>) – The character used to indicate a line is a comment (not an entry) (if any)
+e.g. ‘#’.</li>
+<li><strong>skipFirstLine</strong> (<em>boolean</em>) – Whether to ignore the first line of the file (because it 
+contains field names).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">None if the upload was successful, or an error message if not.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str or None</p>
+</td>
 </tr>
 </tbody>
 </table>
