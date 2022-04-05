@@ -1,5 +1,6 @@
 import os
 from labbcat.LabbcatView import LabbcatView
+from labbcat.ResponseException import ResponseException
 
 class LabbcatEdit(LabbcatView):
     """ API for querying and updating a `LaBB-CAT <https://labbcat.canterbury.ac.nz>`_
@@ -197,3 +198,155 @@ class LabbcatEdit(LabbcatView):
         
         model = self._postRequest(self._labbcatUrl("generateLayerUtterances"), params)
         return(model["threadId"])
+
+    def getAnnotatorDescriptor(self, annotatorId):
+        """ Gets annotator information.
+
+        Retrieve information about an annotator. Annotators are modules that perform different
+        annotation tasks. This function provides information about a given annotator, for
+        example the currently installed version of the module, what configuration parameters it
+        requires, etc.
+        
+        :param annotatorId: ID of the annotator module.
+        :type annotatorId: str
+        
+        :returns: The annotator info:  
+                  - annotatorId - The annotators's unique ID
+                  - version - The currently install version of the annotator.
+                  - info - HTML-encoded description of the function of the annotator.
+                  - infoText - A plain text version of $info (converted automatically).
+                  - hasConfigWebapp - Determines whether the annotator includes a web-app for
+                     installation or general configuration.
+                  - configParameterInfo - An HTML-encoded definition of the installation config
+                     parameters, including a list of all parameters, and the encoding of the 
+                     parameter string.
+                  - hasTaskWebapp - Determines whether the annotator includes a web-app for
+                     task parameter configuration.
+                  - taskParameterInfo - An HTML-encoded definition of the task parameters,
+                     including a list of all parameters, and the encoding of the parameter string.
+                  - hasExtWebapp - Determines whether the annotator includes an extras web-app
+                     which implements functionality for providing extra data or extending 
+                     functionality in an annotator-specific way.
+                  - extApiInfo - An HTML-encoded document containing information about what
+                     endpoints are published by the ext web-app.
+        :rtype: dictionary of str
+        """
+        return(self._getRequest(self._storeQueryUrl(
+            "getAnnotatorDescriptor"), {"annotatorId":annotatorId}))
+
+    def addLayerDictionaryEntry(self, layerId, key, entry):
+        """ Adds an entry to a layer dictionary.
+        
+        This function adds a new entry to the dictionary that manages a given layer,
+        and updates all affected tokens in the corpus. Words can have multiple entries.
+        
+        :param layerId: The ID of the layer with a dictionary configured to manage it.
+        :type layerId: str
+        
+        :param key: The key (word) in the dictionary to add an entry for.
+        :type key: str
+        
+        :param entry: The value (definition) for the given key.
+        :type entry: str
+        
+        :returns: None if the entry was added, or an error message if not.
+        :rtype: str or None
+        """
+        try:
+            self._postRequest(self._labbcatUrl(
+            "api/edit/dictionary/add"), { "layerId":layerId, "key":key, "entry":entry })
+            return(None)
+        except ResponseException as x:
+            return(x.message)
+
+    def removeLayerDictionaryEntry(self, layerId, key, entry=None):
+        """ Removes an entry from a layer dictionary.
+
+        This function removes an existing entry from the dictionary that manages a given layer,
+        and updates all affected tokens in the corpus. Words can have multiple entries.
+        
+        :param layerId: The ID of the layer with a dictionary configured to manage it.
+        :type layerId: str
+        
+        :param key: The key (word) in the dictionary to remove an entry for.
+        :type key: str
+        
+        :param entry: The value (definition) to remove, or None to remove all the entries for key.
+        :type entry: str
+        
+        :returns: None if the entry was removed, or an error message if not.
+        :rtype: str or None
+        """
+        try:
+            self._postRequest(self._labbcatUrl(
+            "api/edit/dictionary/remove"), { "layerId":layerId, "key":key, "entry":entry })
+            return(None)
+        except ResponseException as x:
+            return(x.message)
+
+    def addDictionaryEntry(self, managerId, dictionaryId, key, entry):
+        """ Adds an entry to a dictionary.
+        
+        This function adds a new entry to the given dictionary. Words can have multiple entries.
+        
+        :param managerId: The layer manager ID of the dictionary, as returned by getDictionaries
+        :type managerId: str
+        
+        :param dictionaryId: The ID of the dictionary, as returned by 
+                             `getDictionaries() <#labbcat.LabbcatView.getDictionaries>`_.
+        :type dictionaryId: str
+        
+        :param key: The key (word) in the dictionary to add an entry for.
+        :type key: str
+        
+        :param entry: The value (definition) for the given key.
+        :type entry: str
+        
+        :returns: None if the entry was added, or an error message if not.
+        :rtype: str or None
+        """
+        try:
+            self._postRequest(self._labbcatUrl(
+            "api/edit/dictionary/add"), {
+                "layerManagerId" : managerId,
+                "dictionaryId" : dictionaryId,
+                "key" : key,
+                "entry" : entry })
+            return(None)
+        except ResponseException as x:
+            return(x.message)
+
+    def removeDictionaryEntry(self, managerId, dictionaryId, key, entry=None):
+        """ Removes an entry from a dictionary.
+
+        This function removes an existing entry from the given dictionary. Words can have 
+        multiple entries.
+        
+        :param managerId: The layer manager ID of the dictionary, as returned by getDictionaries
+        :type managerId: str
+        
+        :param dictionaryId: The ID of the dictionary, as returned by 
+                             `getDictionaries() <#labbcat.LabbcatView.getDictionaries>`_.
+        :type dictionaryId: str
+        
+        :param key: The key (word) in the dictionary to remove an entry for.
+        :type key: str
+        
+        :param entry: The value (definition) to remove, or None to remove all the entries for key.
+        :type entry: str
+        
+        :returns: None if the entry was removed, or an error message if not.
+        :rtype: str or None
+        """
+        try:
+            self._postRequest(self._labbcatUrl(
+            "api/edit/dictionary/remove"), {
+                "layerManagerId" : managerId,
+                "dictionaryId" : dictionaryId,
+                "key" : key,
+                "entry" : entry })
+            return(None)
+        except ResponseException as x:
+            return(x.message)
+
+# TODO annotatorExt
