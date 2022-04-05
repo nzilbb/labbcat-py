@@ -5,6 +5,7 @@
   + *getDictionaryEntries* - lookup entries in a dictionary.
 - New LabbcatEdit functions
   + *getAnnotatorDescriptor* - gets annotator information.
+  + *annotatorExt* - retrieve annotator's "ext" web-app resource.
   + *addLayerDictionaryEntry* - adds an entry to a layer dictionary.
   + *removeLayerDictionaryEntry* - removes an entry from a layer dictionary.
   + *addDictionaryEntry* - adds an entry to a dictionary.

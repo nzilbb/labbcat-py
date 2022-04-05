@@ -201,34 +201,35 @@ class LabbcatEdit(LabbcatView):
 
     def getAnnotatorDescriptor(self, annotatorId):
         """ Gets annotator information.
-
+        
         Retrieve information about an annotator. Annotators are modules that perform different
         annotation tasks. This function provides information about a given annotator, for
         example the currently installed version of the module, what configuration parameters it
         requires, etc.
+
+        The retuned dictionary contains the following entries:
+        
+        - "annotatorId" - The annotators's unique ID  
+        - "version" - The currently install version of the annotator.  
+        - "info" - HTML-encoded description of the function of the annotator.  
+        - "infoText" - A plain text version of $info (converted automatically).  
+        - "hasConfigWebapp" - Determines whether the annotator includes a web-app for
+          installation or general configuration. 
+        - "configParameterInfo" - An HTML-encoded definition of the installation config parameters, including a list of all parameters, and the encoding of the parameter string.
+        - "hasTaskWebapp" - Determines whether the annotator includes a web-app for
+          task parameter configuration.
+        - "taskParameterInfo" - An HTML-encoded definition of the task parameters,
+          including a list of all parameters, and the encoding of the parameter string.  
+        - "hasExtWebapp" - Determines whether the annotator includes an extras web-app
+          which implements functionality for providing extra data or extending
+          functionality in an annotator-specific way.
+        - "extApiInfo" - An HTML-encoded document containing information about what
+          endpoints are published by the ext web-app.
         
         :param annotatorId: ID of the annotator module.
         :type annotatorId: str
         
-        :returns: The annotator info:  
-                  - annotatorId - The annotators's unique ID
-                  - version - The currently install version of the annotator.
-                  - info - HTML-encoded description of the function of the annotator.
-                  - infoText - A plain text version of $info (converted automatically).
-                  - hasConfigWebapp - Determines whether the annotator includes a web-app for
-                     installation or general configuration.
-                  - configParameterInfo - An HTML-encoded definition of the installation config
-                     parameters, including a list of all parameters, and the encoding of the 
-                     parameter string.
-                  - hasTaskWebapp - Determines whether the annotator includes a web-app for
-                     task parameter configuration.
-                  - taskParameterInfo - An HTML-encoded definition of the task parameters,
-                     including a list of all parameters, and the encoding of the parameter string.
-                  - hasExtWebapp - Determines whether the annotator includes an extras web-app
-                     which implements functionality for providing extra data or extending 
-                     functionality in an annotator-specific way.
-                  - extApiInfo - An HTML-encoded document containing information about what
-                     endpoints are published by the ext web-app.
+        :returns: The annotator info.
         :rtype: dictionary of str
         """
         return(self._getRequest(self._storeQueryUrl(
@@ -348,5 +349,43 @@ class LabbcatEdit(LabbcatView):
             return(None)
         except ResponseException as x:
             return(x.message)
+    
+    def annotatorExt(self, annotatorId, resource, parameters=None):
+        """ Retrieve annotator's "ext" resource.
 
-# TODO annotatorExt
+        Retrieve a given resource from an annotator's "ext" web app. Annotators are modules
+        that perform different annotation tasks, and can optionally implement functionality for
+        providing extra data or extending functionality in an annotator-specific way. If the
+        annotator implements an "ext" web app, it can provide resources and implement a
+        mechanism for iterrogating the annotator. This function provides a mechanism for
+        accessing these resources via python.
+
+        Details about the resources available for a given annotator are available by
+        calling `getAnnotatorDescriptor() <#labbcat.LabbcatEdit.getAnnotatorDescriptor>`_
+        and checking "hasExtWebapp" attribute to ensure an 'ext' webapp is implemented,
+        and checking details the "extApiInfo" attribute.
+        
+        :param annotatorId: ID of the annotator to interrogate.
+        :type annotatorId: str
+        
+        :param resource: The name of the file to retrieve or instance method (function) to
+         invoke. Possible values for this depend on the specific annotator being interrogated.
+        :type resource: str
+        
+        :param parameters: Optional list of ordered parameters for the instance method (function).
+        :type parameters: str
+        
+        :returns: The resource requested.
+        :rtype: str
+        """
+        queryString = ""
+        if parameters != None:
+            queryString = "?" + ",".join(parameters)
+        path = "edit/annotator/ext/"+annotatorId+"/"+resource+queryString
+        response = self._getRequestRaw(self._labbcatUrl(path), None)
+        
+        # ensure status was ok
+        response.raise_for_status();
+
+        # return the result
+        return(response.text)

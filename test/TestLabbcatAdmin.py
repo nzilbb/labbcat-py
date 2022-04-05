@@ -1,4 +1,5 @@
 import unittest
+import json
 import labbcat
 
 # YOU MUST ENSURE THE FOLLOWING SETTINGS ARE VALID FOR YOU TEST LABB-CAT SERVER:
@@ -632,7 +633,10 @@ class TestLabbcatAdmin(unittest.TestCase):
                 with self.subTest(key=key):
                     self.assertIn(key, descriptor, "Has " + key)
             
-            # TODO annotatorExt
+            # test annotatorExt
+            lexiconListJSON = self.store.annotatorExt("FlatLexiconTagger", "listLexicons")
+            lexiconList = json.loads(lexiconListJSON)
+            self.assertIn("unit-test", lexiconList, "Has unit-text lexicon")
             
             self.assertIsNone(
                 self.store.addDictionaryEntry(
@@ -697,6 +701,11 @@ class TestLabbcatAdmin(unittest.TestCase):
             self.assertIsNone(
                 self.store.deleteLexicon("unit-test"),
                 "deleteLexicon succeeds")
+
+            # lexicon not there any more
+            lexiconListJSON = self.store.annotatorExt("FlatLexiconTagger", "listLexicons")
+            lexiconList = json.loads(lexiconListJSON)
+            self.assertNotIn("unit-test", lexiconList, "Has unit-text lexicon")
             
             # there are no entries
             entries = self.store.getDictionaryEntries(
