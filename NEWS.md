@@ -1,3 +1,21 @@
+# 0.7.0
+
+- New LabbcatView functions
+  + *getDictionaries* - list the dictionaries available.
+  + *getDictionaryEntries* - lookup entries in a dictionary.
+- New LabbcatEdit functions
+  + *getAnnotatorDescriptor* - gets annotator information.
+  + *annotatorExt* - retrieve annotator's "ext" web-app resource.
+  + *addLayerDictionaryEntry* - adds an entry to a layer dictionary.
+  + *removeLayerDictionaryEntry* - removes an entry from a layer dictionary.
+  + *addDictionaryEntry* - adds an entry to a dictionary.
+  + *removeDictionaryEntry* - removes an entry from a dictionary.
+- New LabbcatAdmin functions
+  + *loadLexicon* - upload a flat lexicon file for lexical tagging.
+  + *deleteLexicon* - delete a previously loaded lexicon.
+
+Requires LaBB-CAT version 20220401.1858
+
 # 0.6.0
 
 - Changed LabbcatView function

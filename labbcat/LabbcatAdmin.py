@@ -1,4 +1,7 @@
+import os
+import time
 from labbcat.LabbcatEdit import LabbcatEdit
+from labbcat.ResponseException import ResponseException
 
 class LabbcatAdmin(LabbcatEdit):
     """ API for querying, updating, and administering a `LaBB-CAT
@@ -858,5 +861,115 @@ class LabbcatAdmin(LabbcatEdit):
         model = self._postRequest(self._labbcatUrl("admin/layers/regenerate"), params)
         return(model["threadId"])
     
-# TODO loadLexicon
-# TODO deleteLexicon
+    def loadLexicon(self, file, lexicon, fieldDelimiter, fieldNames, quote=None, comment=None, skipFirstLine=False):
+        """ Upload a flat lexicon file for lexical tagging.
+
+        By default LaBB-CAT includes a layer manager called the Flat Lexicon Tagger, which can
+        be configured to annotate words with data from a dictionary loaded from a plain text
+        file (e.g. a CSV file). The file must have a 'flat' structure in the sense that it's a
+        simple list of dictionary entries with a fixed number of columns/fields, rather than
+        having a complex structure.
+        
+        :param file: The full path name of the lexicon file.
+        :type layerId: str
+        
+        :param lexicon: The name for the resulting lexicon. If the named lexicon already exists,
+                        it will be completely replaced with the contents of the file (i.e. all 
+                        existing entries will be deleted befor adding new entries from the file).
+                        e.g. 'cmudict'
+        :type lexicon: str
+        
+        :param fieldDelimiter: The character used to delimit fields in the file.
+                               If this is " - ", rows are split on only the *first* space, 
+                               in line with common dictionary formats.
+                               e.g. ',' for Comma Separated Values (CSV) files.
+        :type fieldDelimiter: str
+        
+        :param fieldNames: A list of field names, delimited by fieldDelimiter, 
+                           e.g. 'Word,Pronunciation'.
+        :type fieldNames: str
+        
+        :param quote: The character used to quote field values (if any), e.g. '"'.
+        :type quote: str
+        
+        :param comment: The character used to indicate a line is a comment (not an entry) (if any)
+                        e.g. '#'.
+        :type comment: str
+        
+        :param skipFirstLine: Whether to ignore the first line of the file (because it 
+                              contains field names). 
+        :type skipFirstLine: boolean
+        
+        :returns: None if the upload was successful, or an error message if not.
+        :rtype: str or None
+        """
+        if quote == None: quote = ""
+        if comment == None: comment = ""
+        if skipFirstLine: skipFirstLine = "true"
+        params = {
+            "lexicon" : lexicon,
+            "fieldDelimiter" : fieldDelimiter,
+            "quote" : quote,
+            "comment" : comment,
+            "fieldNames" : fieldNames,
+            "skipFirstLine" : skipFirstLine }
+        files = {}
+        f = open(file, 'rb')
+        files["file"] = (os.path.basename(file), f)
+        try:
+            resp = self._postMultipartRequestRaw(
+                self._labbcatUrl("edit/annotator/ext/FlatLexiconTagger/loadLexicon"),
+                params, files)
+            if resp.status_code != 200:
+                raise ResponseException("Error: " + str(resp.status_code) + ": " + resp.text)
+            else:
+                running = True
+                status = "Uploading"
+                percentComplete = 0
+                while running:
+                    time.sleep(1)
+                    resp = self._getRequestRaw(
+                        self._labbcatUrl("edit/annotator/ext/FlatLexiconTagger/getRunning"), None)
+                    running = resp.text == "true"
+                    resp = self._getRequestRaw(
+                        self._labbcatUrl("edit/annotator/ext/FlatLexiconTagger/getStatus"), None)
+                    status = resp.text
+                    resp = self._getRequestRaw(
+                        self._labbcatUrl(
+                            "edit/annotator/ext/FlatLexiconTagger/getPercentComplete"), None)
+                    percentComplete = int(resp.text)
+                    if self.verbose: print("status: " + str(percentComplete) + "% " + status + " - " + str(running))
+
+                if percentComplete == 100:
+                    return(None)
+                else:
+                    return(status)
+                if self.verbose: print("Finished.")
+        finally:
+            f.close()
+    
+
+    def deleteLexicon(self, lexicon):
+        """ Delete a previously loaded lexicon.
+        
+        By default LaBB-CAT includes a layer manager called the Flat Lexicon Tagger, which can
+        be configured to annotate words with data from a dictionary loaded from a plain text
+        file (e.g. a CSV file). 
+
+        :param lexicon: The name of the lexicon to delete. e.g. 'cmudict'
+        :type lexicon: str
+        
+        :returns: None if the deletion was successful, or an error message if not.
+        :rtype: str or None
+        """
+        resp = self._getRequestRaw(
+            self._labbcatUrl(
+                "edit/annotator/ext/FlatLexiconTagger/deleteLexicon?"+lexicon), {})
+        if resp.status_code != 200:
+            raise ResponseException("Error: " + str(resp.status_code) + ": " + resp.text)
+        else:
+            if resp.text != "":
+                return(resp.text)
+            else:
+                return(None)
+    

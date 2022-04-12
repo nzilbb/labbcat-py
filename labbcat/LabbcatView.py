@@ -1,3 +1,4 @@
+import csv
 import json
 import os
 import re
@@ -74,23 +75,23 @@ class LabbcatView:
         return self.labbcatUrl + "api/store/" + resource
 
     def _getRequest(self, url, params):
-        if self.verbose: print("_getRequest " + url + " : " + str(params))
-        if self.username == None:
-            auth = None
-        else:
-            auth = (self.username, self.password)
-
-        response = Response(
-            requests.get(
-                url=url, params=params, auth=auth, headers={
-                    "Accept":"application/json",
-                    "Accept-Language":self.language,
-                    "user-agent": "labbcat-py/"+__version__}), 
-            self.verbose)
+        response = Response(self._getRequestRaw(url, params), self.verbose)
         response.checkForErrors()
 
         if self.verbose: print("response: " + str(response.text))
         return(response.model)
+        
+    def _getRequestRaw(self, url, params):
+        if self.verbose: print("_getRequestRaw " + url + " : " + str(params))
+        if self.username == None:
+            auth = None
+        else:
+            auth = (self.username, self.password)
+        return(requests.get(
+            url=url, params=params, auth=auth, headers={
+                "Accept":"application/json",
+                "Accept-Language":self.language,
+                "user-agent": "labbcat-py/"+__version__}))
         
     def _postRequest(self, url, params, json=None):
         if self.verbose: print("_postRequest " + url + " : " + str(params) + " : " + str(json))
@@ -246,6 +247,27 @@ class LabbcatView:
         
         if self.verbose: print("model: " + str(response.model))
         return(response.model)
+         
+    def _postMultipartRequestRaw(self, url, params, files):
+        if self.verbose: print("_postMultipartRequestRaw " + url + " : " + str(params) + " - " + str(files))
+        if self.username == None:
+            auth = None
+        else:
+            auth = (self.username, self.password)
+            
+        resp = requests.post(
+            url=url, data=params, files=files, auth=auth, headers={
+                "Accept":"text/plain",
+                "Accept-Language":self.language,
+                "user-agent": "labbcat-py/"+__version__
+            })
+        
+        # close the files
+        for param in files:
+            name, fd = files[param]
+            fd.close()
+        
+        return(resp)
          
     def getId(self):
         """ Gets the store's ID. 
@@ -1562,6 +1584,83 @@ class LabbcatView:
         :rtype: dict
         """
         return(self._getRequest(self._labbcatUrl("api/user"), None))
+
+    def getDictionaries(self):
+        """ List the dictionaries available.
+        
+        :returns: A dictionary of lists, where keys are layer manager IDs, each of which 
+         containing a list of IDs for dictionaries that the layer manager makes 
+         available.
+        :rtype: dict of lists
+        """
+        return(self._getRequest(self._labbcatUrl("dictionaries"), None))
+
+    def getDictionaryEntries(self, managerId, dictionaryId, keys):
+        """ Lookup entries in a dictionary.
+        
+        :param managerId: The layer manager ID of the dictionary, as returned by 
+         `getDictionaries() <#labbcat.LabbcatView.getDictionaries>`_).
+        :type managerId: str
+        
+        :param dictionaryId: The ID of the dictionary, as returned by 
+         `getDictionaries() <#labbcat.LabbcatView.getDictionaries>`_).
+        :type managerId: str
+        
+        :param keys: A list of keys (words) identifying entries to look up.
+        :type keys: list of str or list of dict
+        
+        :returns: A dictionary of lists, where keys are given keys, each of which
+         containing a list of entries. Keys with no corresponding entry in the given
+         dictionary will be present in the returned result, but will have no entries.
+        :rtype: dict of lists
+        """
+        if self.verbose:
+            print("getDictionaryEntries " + managerId + ", " + dictionaryId + ", " + str(keys))
+        # save keys to a CSV file
+        fd, fileName = tempfile.mkstemp(".csv", "labbcat-py-getDictionaryEntries-")
+        if self.verbose: print("keys file: " + fileName)
+        with open(fileName, "w") as file:
+            for key in keys:
+                file.write(key + "\n")
+        os.close(fd)
+        
+        # make request
+        files = {}
+        f = open(fileName, 'r')
+        files["uploadfile"] = (fileName, f)
+        response = self._postMultipartRequestRaw(
+            self._labbcatUrl("dictionary"), {
+                "managerId" : managerId,
+                "dictionaryId" : dictionaryId
+            }, files)
+        
+        # tidily remove upload file
+        os.remove(fileName)
+        
+        # ensure status was ok
+        response.raise_for_status();
+
+        # save response to file
+        if self.verbose: print("saving result to file: " + fileName)
+        with open(fileName, "wb") as file:
+            file.write(response.content)
+        
+        # load the returned entries into a dict
+        dictionary = {}
+        with open(fileName) as csvDataFile:
+            csvReader = csv.reader(csvDataFile)
+            for row in csvReader:
+                # first column is the key, the rest are entries
+                key = row[0]
+                entries = row[1:]
+                if len(entries) == 1 and entries[0] == "":
+                    entries = []
+                dictionary[key] = entries
+        
+        # tidily remove the downloaded file
+        os.remove(fileName)
+        
+        return(dictionary)
     
     # TODO getFragment
     # TODO getFragmentSeries

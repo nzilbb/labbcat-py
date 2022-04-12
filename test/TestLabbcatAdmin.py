@@ -1,4 +1,5 @@
 import unittest
+import json
 import labbcat
 
 # YOU MUST ENSURE THE FOLLOWING SETTINGS ARE VALID FOR YOU TEST LABB-CAT SERVER:
@@ -601,6 +602,124 @@ class TestLabbcatAdmin(unittest.TestCase):
             self.assertFalse(task["running"], "Search task finished in a timely manner")
         finally:
             self.store.releaseTask(threadId)
+
+    def test_layerDictionaryManagement(self):
+        lexiconPath = "/home/robert/nzilbb/labbcat-py/test/lexicon.txt"
+
+        try:
+            # upload a lexicon
+            self.assertIsNone(
+                self.store.loadLexicon(lexiconPath, "unit-test", ",", "word,definition"),
+                "loadLexicon succeeds")
+            entries = self.store.getDictionaryEntries(
+                "FlatFileDictionary", "unit-test:word->definition",
+                ["test-word", "DictionaryEntry", "LayerDictionaryEntry"])
+            self.assertEqual(len(entries["test-word"]), 2,
+                             "Word has two entries " + str(entries["test-word"]))
+            self.assertEqual(entries["test-word"][0], "test-word-1",
+                             "First entry correct")
+            self.assertEqual(entries["test-word"][1], "test-word-2",
+                             "Second entry correct")
+            self.assertEqual(len(entries["DictionaryEntry"]), 0,
+                             "DictionaryEntry has no entries " + str(entries["DictionaryEntry"]))
+            self.assertEqual(len(entries["LayerDictionaryEntry"]), 0,
+                             "LayerDictionaryEntry has no entries "
+                             + str(entries["LayerDictionaryEntry"]))
             
+            # get annotator descriptor
+            descriptor = self.store.getAnnotatorDescriptor("FlatLexiconTagger")
+            self.assertIsNotNone(descriptor, "There is a descriptor")
+            for key in ["annotatorId", "info", "extApiInfo"]:
+                with self.subTest(key=key):
+                    self.assertIn(key, descriptor, "Has " + key)
+            
+            # test annotatorExt
+            lexiconListJSON = self.store.annotatorExt("FlatLexiconTagger", "listLexicons")
+            lexiconList = json.loads(lexiconListJSON)
+            self.assertIn("unit-test", lexiconList, "Has unit-text lexicon")
+            
+            self.assertIsNone(
+                self.store.addDictionaryEntry(
+                    "FlatFileDictionary", "unit-test:word->definition",
+                    "DictionaryEntry", "new-entry-1"),
+                "addDictionaryEntry doesn't return an error")
+        
+            # now there's a definition
+            entries = self.store.getDictionaryEntries(
+                "FlatFileDictionary", "unit-test:word->definition", ["DictionaryEntry"])
+            self.assertEqual(len(entries["DictionaryEntry"]), 1,
+                             "DictionaryEntry has one entry " + str(entries["DictionaryEntry"]))
+            self.assertEqual(entries["DictionaryEntry"][0], "new-entry-1",
+                             "DictionaryEntry entry is correct")
+            
+            self.assertIsNone(
+                self.store.removeDictionaryEntry(
+                    "FlatFileDictionary", "unit-test:word->definition", "DictionaryEntry"),
+                "removeDictionaryEntry doesn't return an error")
+            
+            # now there's no definition
+            entries = self.store.getDictionaryEntries(
+                "FlatFileDictionary", "unit-test:word->definition", ["DictionaryEntry"])
+            self.assertEqual(len(entries["DictionaryEntry"]), 0,
+                             "DictionaryEntry has no entries " + str(entries["DictionaryEntry"]))
+            
+            # newLayer...
+            newLayer = self.store.newLayer(
+                "unit-test", "word", "Unit test layer", 2,
+                False, False, True, True, "string",
+                {}, None, "FlatFileDictionary",
+                "tokenLayerId=orthography&tagLayerId=test&dictionary=unit-test:word->definition")
+            self.assertEqual("unit-test", newLayer["id"], "Layer added");
+            
+            self.assertIsNone(
+                self.store.addLayerDictionaryEntry(
+                    "unit-test", "LayerDictionaryEntry", "new-layer-entry-1"),
+                "addLayerDictionaryEntry doesn't return an error")
+            
+            # now there's a definition
+            entries = self.store.getDictionaryEntries(
+                "FlatFileDictionary", "unit-test:word->definition", ["LayerDictionaryEntry"])
+            self.assertEqual(len(entries["LayerDictionaryEntry"]), 1,
+                             "LayerDictionaryEntry has one entry "
+                             + str(entries["LayerDictionaryEntry"]))
+            self.assertEqual(entries["LayerDictionaryEntry"][0], "new-layer-entry-1",
+                             "LayerDictionaryEntry entry is correct")
+            
+            self.assertIsNone(
+                self.store.removeLayerDictionaryEntry(
+                    "unit-test", "LayerDictionaryEntry"),
+                "removeLayerDictionaryEntry doesn't return an error")
+            
+            # now there's no definition
+            entries = self.store.getDictionaryEntries(
+                "FlatFileDictionary", "unit-test:word->definition", ["LayerDictionaryEntry"])
+            self.assertEqual(len(entries["LayerDictionaryEntry"]), 0,
+                             "LayerDictionaryEntry has no entries "
+                             + str(entries["LayerDictionaryEntry"]))            
+            
+            # delete lexicon
+            self.assertIsNone(
+                self.store.deleteLexicon("unit-test"),
+                "deleteLexicon succeeds")
+
+            # lexicon not there any more
+            lexiconListJSON = self.store.annotatorExt("FlatLexiconTagger", "listLexicons")
+            lexiconList = json.loads(lexiconListJSON)
+            self.assertNotIn("unit-test", lexiconList, "Has unit-text lexicon")
+            
+            # there are no entries
+            entries = self.store.getDictionaryEntries(
+                "FlatFileDictionary", "unit-test:word->definition",
+                ["test-word", "DictionaryEntry", "LayerDictionaryEntry"])
+            self.assertEqual(len(entries["test-word"]), 0,
+                             "Word has no entries " + str(entries["test-word"]))
+            self.assertEqual(len(entries["DictionaryEntry"]), 0,
+                             "DictionaryEntry has no entries " + str(entries["DictionaryEntry"]))
+            self.assertEqual(len(entries["LayerDictionaryEntry"]), 0,
+                             "LayerDictionaryEntry has no entries "
+                             + str(entries["LayerDictionaryEntry"]))
+        finally:
+            self.store.deleteLayer("unit-test")
+        
 if __name__ == '__main__':
     unittest.main()
