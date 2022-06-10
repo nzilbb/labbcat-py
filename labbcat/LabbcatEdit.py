@@ -290,7 +290,8 @@ class LabbcatEdit(LabbcatView):
         
         This function adds a new entry to the given dictionary. Words can have multiple entries.
         
-        :param managerId: The layer manager ID of the dictionary, as returned by getDictionaries
+        :param managerId: The layer manager ID of the dictionary, as returned by
+                          `getDictionaries() <#labbcat.LabbcatView.getDictionaries>`_
         :type managerId: str
         
         :param dictionaryId: The ID of the dictionary, as returned by 
