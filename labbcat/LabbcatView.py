@@ -313,8 +313,7 @@ class LabbcatView:
         return(self._getRequest(self._storeQueryUrl("getCorpusIds"), None))
         
     def getParticipantIds(self):
-        """ Gets a list of participant IDs. 
-        
+        """ Gets a list of participant IDs.         
 
         :returns: A list of participant IDs.
         :rtype: list
@@ -329,8 +328,8 @@ class LabbcatView:
         :type id: str
 
         :returns: An annotation representing the participant, or null if the participant
-        :rtype: dictionary
             was not found. 
+        :rtype: dictionary
         """
         return(self._getRequest(self._storeQueryUrl("getParticipant"), {"id":id}))
         
@@ -616,7 +615,30 @@ class LabbcatView:
             { "id":id, "anchorIds":anchorIds }))
         
     def getTranscript(self, id, layerIds=None):
-        """ Gets a transcript given its ID. 
+        """ Gets a transcript given its ID.
+
+        The returned object defines the annotation graph structure, and is a dictionary
+        whose entries include:
+
+        - "id" : the transcript ID
+        - "schema" : a representation of the layer structure of the graph
+        - "anchors" : a dictionary of temporal anchors that represent the start and/or end
+                      time of an annotation (keyed by anchor ID)
+        - "participant" : a list of participants in the transcript. Each participant is
+                          represented by a dictionary that includes a "turn" entry which
+                          is a list of speaker turns, each turn having an "utterance"
+                          entry contatainging utterance boundary annotations, and a "word" entry
+                          containing a list of word tokens.
+        - entries for 'spanning' layers that are not assigned to a specific participant.
+
+        Annotations are presented by dictionaries that have the following entries:
+
+        - "id" : the unique identifier for the annotation
+        - "label" : the annotation layer
+        - "startId" and "endId" : the start and end anchors, which correspond to an entry
+                                  in the "anchors" dictionary
+        - "confidence" : label confidence rating, where 100 means it was labelled by a
+                         human, and 50 means it was labelled by an automated process.
         
         :param id: The given transcript ID.
         :type id: str
