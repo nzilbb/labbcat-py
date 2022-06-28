@@ -7,11 +7,6 @@
 #  - nzilbb-labbcat - run the following shell command: `pip install nzilbb-labbcat`
 #  - progressbar - run the following shell command: `pip install progressbar`
 
-import sys
-
-# appending a path
-sys.path.append('/home/robert/nzilbb/labbcat-py')
-
 import labbcat
 import progressbar
 import sys
