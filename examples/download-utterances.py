@@ -15,7 +15,7 @@ def main(argv):
     
     print("Download utterances...");
     if len(argv) < 3:
-        print("This script downloads audio files and trnascript for all utterances in given,")
+        print("This script downloads audio files and transcripts for all utterances in given")
         print("LaBB-CAT server.")
         print("usage: " + argv[0] + " dir url [ username password ]")
         print(" where:")
