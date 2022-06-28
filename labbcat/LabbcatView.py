@@ -701,12 +701,15 @@ class LabbcatView:
             media doesn't exist. 
         :rtype: str
         """
-        url = self._getRequest(
-            self._storeQueryUrl("getMedia"),
-            { "id":id, "trackSuffix":trackSuffix, "mimeType":mimeType,
-              "startOffset":startOffset, "endOffset":endOffset })
-        if url != None: url = url.replace("+","%20")
-        return(url)
+        try:
+            url = self._getRequest(
+                self._storeQueryUrl("getMedia"),
+                { "id":id, "trackSuffix":trackSuffix, "mimeType":mimeType,
+                  "startOffset":startOffset, "endOffset":endOffset })
+            if url != None: url = url.replace("+","%20")
+            return(url)
+        except ResponseException:
+            return None
         
     def getMedia(self, id, trackSuffix, mimeType, startOffset=None, endOffset=None, dir=None):
         """ Downloads a given media track URL for a given transcript. 
