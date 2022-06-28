@@ -1427,7 +1427,7 @@ class LabbcatView:
          system's temporary directory, so once processing is finished, they should be
          deleted by the caller, or moved to a more permanent location. 
          *NB* Although many formats will generate exactly one file for each interval, this
-         is not guaranted; some formats generate a single file or a fixed collection of
+         is not guaranteed; some formats generate a single file or a fixed collection of
          files regardless of how many fragments there are.
         :rtype: list of str
         """
@@ -1589,7 +1589,7 @@ class LabbcatView:
          system's temporary directory, so once processing is finished, they should be
          deleted by the caller, or moved to a more permanent location. 
          *NB* Although many formats will generate exactly one file for each transcript, this
-         is not guaranted; some formats generate a mutiple files per transcript.
+         is not guaranteed; some formats generate a mutiple files per transcript.
         :rtype: list of str
         """
         files = []
