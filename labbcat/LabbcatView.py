@@ -1567,6 +1567,61 @@ class LabbcatView:
         model = self._postRequest(url, params)
         return(model["threadId"])
 
+    def formatTranscript(self, id, layerIds, mimeType, dir=None):
+        """
+        Get transcript in a specified format.
+
+        :param id: The ID of the transcript to export.
+        :type id: str
+        
+        :param layerIds: A list of IDs of annotation layers to include in the transcript.
+        :type layerIds: list of str
+        
+        :param mimeType: The desired format, for example "text/praat-textgrid" for Praat
+         TextGrids, "text/plain" for plain text, etc.
+        :type mimeType: list of str
+        
+        :param dir: A directory in which the file(s) should be stored, or null for a temporary
+         folder.  If specified, and the directory doesn't exist, it will be created. 
+        :type dir: str
+        
+        :returns: A list of files. If *dir* is None, these files will be stored under the
+         system's temporary directory, so once processing is finished, they should be
+         deleted by the caller, or moved to a more permanent location. 
+         *NB* Although many formats will generate exactly one file for each transcript, this
+         is not guaranted; some formats generate a mutiple files per transcript.
+        :rtype: list of str
+        """
+        files = []
+        
+        tempFiles = False
+        if dir == None:
+            dir = tempfile.mkdtemp("_transcript", "formatTranscript_")
+            tempFiles = True
+        elif not os.path.exists(dir):
+            os.mkdir(dir)
+
+        # send all triples in one request, we should get a zip file back
+        url = self._labbcatUrl("api/serialize/graphs")
+        params = {
+            "id" : id,
+            "mimeType" : mimeType,
+            "layerId" : layerIds
+        }
+        fileName = self._postRequestToFile(url, params, dir)
+        files = [ fileName ]
+        
+        if fileName.endswith(".zip"):
+            # extract the zip file
+            with ZipFile(fileName, 'r') as zipObj:
+                zipObj.extractall(dir)
+                files = [os.path.join(dir, fileName) for fileName in zipObj.namelist()]
+            
+            # delete the temporary zip file
+            os.remove(fileName)
+                
+        return(files)
+
     def getSerializerDescriptors(self):
         """ Lists the descriptors of all registered serializers.        
         

@@ -1,3 +1,8 @@
+# 0.7.1
+
+- New LabbcatView function
+  + *formatTranscript* - export a transcript in a given format
+
 # 0.7.0
 
 - New LabbcatView functions

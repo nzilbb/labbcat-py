@@ -174,6 +174,19 @@ class TestLabbcatView(unittest.TestCase):
         self.assertTrue(fileName.endswith(".wav"), "File name correct")
         os.remove(fileName)
     
+    def test_formatTranscript(self):
+        ids = self.store.getMatchingTranscriptIds("/AP511.+\\.eaf/.test(id)", 1, 0)
+        self.assertTrue(len(ids) > 0, "Some graph IDs are returned")
+        graphId = ids[0]
+        fileNames = self.store.formatTranscript(graphId, ["utterance"], "text/plain")
+        self.assertIsNotNone(
+            fileNames, "There is some media (check the first graph listed) "+graphId+")")
+        self.assertIsNotNone(
+            fileNames[0], "There is some media (check the first graph listed) "+graphId+")")
+        self.assertTrue(os.path.exists(fileNames[0]), "File downloaded")
+        self.assertTrue(fileNames[0].endswith(".txt"), "File name correct")
+        os.remove(fileNames[0])
+    
     def test_getMediaFragment(self):
       ids = self.store.getMatchingTranscriptIds("/AP511.+\\.eaf/.test(id)", 1, 0)
       self.assertTrue(len(ids) > 0, "Some graph IDs are returned")
@@ -263,7 +276,7 @@ class TestLabbcatView(unittest.TestCase):
       else:
           # do they look like annotations?
           file = files[0]
-          for key in ["name", "mimeType", "url", "trackSuffix"]:
+          for key in ["name", "type", "url", "trackSuffix"]:
               with self.subTest(key=key):
                   self.assertIn(key, file, "Has " + key)
     
