@@ -88,6 +88,8 @@ by users with “view” permission.</p>
 <dt id="labbcat.LabbcatView.allUtterances">
 <code class="descname">allUtterances</code><span class="sig-paren">(</span><em>participantIds</em>, <em>transcriptTypes=None</em>, <em>mainParticipant=True</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.allUtterances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Identifies all utterances by the given participants.</p>
+<p>A taskId is returned. To get the actual utterances, which are represented the same
+way as search results, call <a class="reference external" href="#labbcat.LabbcatView.getMatches">getMatches()</a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -101,11 +103,12 @@ search all utterances.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The threadId of the resulting task, which can be passed in to
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>The threadId of the resulting task, which can be passed in to
 <a class="reference external" href="#labbcat.LabbcatView.getMatches">getMatches()</a>, 
 <a class="reference external" href="#labbcat.LabbcatView.taskStatus">taskStatus()</a>, 
 <a class="reference external" href="#labbcat.LabbcatView.waitForTask">waitForTask()</a>
 <a class="reference external" href="#labbcat.LabbcatView.releaseTask">releaseTask()</a>, etc.</p>
+</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
@@ -244,6 +247,38 @@ following can be used:</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The number of matching transcripts.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.formatTranscript">
+<code class="descname">formatTranscript</code><span class="sig-paren">(</span><em>id</em>, <em>layerIds</em>, <em>mimeType</em>, <em>dir=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.formatTranscript" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get transcript in a specified format.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<em>str</em>) – The ID of the transcript to export.</li>
+<li><strong>layerIds</strong> (<em>list of str</em>) – A list of IDs of annotation layers to include in the transcript.</li>
+<li><strong>mimeType</strong> (<em>list of str</em>) – The desired format, for example “text/praat-textgrid” for Praat
+TextGrids, “text/plain” for plain text, etc.</li>
+<li><strong>dir</strong> (<em>str</em>) – A directory in which the file(s) should be stored, or null for a temporary
+folder.  If specified, and the directory doesn’t exist, it will be created.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of files. If <em>dir</em> is None, these files will be stored under the
+system’s temporary directory, so once processing is finished, they should be
+deleted by the caller, or moved to a more permanent location. 
+<em>NB</em> Although many formats will generate exactly one file for each transcript, this
+is not guaranteed; some formats generate a mutiple files per transcript.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of str</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -454,7 +489,7 @@ folder.  If specified, and the directory doesn’t exist, it will be created.</l
 system’s temporary directory, so once processing is finished, they should be
 deleted by the caller, or moved to a more permanent location. 
 <em>NB</em> Although many formats will generate exactly one file for each interval, this
-is not guaranted; some formats generate a single file or a fixed collection of
+is not guaranteed; some formats generate a single file or a fixed collection of
 files regardless of how many fragments there are.</p>
 </td>
 </tr>
@@ -920,10 +955,10 @@ media doesn’t exist.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>str</em>) – The ID of the participant, which could be their name or their database
 annotation ID.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An annotation representing the participant, or null if the participant</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionary
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An annotation representing the participant, or null if the participant
 was not found.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionary</td>
 </tr>
 </tbody>
 </table>
@@ -1073,6 +1108,41 @@ be deleted by the caller, or moved to a more permanent location.</p>
 <dt id="labbcat.LabbcatView.getTranscript">
 <code class="descname">getTranscript</code><span class="sig-paren">(</span><em>id</em>, <em>layerIds=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getTranscript" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a transcript given its ID.</p>
+<p>The returned object defines the annotation graph structure, and is a dictionary
+whose entries include:</p>
+<ul class="simple">
+<li>“id” : the transcript ID</li>
+<li>“schema” : a representation of the layer structure of the graph</li>
+<li><dl class="first docutils">
+<dt>“anchors” <span class="classifier-delimiter">:</span> <span class="classifier">a dictionary of temporal anchors that represent the start and/or end</span></dt>
+<dd>time of an annotation (keyed by anchor ID)</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>“participant” <span class="classifier-delimiter">:</span> <span class="classifier">a list of participants in the transcript. Each participant is</span></dt>
+<dd>represented by a dictionary that includes a “turn” entry which
+is a list of speaker turns, each turn having an “utterance”
+entry contatainging utterance boundary annotations, and a “word” entry
+containing a list of word tokens.</dd>
+</dl>
+</li>
+<li>entries for ‘spanning’ layers that are not assigned to a specific participant.</li>
+</ul>
+<p>Annotations are presented by dictionaries that have the following entries:</p>
+<ul class="simple">
+<li>“id” : the unique identifier for the annotation</li>
+<li>“label” : the annotation layer</li>
+<li><dl class="first docutils">
+<dt>“startId” and “endId” <span class="classifier-delimiter">:</span> <span class="classifier">the start and end anchors, which correspond to an entry</span></dt>
+<dd>in the “anchors” dictionary</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>“confidence” <span class="classifier-delimiter">:</span> <span class="classifier">label confidence rating, where 100 means it was labelled by a</span></dt>
+<dd>human, and 50 means it was labelled by an automated process.</dd>
+</dl>
+</li>
+</ul>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1425,7 +1495,9 @@ permission.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>managerId</strong> (<em>str</em>) – The layer manager ID of the dictionary, as returned by getDictionaries</li>
+<li><strong>managerId</strong> (<em>str</em>) – <p>The layer manager ID of the dictionary, as returned by
+<a class="reference external" href="#labbcat.LabbcatView.getDictionaries">getDictionaries()</a></p>
+</li>
 <li><strong>dictionaryId</strong> (<em>str</em>) – <p>The ID of the dictionary, as returned by 
 <a class="reference external" href="#labbcat.LabbcatView.getDictionaries">getDictionaries()</a>.</p>
 </li>
