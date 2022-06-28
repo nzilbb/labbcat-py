@@ -701,10 +701,12 @@ class LabbcatView:
             media doesn't exist. 
         :rtype: str
         """
-        return(self._getRequest(
+        url = self._getRequest(
             self._storeQueryUrl("getMedia"),
             { "id":id, "trackSuffix":trackSuffix, "mimeType":mimeType,
-              "startOffset":startOffset, "endOffset":endOffset }))
+              "startOffset":startOffset, "endOffset":endOffset })
+        if url != None: url = url.replace("+","%20")
+        return(url)
         
     def getMedia(self, id, trackSuffix, mimeType, startOffset=None, endOffset=None, dir=None):
         """ Downloads a given media track URL for a given transcript. 
@@ -740,13 +742,16 @@ class LabbcatView:
         # get the URL of the media
         url = self.getMediaUrl(id, trackSuffix, mimeType, startOffset, endOffset)
 
-        # download the content of the URL
-        if dir == None:
-            dir = tempfile.mkdtemp("_wav", "getMedia_")
-            tempFiles = True
-        elif not os.path.exists(dir):
-            os.mkdir(dir)
-        return(self._postRequestToFile(url, None, dir))
+        if url != None:
+            # download the content of the URL
+            if dir == None:
+                dir = tempfile.mkdtemp("_wav", "getMedia_")
+                tempFiles = True
+            elif not os.path.exists(dir):
+                os.mkdir(dir)
+            return(self._postRequestToFile(url, None, dir))
+        else:
+            return(None)
         
     def getEpisodeDocuments(self, id):
         """ Get a list of documents associated with the episode of the given transcript. 
@@ -1075,7 +1080,10 @@ class LabbcatView:
     
     def allUtterances(self, participantIds, transcriptTypes=None, mainParticipant=True):
         """
-        Identifies all utterances by the given participants.        
+        Identifies all utterances by the given participants.
+
+        A taskId is returned. To get the actual utterances, which are represented the same
+        way as search results, call `getMatches() <#labbcat.LabbcatView.getMatches>`_
         
         :param participantIds: A list of participant IDs to identify the utterances of.
         :type list of str:
