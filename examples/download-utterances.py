@@ -13,7 +13,7 @@ import sys
 
 def main(argv):
     
-    print("Download utterances...");
+    print("Download utterances...")
     if len(argv) < 3:
         print("This script downloads audio files and transcripts for all utterances in given")
         print("LaBB-CAT server.")
@@ -39,28 +39,30 @@ def main(argv):
         bar = progressbar.ProgressBar(len(participantIds)).start()
         
         for p, participantId in enumerate(participantIds):
-            # get all main-participant utterances by this participant
-            taskId = corpus.allUtterances(participantId)
-            utterances = corpus.getMatches(taskId)
-            if len(utterances) > 0:
-                # get text file for each utterance
-                corpus.getFragments(
-                    transcriptIds=[u['Transcript'] for u in utterances],
-                    startOffsets=[u['Line'] for u in utterances],
-                    endOffsets=[u['LineEnd'] for u in utterances],
-                    dir=dir,
-                    prefixNames=False,
-                    layerIds=["word"],
-                    mimeType="text/plain")
-                # get audio file for each utterance
-                corpus.getSoundFragments(
-                    transcriptIds=[u['Transcript'] for u in utterances],
-                    startOffsets=[u['Line'] for u in utterances],
-                    endOffsets=[u['LineEnd'] for u in utterances],
-                    dir=dir,
-                    prefixNames=False)
-                
-            bar.update(p)
+            try:
+                # get all main-participant utterances by this participant
+                taskId = corpus.allUtterances(participantId)
+                utterances = corpus.getMatches(taskId)
+                if len(utterances) > 0:
+                    # get text file for each utterance
+                    corpus.getFragments(
+                        transcriptIds=[u['Transcript'] for u in utterances],
+                        startOffsets=[u['Line'] for u in utterances],
+                        endOffsets=[u['LineEnd'] for u in utterances],
+                        dir=dir,
+                        prefixNames=False,
+                        layerIds=["word"],
+                        mimeType="text/plain")
+                    # get audio file for each utterance
+                    corpus.getSoundFragments(
+                        transcriptIds=[u['Transcript'] for u in utterances],
+                        startOffsets=[u['Line'] for u in utterances],
+                        endOffsets=[u['LineEnd'] for u in utterances],
+                        dir=dir,
+                        prefixNames=False)                
+                bar.update(p)
+            except:                
+                bar.update(p)
         
         bar.finish()
         print("Download complete.")

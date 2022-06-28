@@ -13,7 +13,7 @@ import sys
 
 def main(argv):
     
-    print("Download media and transcripts...");
+    print("Download media and transcripts...")
     if len(argv) < 4:
         print("This script downloads audio files and transcripts for all utterances in given")
         print("LaBB-CAT server.")
@@ -42,10 +42,12 @@ def main(argv):
         
         for p, transcriptId in enumerate(transcriptIds):
             # get media
-            corpus.formatTranscript(transcriptId, ["utterance"], mimeType, dir=dir)
-            corpus.getMedia(transcriptId, "", "audio/wav", dir=dir)
-                
-            bar.update(p)
+            try:
+                corpus.formatTranscript(transcriptId, ["utterance"], mimeType, dir=dir)
+                corpus.getMedia(transcriptId, "", "audio/wav", dir=dir)
+                bar.update(p)
+            except:                
+                bar.update(p)
         
         bar.finish()
         print("Download complete.")
