@@ -46,6 +46,8 @@ def main(argv):
                 corpus.formatTranscript(transcriptId, ["utterance"], mimeType, dir=dir)
                 corpus.getMedia(transcriptId, "", "audio/wav", dir=dir)
                 bar.update(p)
+            except KeyboardInterrupt:
+                break
             except:                
                 bar.update(p)
         

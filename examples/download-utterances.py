@@ -61,6 +61,8 @@ def main(argv):
                         dir=dir,
                         prefixNames=False)                
                 bar.update(p)
+            except KeyboardInterrupt:
+                break
             except:                
                 bar.update(p)
         
