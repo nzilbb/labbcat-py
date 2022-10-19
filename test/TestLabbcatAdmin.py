@@ -708,16 +708,13 @@ class TestLabbcatAdmin(unittest.TestCase):
             self.assertNotIn("unit-test", lexiconList, "Has unit-text lexicon")
             
             # there are no entries
-            entries = self.store.getDictionaryEntries(
-                "FlatFileDictionary", "unit-test:word->definition",
-                ["test-word", "DictionaryEntry", "LayerDictionaryEntry"])
-            self.assertEqual(len(entries["test-word"]), 0,
-                             "Word has no entries " + str(entries["test-word"]))
-            self.assertEqual(len(entries["DictionaryEntry"]), 0,
-                             "DictionaryEntry has no entries " + str(entries["DictionaryEntry"]))
-            self.assertEqual(len(entries["LayerDictionaryEntry"]), 0,
-                             "LayerDictionaryEntry has no entries "
-                             + str(entries["LayerDictionaryEntry"]))
+            try:
+                entries = self.store.getDictionaryEntries(
+                    "FlatFileDictionary", "unit-test:word->definition",
+                    ["test-word", "DictionaryEntry", "LayerDictionaryEntry"])
+                self.fail("Getting entries from deleted lexicon should fail: " + str[entries])
+            except:
+                pass
         finally:
             self.store.deleteLayer("unit-test")
         
