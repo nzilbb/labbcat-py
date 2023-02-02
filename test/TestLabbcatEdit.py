@@ -47,8 +47,9 @@ class TestLabbcatEdit(unittest.TestCase):
         transcriptType = next(iter(typeLayer["validLabels"]))
         
         # upload transcript (with no media)
-        threadId = self.store.newTranscript(
+        result = self.store.newTranscript(
             transcriptPath, None, None, transcriptType, corpusId, "test")
+        threadId = result[transcriptName]
         
         # wait for task generation to finish
         self.store.waitForTask(threadId)
@@ -61,7 +62,8 @@ class TestLabbcatEdit(unittest.TestCase):
         self.assertEqual(1, count, "Participant '"+participantName+"' is in the store")
         
         # re-upload transcript (with no media)
-        threadId = self.store.updateTranscript(transcriptPath)
+        result = self.store.updateTranscript(transcriptPath)
+        threadId = result[transcriptName]
         
         # wait for task generation to finish
         self.store.waitForTask(threadId)

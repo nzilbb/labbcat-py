@@ -107,8 +107,13 @@ class TestLabbcatView(unittest.TestCase):
         ids = self.store.getMatchingTranscriptIds("/.+/.test(id)", 1, 0)
         self.assertTrue(len(ids) > 0, "Some graph IDs are returned")
         graphId = ids[0]
-        count = self.store.countAnnotations(graphId, "orthography")
-        self.assertTrue(count > 0, "There are some matches")   
+        countAll = self.store.countAnnotations(graphId, "phonemes")
+        self.assertTrue(countAll > 0, "There are some matches")   
+        countFirsts = self.store.countAnnotations(graphId, "phonemes", 1)
+        self.assertTrue(
+            countAll > countFirsts,
+            "All phonemes ("+str(countAll)
+            +") are not more numerous than maxOrdinal = 1 ("+str(countFirsts)+")")   
 
     def test_getAnnotations(self):
         ids = self.store.getMatchingTranscriptIds("/.+/.test(id)", 1, 0)
@@ -116,7 +121,7 @@ class TestLabbcatView(unittest.TestCase):
         graphId = ids[0]
         
         count = self.store.countAnnotations(graphId, "orthography")
-        annotations = self.store.getAnnotations(graphId, "orthography", 2, 0)
+        annotations = self.store.getAnnotations(graphId, "orthography", pageLength=2, pageNumber=0)
         if count < 2:
             print("Too few annotations to test pagination")
         else:
@@ -127,6 +132,13 @@ class TestLabbcatView(unittest.TestCase):
             for key in ["id", "label", "startId", "endId"]:
                 with self.subTest(key=key):
                     self.assertIn(key, annotation, "Has " + key)
+
+        allAnnotations = self.store.getAnnotations(graphId, "phonemes")
+        firstAnnotations = self.store.getAnnotations(graphId, "phonemes", maxOrdinal=1)
+        self.assertTrue(
+            len(allAnnotations) > len(firstAnnotations),
+            "All phonemes ("+str(len(allAnnotations))
+            +") are not more numerous than maxOrdinal = 1 ("+str(len(firstAnnotations))+")")   
 
     def test_getAnchors(self):
         # get a graph to work with

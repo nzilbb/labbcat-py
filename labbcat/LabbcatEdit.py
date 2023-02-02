@@ -55,10 +55,10 @@ class LabbcatEdit(LabbcatView):
         :param episode: The episode the transcript belongs to.
         :type episode: str
         
-        :returns: The taskId of the resulting annotation layer generation task. The
+        :returns: A dictionary of transcript IDs (transcript names) to task threadIds. The
                   task status can be updated using
                   `taskStatus() <#labbcat.LabbcatView.taskStatus>`_.
-        :rtype: str
+        :rtype: dictionary of str
         """
         params = {
             "todo" : "new",
@@ -83,21 +83,19 @@ class LabbcatEdit(LabbcatView):
             if not "result" in model:
                 raise ResponseException("Malformed response model, no result: " + str(model))
             else:
-                if transcriptName not in model["result"]:
-                    raise ResponseException(
-                        "Malformed response model, '"+transcriptName+"' not present: "
-                        + str(model))
-                else:
-                    threadId = model["result"][transcriptName]
-                    return(threadId)
+                return(model["result"])
         finally:
             f.close()
         
-    def updateTranscript(self, transcript):
+    def updateTranscript(self, transcript, suppressGeneration=False):
         """ Uploads a new version of an existing transcript.
         
         :param transcript: The path to the transcript to upload.
         :type transcript: str
+
+        :param suppressGeneration: False (the default) to run automatic layer generation,
+                                   True to suppress automatic layer generation.
+        :type suppressGeneration: boolean
         
         :returns: A dictionary of transcript IDs (transcript names) to task threadIds. The
                   task status can be updated using
@@ -107,6 +105,8 @@ class LabbcatEdit(LabbcatView):
         params = {
             "todo" : "update",
             "auto" : "true" }
+        if suppressGeneration:
+            params["suppressGeneration"] = "true"
         
         transcriptName = os.path.basename(transcript)
         files = {}
@@ -119,13 +119,7 @@ class LabbcatEdit(LabbcatView):
             if not "result" in model:
                 raise ResponseException("Malformed response model, no result: " + str(model))
             else:
-                if transcriptName not in model["result"]:
-                    raise ResponseException(
-                        "Malformed response model, '"+transcriptName+"' not present: "
-                        + str(model))
-                else:
-                    threadId = model["result"][transcriptName]
-                    return(threadId)
+                return model["result"]
         finally:
             f.close()
     

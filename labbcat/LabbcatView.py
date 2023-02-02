@@ -559,7 +559,7 @@ class LabbcatView:
             { "expression":expression,
               "pageLength":pageLength, "pageNumber":pageNumber }))
         
-    def countAnnotations(self, id, layerId):
+    def countAnnotations(self, id, layerId, maxOrdinal=None):
         """ Gets the number of annotations on the given layer of the given transcript. 
         
         :param id: The ID of the transcript.
@@ -567,15 +567,21 @@ class LabbcatView:
         
         :param layerId: The ID of the layer.
         :type layerId: str
-
+        
+        :param maxOrdinal: The maximum ordinal for the counted annotations.
+           e.g. a maxOrdinal of 1 will ensure that only the first annotation for each
+           parent is returned. If maxOrdinal is None, then all annotations are
+           counted, regardless of their ordinal.
+        :type maxOrdinal: int or None
+        
         :returns: A (possibly empty) array of annotations.
         :rtype: int
         """
         return(self._getRequest(
             self._storeQueryUrl("countAnnotations"),
-            { "id":id, "layerId":layerId }))
+            { "id":id, "layerId":layerId, "maxOrdinal":maxOrdinal }))
         
-    def getAnnotations(self, id, layerId, pageLength=None, pageNumber=None):
+    def getAnnotations(self, id, layerId, maxOrdinal=None, pageLength=None, pageNumber=None):
         """ Gets the annotations on the given layer of the given transcript.
         
         :param id: The ID of the transcript.
@@ -583,6 +589,12 @@ class LabbcatView:
         
         :param layerId: The ID of the layer.
         :type layerId:
+        
+        :param maxOrdinal: The maximum ordinal for the returned annotations.
+           e.g. a maxOrdinal of 1 will ensure that only the first annotation for each
+           parent is returned. If maxOrdinal is None, then all annotations are
+           returned, regardless of their ordinal.
+        :type maxOrdinal: int or None
         
         :param pageLength: The maximum number of IDs to return, or null to return all.
         :type pageLength: int or None
@@ -595,7 +607,7 @@ class LabbcatView:
         """
         return(self._getRequest(
             self._storeQueryUrl("getAnnotations"),
-            { "id":id, "layerId":layerId,
+            { "id":id, "layerId":layerId, "maxOrdinal":maxOrdinal,
               "pageLength":pageLength, "pageNumber":pageNumber }))
         
     def getAnchors(self, id, anchorIds):
@@ -1384,6 +1396,8 @@ class LabbcatView:
             try:
                 fileName = self._postRequestToFile(url, params, dir)
                 fragments.append(fileName)
+            except KeyboardInterrupt:
+                break
             except:
                 fragments.append(None)
         
