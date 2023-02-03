@@ -4,7 +4,9 @@
   + *countAnnotations* - new maxOrdinal parameter
   + *getAnnotations* - new maxOrdinal parameter
   + *updateTranscript* - new suppressGeneration parameter
-  
+
+Requires LaBB-CAT version 20230202.1600
+
 # 0.7.1
 
 - New LabbcatView function
