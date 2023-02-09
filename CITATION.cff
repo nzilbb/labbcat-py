@@ -13,11 +13,17 @@ authors:
     email: robert.fromont@canterbury.ac.nz
     affiliation: NZILBB
     orcid: 'https://orcid.org/0000-0001-5271-5487'
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.7600926
 repository-code: 'https://github.com/nzilbb/labbcat-py/'
 url: 'https://pypi.org/project/nzilbb-labbcat/'
 abstract: >-
-  Client library for communicating with LaBB-CAT
-  servers using Python.
+  Client library for communicating with LaBB-CAT servers
+  using Python.
+keywords:
+  - LaBB-CAT
+  - corpus linguistics
 license: AGPL-3.0-or-later
 version: 0.7.2
 date-released: '2023-02-02'
