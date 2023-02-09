@@ -1,5 +1,7 @@
 # nzilbb-labbcat
 
+[![DOI](https://zenodo.org/badge/243340359.svg)](https://zenodo.org/badge/latestdoi/243340359)
+
 Client library for communicating with [LaBB-CAT](https://labbcat.canterbury.ac.nz/)
 servers using Python.
 
