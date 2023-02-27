@@ -153,6 +153,30 @@ class LabbcatEdit(LabbcatView):
         finally:
             f.close()
         
+    def saveParticipant(self, id, label, attributes):
+        """ Saves a participant, and all its tags, to the graph store.
+            To change the ID of an existing participant, pass the old/current ID as the
+            id, and pass the new ID as the label.
+            If the participant ID does not already exist in the database, a new participant record
+            is created. 
+        
+        :param id: The ID participant to delete.
+        :type id: str
+        
+        :param label: The new ID (name) for the participant.
+        :type label: str
+        
+        :param attributes: Participant attribute values - the names are the participant attribute
+                           layer IDs, and the values are the corresponding new attribute values.
+        :type attributes: dictionary of str
+        
+        :returns: True if the participant was updated, False if there were no changes to update.
+        :rtype: boolean
+        """
+        attributes['id'] = id
+        attributes['label'] = label
+        return(self._postRequest(self._storeEditUrl("saveParticipant"), attributes))
+    
     def deleteParticipant(self, id):
         """ Deletes the given participant, and all associated meta-data.
         

@@ -1,3 +1,10 @@
+# 0.7.3
+
+- New LabbcatEdit function
+  + *saveParticipant* - add or update a participant record
+
+Requires LaBB-CAT version 20230224.1731
+
 # 0.7.2
 
 - Changed LabbcatView functions
