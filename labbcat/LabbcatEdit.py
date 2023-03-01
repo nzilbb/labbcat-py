@@ -168,6 +168,8 @@ class LabbcatEdit(LabbcatView):
         
         :param attributes: Participant attribute values - the names are the participant attribute
                            layer IDs, and the values are the corresponding new attribute values.
+                           The pass phrase for participant access can also be set by specifying
+                           a "_password" attribute.
         :type attributes: dictionary of str
         
         :returns: True if the participant was updated, False if there were no changes to update.
