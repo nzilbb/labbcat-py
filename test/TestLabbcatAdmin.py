@@ -172,6 +172,77 @@ class TestLabbcatAdmin(unittest.TestCase):
         except:
             pass
 
+    def test_categories_CRUD(self):
+        
+        class_id = "transcript"
+        category_name = "unit-test"
+        category_description = "Temporary category for unit testing"
+        display_order = 99
+
+        # ensure the category doesn't exist to start with
+        try:
+            self.store.deleteCategory(class_id, category_name)
+        except labbcat.ResponseException as x:
+            pass
+                    
+        # create category
+        category = self.store.createCategory(
+            class_id, category_name, category_description, display_order)
+        self.assertEqual(category["class_id"], class_id,
+                         "class_id name saved")
+        self.assertEqual(category["category"], category_name,
+                         "category name saved")
+        self.assertEqual(category["description"], category_description,
+                         "category description saved")
+        self.assertEqual(category["display_order"], display_order,
+                         "category display_order saved")
+        
+        # read categories
+        categories = self.store.readCategories("transcript")
+        foundNewCategory = False
+        for c in categories:
+            if c["category"] == category_name:
+                foundNewCategory = True
+        self.assertTrue(foundNewCategory, "New category is present in list")
+        
+        # can't create an existing record
+        try:
+            self.store.createCategory(
+                class_id, category_name, category_description, display_order)
+            fail("Create an existing category")
+        except:
+            pass
+        
+        # update category
+        new_category_description = "Changed description";
+        new_display_order = 88
+        updatedCategory = self.store.updateCategory(
+            class_id, category_name, new_category_description, new_display_order)
+        self.assertEqual(updatedCategory["category"], category_name,
+                         "category name unchanged");
+        self.assertEqual(updatedCategory["description"], new_category_description,
+                         "category description changed");
+        self.assertEqual(updatedCategory["display_order"], new_display_order,
+                         "category display_order changed");
+                
+        # delete it
+        self.store.deleteCategory(class_id, category_name)
+        
+        # make sure it was deleted
+        categories = self.store.readCategories(class_id)
+        foundNewCategory = False
+        for c in categories:
+            if c["category"] == category_name:
+                foundNewCategory = True
+        self.assertFalse(foundNewCategory, "New category is gone from list")
+
+        # can't delete a nonexistent record
+        try:
+            self.store.deleteCategory(class_id, category_name)
+            fail("Delete non-existent category")
+        except:
+            pass
+
     def test_mediaTracks_CRUD(self):
         
         suffix = "unit-test"
