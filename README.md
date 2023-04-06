@@ -36,9 +36,7 @@ this one.
 
 The current version of this library requires LaBB-CAT version 20220307.1126.
 
-## Documentation
-
-Detailed documentation is available [here](https://nzilbb.github.io/labbcat-py/)
+**API documentation is available at https://nzilbb.github.io/labbcat-py/**
 
 # Basic usage
 
