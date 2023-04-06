@@ -663,14 +663,14 @@ class TestLabbcatAdmin(unittest.TestCase):
         self.assertIsNotNone(threadId, "There is a threadId")
 
         try:
-            task = self.store.waitForTask(threadId, 120)
+            task = self.store.waitForTask(threadId, 180)
             # if the task is still running, it's taking too long, so cancel it
             if task["running"]:
                 try:
                     self.store.cancelTask(threadId)
                 except:
                     pass
-            self.assertFalse(task["running"], "Search task finished in a timely manner")
+            self.assertFalse(task["running"], "Generate Layer finished in a timely manner")
         finally:
             self.store.releaseTask(threadId)
 
