@@ -26,6 +26,38 @@ class TestLabbcatEdit(unittest.TestCase):
         with self.assertRaises(labbcat.ResponseException):
             self.store.deleteTranscript("nonexistent transcript ID")    
     
+    def test_participantCRUD(self):
+        originalId = "TestLabbcatEdit-participant";
+        changedId = "TestLabbcatEdit-participant-changed";
+        
+        # create participant
+        self.assertTrue(
+            self.store.saveParticipant(originalId, originalId, {"participant_gender":"X"}),
+            "Participant created")
+        
+        # check it's really there
+        participant = self.store.getParticipant(originalId)
+        self.assertIsNotNone(participant, "New participant exists")
+        self.assertEqual(originalId, participant["label"], "Correct participant") # not getId()
+
+        # update it
+        self.assertTrue(
+            self.store.saveParticipant(originalId, changedId, {"participant_gender":"Y"}),
+            "Participant updated")
+        
+        # check it's been updated
+        participant = self.store.getParticipant(changedId)
+        self.assertIsNotNone(participant, "Changed participant exists under new ID")
+        self.assertEqual(changedId, participant["label"], "Correct participant") # not getId()
+
+        # delete it
+        self.store.deleteParticipant(changedId)
+
+        # check it's been deleted
+        participant = self.store.getParticipant(changedId)
+        self.assertIsNone(participant, "Deleted participant isn't there")
+
+    
     def test_newTranscript_updateTranscript_deleteTranscript_deleteParticipant(self):
         transcriptName = "labbcat-py.test.txt"
         transcriptPath = "/home/robert/nzilbb/labbcat-py/test/" + transcriptName

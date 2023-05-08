@@ -349,6 +349,121 @@ class LabbcatAdmin(LabbcatEdit):
         """
         return(self._deleteRequest(self._labbcatUrl("api/admin/projects/"+project), {}))
     
+    def createCategory(self, class_id, category, description, display_order):
+        """ Creates a new category record.
+        
+        The dictionary returned has the following entries:
+        
+        - "class_id"      : What kind of attributes are categorised - "transcript" or "speaker". 
+        - "category"      : The name/id of the category.
+        - "description"   : The description of the category.
+        - "display_order" : Where the category appears among other categories..
+        - "_cantDelete"   : This is not a database field, but rather is present in records
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.   
+        
+        :param class_id: What kind of attributes are categorised - "transcript" or "speaker". 
+        :type class_id: str
+        
+        :param category: The name/id of the category.
+        :type category: str
+        
+        :param description: The description of the category.
+        :type description: str
+        
+        :param display_order: Where the category appears among other categories.
+        :type display_order: number
+        
+        :returns: A copy of the category record
+        :rtype: dict
+        """
+        if class_id == "participant": class_id = "speaker"
+        return(self._postRequest(self._labbcatUrl("api/admin/categories"), {}, {
+            "class_id" : class_id,
+            "category" : category,
+            "description" : description,
+            "display_order" : display_order}))
+    
+    def readCategories(self, class_id, pageNumber=None, pageLength=None):
+        """ Reads a list of category records.
+        
+        The dictionaries in the returned list have the following entries:
+        
+        - "class_id"      : What kind of attributes are categorised - "transcript" or "speaker". 
+        - "category"      : The name/id of the category.
+        - "description"   : The description of the category.
+        - "display_order" : Where the category appears among other categories..
+        - "_cantDelete"   : This is not a database field, but rather is present in records
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.   
+        
+        :param class_id: What kind of attributes are categorised - "transcript" or "speaker". 
+        :type class_id: str
+        
+        :param pageNumber: The zero-based page number to return, or null to return the first page.
+        :type pageNumber: int or None
+
+        :param pageLength: The maximum number of records to return, or null to return all.
+        :type pageLength: int or None
+        
+        :returns: A list of category records.
+        :rtype: list of dict
+        """
+        # define request parameters
+        parameters = {}
+        if pageNumber != None:
+            parameters["pageNumber"] = pageNumber
+        if pageLength != None:
+            parameters["pageLength"] = pageLength
+        return(self._getRequest(self._labbcatUrl("api/admin/categories/"+class_id), parameters))
+        
+    def updateCategory(self, class_id, category, description, display_order):
+        """ Updates an existing category record.
+        
+        The dictionary returned has the following entries:
+        
+        - "class_id"      : What kind of attributes are categorised - "transcript" or "speaker". 
+        - "category"      : The name/id of the category.
+        - "description"   : The description of the category.
+        - "display_order" : Where the category appears among other categories..
+        - "_cantDelete"   : This is not a database field, but rather is present in records
+          returned from the server that can not currently be deleted; a string
+          representing the reason the record can't be deleted.   
+        
+        :param class_id: What kind of attributes are categorised - "transcript" or "speaker". 
+        :type class_id: str
+        
+        :param category: The name/id of the category.
+        :type category: str
+        
+        :param description: The description of the category.
+        :type description: str
+        
+        :param display_order: Where the category appears among other categories.
+        :type display_order: number
+        
+        :returns: A copy of the category record
+        :rtype: dict
+        """
+        if class_id == "participant": class_id = "speaker"
+        return(self._putRequest(self._labbcatUrl("api/admin/categories"), {}, {
+            "class_id" : class_id,
+            "category" : category,
+            "description" : description,
+            "display_order" : display_order }))
+    
+    def deleteCategory(self, class_id, category):
+        """ Deletes an existing category record.
+        
+        :param class_id: What kind of attributes are categorised - "transcript" or "speaker". 
+        :type class_id: str
+        
+        :param category: The name/id of the category.
+        :type category: str        
+        """
+        if class_id == "participant": class_id = "speaker"
+        return(self._deleteRequest(self._labbcatUrl("api/admin/categories/"+class_id+"/"+category), {}))
+    
     def createMediaTrack(self, suffix, description, display_order):
         """ Creates a new media track record.
         
