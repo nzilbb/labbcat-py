@@ -22,6 +22,12 @@ class TestLabbcatView(unittest.TestCase):
     def setUp(self):
         self.store = labbcat.LabbcatView(labbcatUrl, username, password)
         
+    def test_versionInfo(self):
+        versionInfo = self.store.versionInfo()
+        self.assertIn("System", versionInfo, "Has System section")
+        self.assertIn("LaBB-CAT", versionInfo["System"], "Has main LaBB-CAT version")
+        print("LaBB-CAT version " + versionInfo["System"]["LaBB-CAT"])
+    
     def test_getId(self):
         id = self.store.getId()
         self.assertEqual(id, labbcatUrl)

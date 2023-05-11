@@ -1,5 +1,7 @@
 # 0.7.3
 
+- New LabbcatView function
+  + *versionInfo* - gets version information of all components of LaBB-CAT
 - New LabbcatEdit function
   + *saveParticipant* - add or update a participant record
 

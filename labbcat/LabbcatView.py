@@ -269,6 +269,18 @@ class LabbcatView:
         
         return(resp)
          
+    def versionInfo(self):
+        """ Gets version information of all components of LaBB-CAT.
+
+        Version information includes versions of all components and modules installed on the
+        LaBB-CAT server, including format converters and annotator modules.
+
+        :returns: A dictionary of sections, each section a dictionary of modules
+                  indicating the version of that module.
+        :rtype: dict
+        """
+        return(self._getRequest(self._labbcatUrl("version"), None))
+        
     def getId(self):
         """ Gets the store's ID. 
 
