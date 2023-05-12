@@ -739,7 +739,7 @@ class TestLabbcatAdmin(unittest.TestCase):
                 "unit-test", "word", "Unit test layer", 2,
                 False, False, True, True, "string",
                 {}, None, "FlatFileDictionary",
-                "tokenLayerId=orthography&tagLayerId=test&dictionary=unit-test:word->definition")
+                "tokenLayerId=orthography&tagLayerId=unit-test&dictionary=unit-test:word->definition")
             self.assertEqual("unit-test", newLayer["id"], "Layer added");
             
             self.assertIsNone(

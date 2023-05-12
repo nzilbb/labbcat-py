@@ -153,7 +153,8 @@ class TestLabbcatView(unittest.TestCase):
         graphId = ids[0]
 
         # get some annotations so we have valid anchor IDs
-        annotations = self.store.getAnnotations(graphId, "orthography", 2, 0)
+        annotations = self.store.getAnnotations(
+            graphId, "orthography", pageLength=2, pageNumber=0)
         if len(annotations) == 0:
             print("Can't test getAnchors() - no annotations in " + graphId)
         else:
