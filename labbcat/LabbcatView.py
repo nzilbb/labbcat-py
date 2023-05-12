@@ -67,6 +67,7 @@ class LabbcatView:
         self.password = password
         self.verbose = False
         self.language = "en"
+        self.labbcatVersion = None
 
     def _labbcatUrl(self, resource):
         return self.labbcatUrl + resource
@@ -76,6 +77,8 @@ class LabbcatView:
 
     def _getRequest(self, url, params):
         response = Response(self._getRequestRaw(url, params), self.verbose)
+        if self.labbcatVersion is None:
+            self.labbcatVersion = response.version
         response.checkForErrors()
 
         if self.verbose: print("response: " + str(response.text))
@@ -1102,7 +1105,12 @@ class LabbcatView:
             parameters["transcript_type"] = transcriptTypes
         if overlapThreshold != None:
             parameters["overlap_threshold"] = overlapThreshold
-        model = self._getRequest(self._labbcatUrl("search"), parameters)
+            
+        endpoint = "api/search" # this endpoint was implemented as of LaBB-CAT 20230511.1949
+        if self.labbcatVersion is None: self.getId() # ensure we know the server version
+        if self.labbcatVersion < "20230511.1949": endpoint = "search"
+        
+        model = self._getRequest(self._labbcatUrl(endpoint), parameters)
         return(model["threadId"])
     
     def allUtterances(self, participantIds, transcriptTypes=None, mainParticipant=True):
@@ -1140,7 +1148,12 @@ class LabbcatView:
             parameters["only_main_speaker"] = "true"
         if transcriptTypes != None:
             parameters["transcript_type"] = transcriptTypes
-        model = self._getRequest(self._labbcatUrl("allUtterances"), parameters)
+            
+        endpoint = "api/utterances" # this endpoint was implemented as of LaBB-CAT 20230511.1949
+        if self.labbcatVersion is None: self.getId() # ensure we know the server version
+        if self.labbcatVersion < "20230511.1949": endpoint = "allUtterances"
+        
+        model = self._getRequest(self._labbcatUrl(endpoint), parameters)
         return(model["threadId"])
     
     def getMatches(self, search, wordsContext=0, pageLength=None, pageNumber=None):
@@ -1228,8 +1241,13 @@ class LabbcatView:
         if pageNumber != None:
             parameters["pageNumber"] = pageNumber
 
+            
+        endpoint = "api/results" # this endpoint was implemented as of LaBB-CAT 20230511.1949
+        if self.labbcatVersion is None: self.getId() # ensure we know the server version
+        if self.labbcatVersion < "20230511.1949": endpoint = "resultsStream"
+        
         # send request
-        model = self._getRequest(self._labbcatUrl("resultsStream"), parameters)
+        model = self._getRequest(self._labbcatUrl(endpoint), parameters)
         
         # if search matrix was passed, releaseTask
         if releaseThread:
