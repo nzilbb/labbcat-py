@@ -37,7 +37,7 @@ class LabbcatView:
         import labbcat
         
         # create annotation store client
-        corpus = labbcat.LabbcatView("https://labbcat.canterbury.ac.nz", "demo", "demo");
+        corpus = labbcat.LabbcatView("https://labbcat.canterbury.ac.nz", "demo", "demo")
         
         # show some basic information
         
@@ -67,6 +67,7 @@ class LabbcatView:
         self.password = password
         self.verbose = False
         self.language = "en"
+        self.labbcatVersion = None
 
     def _labbcatUrl(self, resource):
         return self.labbcatUrl + resource
@@ -76,6 +77,8 @@ class LabbcatView:
 
     def _getRequest(self, url, params):
         response = Response(self._getRequestRaw(url, params), self.verbose)
+        if self.labbcatVersion is None:
+            self.labbcatVersion = response.version
         response.checkForErrors()
 
         if self.verbose: print("response: " + str(response.text))
@@ -152,7 +155,7 @@ class LabbcatView:
         if self.verbose: print("model: " + str(response.model))
         return(response.model)
          
-    def _postRequestToFile(self, url, params, dir=None):
+    def _postRequestToFile(self, url, params, dir=None, fileName=None):
         if self.verbose: print("_postRequestToFile " + url + " : " + str(params) + " -> " + dir)
         if self.username == None:
             auth = None
@@ -183,43 +186,43 @@ class LabbcatView:
         elif contentType.startswith("audio/mpeg"): extension = ".mp3"
         elif contentType.startswith("video/mpeg"): extension = ".mp4"
 
-        fileName = None
-        if dir == None:
-            # save to temporary file
-            fd, fileName = tempfile.mkstemp(extension, "labbcat-py-")
-            if self.verbose: print("file: " + fileName)
-            with open(fileName, "wb") as file:
-                file.write(response.content)
-            os.close(fd)
-        else:
-            # save into the given directory...
-            # use the name given by the server, if any
-            contentDisposition = None
-            if "content-disposition" in response.headers:
-                contentDisposition = response.headers["content-disposition"];
-                if self.verbose: print("contentDisposition: " + contentDisposition)
-            if contentDisposition != None:                
-                # something like attachment; filename=blah.wav
-                equals = contentDisposition.find("=")
-                if equals >= 0:
-                    fileName = contentDisposition[equals + 1:]
-                    if self.verbose: print("fileName: " + fileName)
-                    if fileName == "":
-                        fileName = None
-                    else:
-                        fileName = os.path.join(dir, fileName)
-            if fileName == None:
-                lastSlash = url.rfind('/')
-                if lastSlash >= 0:
-                    fileName = url[lastSlash + 1:]
-                    if not fileName.endswith(extension): fileName = fileName + extension
-                    fileName = os.path.join(dir, fileName)
-                else:
-                    fd, fileName = tempfile.mkstemp(extension, "labbcat-py-", dir)
+        if fileName == None:
+            if dir == None:
+                # save to temporary file
+                fd, fileName = tempfile.mkstemp(extension, "labbcat-py-")
+                if self.verbose: print("file: " + fileName)
+                with open(fileName, "wb") as file:
+                    file.write(response.content)
                     os.close(fd)
-            if self.verbose: print("file: " + fileName)
-            with open(fileName, "wb") as file:
-                file.write(response.content)
+            else:
+                # save into the given directory...
+                # use the name given by the server, if any
+                contentDisposition = None
+                if "content-disposition" in response.headers:
+                    contentDisposition = response.headers["content-disposition"];
+                    if self.verbose: print("contentDisposition: " + contentDisposition)
+                    if contentDisposition != None:                
+                        # something like attachment; filename=blah.wav
+                        equals = contentDisposition.find("=")
+                        if equals >= 0:
+                            fileName = contentDisposition[equals + 1:]
+                            if self.verbose: print("fileName: " + fileName)
+                            if fileName == "":
+                                fileName = None
+                            else:
+                                fileName = os.path.join(dir, fileName)
+                if fileName == None:
+                    lastSlash = url.rfind('/')
+                    if lastSlash >= 0:
+                        fileName = url[lastSlash + 1:]
+                        if not fileName.endswith(extension): fileName = fileName + extension
+                        fileName = os.path.join(dir, fileName)
+                    else:
+                        fd, fileName = tempfile.mkstemp(extension, "labbcat-py-", dir)
+                        os.close(fd)
+        if self.verbose: print("file: " + fileName)
+        with open(fileName, "wb") as file:
+            file.write(response.content)
             
         return(fileName)
          
@@ -269,6 +272,18 @@ class LabbcatView:
         
         return(resp)
          
+    def versionInfo(self):
+        """ Gets version information of all components of LaBB-CAT.
+
+        Version information includes versions of all components and modules installed on the
+        LaBB-CAT server, including format converters and annotator modules.
+
+        :returns: A dictionary of sections, each section a dictionary of modules
+                  indicating the version of that module.
+        :rtype: dict
+        """
+        return(self._getRequest(self._labbcatUrl("version"), None))
+        
     def getId(self):
         """ Gets the store's ID. 
 
@@ -343,12 +358,24 @@ class LabbcatView:
         - ``labels('corpus').includes('CC')``
         - ``labels('participant_languages').includes('en')``
         - ``labels('transcript_language').includes('en')``
-        - ``!/Ada.+/.test(id) && my('corpus').label == 'CC'``
-        - ``list('transcript_rating').length < 2``
-        - ``list('participant_rating').length = 0``
+        - ``!/Ada.+/.test(id) && first('corpus').label == 'CC'``
+        - ``all('transcript_rating').length < 2``
+        - ``all('participant_rating').length = 0``
         - ``!annotators('transcript_rating').includes('labbcat')``
-        - ``my('participant_gender').label == 'NA'``
+        - ``first('participant_gender').label == 'NA'``
 
+        The following functions can be used to generate an expression of common types:
+        
+        - `expressionFromAttributeValue() <#labbcat.expressionFromAttributeValue>`_
+        - `expressionFromAttributeValues() <#labbcat.expressionFromAttributeValues>`_
+        - `expressionFromIds() <#labbcat.expressionFromIds>`_
+        - `expressionFromCorpora() <#labbcat.expressionFromCorpora>`_
+
+        Example:: 
+        
+            numQbParticipants = corpus.countMatchingParticipantIds(
+                labbcat.expressionFromCorpora("QB"))            
+            
         :param expression: An expression that determines which participants match.
         :type expression: str
         
@@ -369,11 +396,23 @@ class LabbcatView:
         - ``labels('corpus').includes('CC')``
         - ``labels('participant_languages').includes('en')``
         - ``labels('transcript_language').includes('en')``
-        - ``!/Ada.+/.test(id) && my('corpus').label == 'CC'``
-        - ``list('transcript_rating').length < 2``
-        - ``list('participant_rating').length = 0``
+        - ``!/Ada.+/.test(id) && first('corpus').label == 'CC'``
+        - ``all('transcript_rating').length < 2``
+        - ``all('participant_rating').length = 0``
         - ``!annotators('transcript_rating').includes('labbcat')``
-        - ``my('participant_gender').label == 'NA'``
+        - ``first('participant_gender').label == 'NA'``
+
+        The following functions can be used to generate an expression of common types:
+        
+        - `expressionFromAttributeValue() <#labbcat.expressionFromAttributeValue>`_
+        - `expressionFromAttributeValues() <#labbcat.expressionFromAttributeValues>`_
+        - `expressionFromIds() <#labbcat.expressionFromIds>`_
+        - `expressionFromCorpora() <#labbcat.expressionFromCorpora>`_
+
+        Example:: 
+        
+            qbParticipants = corpus.getMatchingParticipantIds(
+                labbcat.expressionFromCorpora("QB"))            
         
         :param expression: An expression that determines which participants match.
         :type expression: str
@@ -430,19 +469,32 @@ class LabbcatView:
         
         - ``/Ada.+/.test(id)``
         - ``labels('participant').includes('Robert')``
-        - ``('CC', 'IA', 'MU').includes(my('corpus').label)``
-        - ``my('episode').label == 'Ada Aitcheson'``
-        - ``my('transcript_scribe').label == 'Robert'``
-        - ``my('participant_languages').label == 'en'``
-        - ``my('noise').label == 'bell'``
+        - ``('CC', 'IA', 'MU').includes(first('corpus').label)``
+        - ``first('episode').label == 'Ada Aitcheson'``
+        - ``first('transcript_scribe').label == 'Robert'``
+        - ``first('participant_languages').label == 'en'``
+        - ``first('noise').label == 'bell'``
         - ``labels('transcript_languages').includes('en')``
         - ``labels('participant_languages').includes('en')``
         - ``labels('noise').includes('bell')``
-        - ``list('transcript_languages').length gt; 1``
-        - ``list('participant_languages').length gt; 1``
-        - ``list('transcript').length gt; 100``
+        - ``all('transcript_languages').length gt; 1``
+        - ``all('participant_languages').length gt; 1``
+        - ``all('transcript').length gt; 100``
         - ``annotators('transcript_rating').includes('Robert')``
-        - ``!/Ada.+/.test(id) && my('corpus').label == 'CC' && labels('participant').includes('Robert')`` 
+        - ``!/Ada.+/.test(id) && first('corpus').label == 'CC' && labels('participant').includes('Robert')`` 
+
+        The following functions can be used to generate an expression of common types:
+        
+        - `expressionFromAttributeValue() <#labbcat.expressionFromAttributeValue>`_
+        - `expressionFromAttributeValues() <#labbcat.expressionFromAttributeValues>`_
+        - `expressionFromIds() <#labbcat.expressionFromIds>`_
+        - `expressionFromTranscriptTypes() <#labbcat.expressionFromTranscriptTypes>`_
+        - `expressionFromCorpora() <#labbcat.expressionFromCorpora>`_
+
+        Example:: 
+        
+            numQuakeFaceTranscripts = corpus.countMatchingTranscriptIds(
+                labbcat.expressionFromAttributeValue("transcript_quakeface", "1"))            
         
         :param expression: An expression that determines which transcripts match.
         :type expression: str
@@ -468,19 +520,32 @@ class LabbcatView:
         
         - ``/Ada.+/.test(id)``
         - ``labels('participant').includes('Robert')``
-        - ``('CC', 'IA', 'MU').includes(my('corpus').label)``
-        - ``my('episode').label == 'Ada Aitcheson'``
-        - ``my('transcript_scribe').label == 'Robert'``
-        - ``my('participant_languages').label == 'en'``
-        - ``my('noise').label == 'bell'``
+        - ``('CC', 'IA', 'MU').includes(first('corpus').label)``
+        - ``first('episode').label == 'Ada Aitcheson'``
+        - ``first('transcript_scribe').label == 'Robert'``
+        - ``first('participant_languages').label == 'en'``
+        - ``first('noise').label == 'bell'``
         - ``labels('transcript_languages').includes('en')``
         - ``labels('participant_languages').includes('en')``
         - ``labels('noise').includes('bell')``
-        - ``list('transcript_languages').length gt; 1``
-        - ``list('participant_languages').length gt; 1``
-        - ``list('transcript').length gt; 100``
+        - ``all('transcript_languages').length gt; 1``
+        - ``all('participant_languages').length gt; 1``
+        - ``all('transcript').length gt; 100``
         - ``annotators('transcript_rating').includes('Robert')``
-        - ``!/Ada.+/.test(id) && my('corpus').label == 'CC' && labels('participant').includes('Robert')``
+        - ``!/Ada.+/.test(id) && first('corpus').label == 'CC' && labels('participant').includes('Robert')``
+
+        The following functions can be used to generate an expression of common types:
+        
+        - `expressionFromAttributeValue() <#labbcat.expressionFromAttributeValue>`_
+        - `expressionFromAttributeValues() <#labbcat.expressionFromAttributeValues>`_
+        - `expressionFromIds() <#labbcat.expressionFromIds>`_
+        - `expressionFromTranscriptTypes() <#labbcat.expressionFromTranscriptTypes>`_
+        - `expressionFromCorpora() <#labbcat.expressionFromCorpora>`_
+
+        Example:: 
+        
+            quakeFaceTranscripts = corpus.getMatchingTranscriptIds(
+                labbcat.expressionFromAttributeValue("transcript_quakeface", "1"))            
         
         :param expression: An expression that determines which transcripts match.        
         :type expression: str
@@ -513,13 +578,13 @@ class LabbcatView:
         
         - ``id == 'ew_0_456'``
         - ``!/th[aeiou].&#47;/.test(label)``
-        - ``my('participant').label == 'Robert' && my('utterances').start.offset == 12.345`` 
+        - ``first('participant').label == 'Robert' && first('utterances').start.offset == 12.345`` 
         - ``graph.id == 'AdaAicheson-01.trs' && layer.id == 'orthography' && start.offset < 10.5`` 
         - ``previous.id == 'ew_0_456'``
 
         *NB* all expressions must match by either id or layer.id.
         
-        :param expression: An expression that determines which participants match.
+        :param expression: An expression that determines which annotations match.
         :type expression: str
 
         :returns: The number of matching annotations.
@@ -537,7 +602,7 @@ class LabbcatView:
         
         - ``id == 'ew_0_456'``
         - ``!/th[aeiou].&#47;/.test(label)``
-        - ``my('participant').label == 'Robert' && my('utterances').start.offset == 12.345`` 
+        - ``first('participant').label == 'Robert' && first('utterances').start.offset == 12.345`` 
         - ``graph.id == 'AdaAicheson-01.trs' && layer.id == 'orthography' && start.offset < 10.5`` 
         - ``previous.id == 'ew_0_456'``
         
@@ -896,30 +961,90 @@ class LabbcatView:
         """
         return(self._getRequest(self._labbcatUrl("threads"), None))
     
-    def getTranscriptAttributes(self, transcriptIds, layerIds):
+    def getTranscriptAttributes(self, expression, layerIds, csvFileName=None):
         """ Get transcript attribute values.
         
-        Retrieves transcript attribute values for given transcript IDs, saves them to
+        Retrieves transcript attribute values for a given transcript expression, saves them to
         a CSV file, and returns the name of the file.
 
+        The expression parameter can be an explicit list of transcript IDs, or a string
+        query expression that identifies which transcripts to return.
+        
+        The expression language is loosely based on JavaScript; expressions such as the
+        following can be used: 
+        
+        - ``/Ada.+/.test(id)``
+        - ``labels('participant').includes('Robert')``
+        - ``('CC', 'IA', 'MU').includes(first('corpus').label)``
+        - ``first('episode').label == 'Ada Aitcheson'``
+        - ``first('transcript_scribe').label == 'Robert'``
+        - ``first('participant_languages').label == 'en'``
+        - ``first('noise').label == 'bell'``
+        - ``labels('transcript_languages').includes('en')``
+        - ``labels('participant_languages').includes('en')``
+        - ``labels('noise').includes('bell')``
+        - ``all('transcript_languages').length &gt; 1``
+        - ``all('participant_languages').length y 1``
+        - ``all('word').length &gt; 100``
+        - ``annotators('transcript_rating').includes('Robert')``
+        - ``!/Ada.+/.test(id) && first('corpus').label == 'CC' && labels('participant').includes('Robert')``
+
+        The following functions can be used to generate an expression of common types:
+        
+        - `expressionFromAttributeValue() <#labbcat.expressionFromAttributeValue>`_
+        - `expressionFromAttributeValues() <#labbcat.expressionFromAttributeValues>`_
+        - `expressionFromIds() <#labbcat.expressionFromIds>`_
+        - `expressionFromTranscriptTypes() <#labbcat.expressionFromTranscriptTypes>`_
+        - `expressionFromCorpora() <#labbcat.expressionFromCorpora>`_
+        
         In general, transcript attributes are layers whose ID is prefixed 'transcript',
         however formally it's any layer where layer.parentId == 'graph' and layer.alignment
         == 0, which includes 'corpus' as well as transcript attribute layers.
         
         The resulting file is the responsibility of the caller to delete when finished.
+
+        Example:: 
         
-        :param transcriptIds: A list of transcript IDs
-        :type transcriptIds: list of str.
+            # duration/word count of QB corpus transcripts
+            qbAttributesCsv = corpus.getTranscriptAttributes(
+                labbcat.expressionFromCorpora("QB"),
+                ["transcript_duration", "transcript_word count"])            
+            
+            # speech rate for spontaneous speech recordings
+            spontaneousSpeechRateCsv = corpus.getTranscriptAttributes(
+                labbcat.expressionFromTranscriptTypes(["monologue", "interview"]),
+                ["transcript_syllables per minute"])
+            
+            # language for targeted transcripts
+            languageCsv = corpus.getTranscriptAttributes(
+                ["AP2505_Nelson.eaf", "AP2512_MattBlack.eaf"],
+                "transcript_language")
+
+            # tidily delete CSV files
+            os.remove([qbAttributesCsv, spontaneousSpeechRateCsv, languageCsv])
+        
+        :param expression: An expression that determines which transcripts match,
+                           or an explicit list of transcript IDs.
+        :type expression: str or list of str.
         
         :param layerIds: A list of layer IDs corresponding to transcript attributes.
         :type layerIds: list of str.
         
+        :param csvFileName: The file to save the resulting CSV rows to.
+        :type csvFileName: str.
+        
+        :returns: The name of a CSV file with one row per transcript, and one column per attribute.
         :rtype: str
         """
-        params = {
-            "layer" : ["transcript"]+layerIds,
-            "id" : transcriptIds }
-        return (self._postRequestToFile(self._labbcatUrl("api/attributes"), params))
+        if isinstance(expression, str):
+            params = {
+                "layer" : ["transcript"]+layerIds,
+                "query" : expression }
+        else:
+            params = {
+                "layer" : ["transcript"]+layerIds,
+                "id" : expression }
+        return (self._postRequestToFile(self._labbcatUrl("api/attributes"), params, None, csvFileName))
     
     def getParticipantAttributes(self, participantIds, layerIds):
         """ Gets participant attribute values.
@@ -939,6 +1064,7 @@ class LabbcatView:
         :param layerIds: A list of layer IDs corresponding to participant attributes. 
         :type layerIds: list of str.
         
+        :returns: The name of a CSV file with one row per participant, and one column per attribute.
         :rtype: str
         """
         params = {
@@ -1090,7 +1216,12 @@ class LabbcatView:
             parameters["transcript_type"] = transcriptTypes
         if overlapThreshold != None:
             parameters["overlap_threshold"] = overlapThreshold
-        model = self._getRequest(self._labbcatUrl("search"), parameters)
+            
+        endpoint = "api/search" # this endpoint was implemented as of LaBB-CAT 20230511.1949
+        if self.labbcatVersion is None: self.getId() # ensure we know the server version
+        if self.labbcatVersion < "20230511.1949": endpoint = "search"
+        
+        model = self._getRequest(self._labbcatUrl(endpoint), parameters)
         return(model["threadId"])
     
     def allUtterances(self, participantIds, transcriptTypes=None, mainParticipant=True):
@@ -1128,7 +1259,12 @@ class LabbcatView:
             parameters["only_main_speaker"] = "true"
         if transcriptTypes != None:
             parameters["transcript_type"] = transcriptTypes
-        model = self._getRequest(self._labbcatUrl("allUtterances"), parameters)
+            
+        endpoint = "api/utterances" # this endpoint was implemented as of LaBB-CAT 20230511.1949
+        if self.labbcatVersion is None: self.getId() # ensure we know the server version
+        if self.labbcatVersion < "20230511.1949": endpoint = "allUtterances"
+        
+        model = self._getRequest(self._labbcatUrl(endpoint), parameters)
         return(model["threadId"])
     
     def getMatches(self, search, wordsContext=0, pageLength=None, pageNumber=None):
@@ -1216,8 +1352,13 @@ class LabbcatView:
         if pageNumber != None:
             parameters["pageNumber"] = pageNumber
 
+            
+        endpoint = "api/results" # this endpoint was implemented as of LaBB-CAT 20230511.1949
+        if self.labbcatVersion is None: self.getId() # ensure we know the server version
+        if self.labbcatVersion < "20230511.1949": endpoint = "resultsStream"
+        
         # send request
-        model = self._getRequest(self._labbcatUrl("resultsStream"), parameters)
+        model = self._getRequest(self._labbcatUrl(endpoint), parameters)
         
         # if search matrix was passed, releaseTask
         if releaseThread:
@@ -1762,7 +1903,7 @@ class LabbcatView:
         # tidily remove the downloaded file
         os.remove(fileName)
         
-        return(dictionary)
-    
+        return(dictionary)    
+        
     # TODO getFragment
     # TODO getFragmentSeries

@@ -2,6 +2,16 @@
 
 - New LabbcatEdit function
   + *saveParticipant* - add or update a participant record
+- New LabbcatView function
+  + *versionInfo* - gets version information of all components of LaBB-CAT
+- Changed LabbcatView function
+  + *getTranscriptAttributes* - now accepts a query expression for identifying transcripts, and an optional CSV file name to use
+- New labbcat functions for generating query expressions...
+  + *expressionFromAttributeValue* - ... from a single-value transcript/participant attribute name and possible values
+  + *expressionFromAttributeValues* - ... from a multi-value transcript/participant attribute name and possible values
+  + *expressionFromIds* - ... from a list of transcript/participant IDs
+  + *expressionFromTranscriptTypes* - ... from a list of transcript types
+  + *expressionFromCorpora* - ... from a list of corpora
 
 Requires LaBB-CAT version 20230224.1731
 

@@ -22,6 +22,12 @@ class TestLabbcatView(unittest.TestCase):
     def setUp(self):
         self.store = labbcat.LabbcatView(labbcatUrl, username, password)
         
+    def test_versionInfo(self):
+        versionInfo = self.store.versionInfo()
+        self.assertIn("System", versionInfo, "Has System section")
+        self.assertIn("LaBB-CAT", versionInfo["System"], "Has main LaBB-CAT version")
+        print("LaBB-CAT version " + versionInfo["System"]["LaBB-CAT"])
+    
     def test_getId(self):
         id = self.store.getId()
         self.assertEqual(id, labbcatUrl)
@@ -147,7 +153,8 @@ class TestLabbcatView(unittest.TestCase):
         graphId = ids[0]
 
         # get some annotations so we have valid anchor IDs
-        annotations = self.store.getAnnotations(graphId, "orthography", 2, 0)
+        annotations = self.store.getAnnotations(
+            graphId, "orthography", pageLength=2, pageNumber=0)
         if len(annotations) == 0:
             print("Can't test getAnchors() - no annotations in " + graphId)
         else:
@@ -310,8 +317,14 @@ class TestLabbcatView(unittest.TestCase):
         ids = ids[:3]
         layerIds = ["transcript_type", "corpus"]
         fileName = self.store.getTranscriptAttributes(ids, layerIds)
-        self.assertTrue(fileName.endswith(".csv"), "CSV file returned")
-        self.assertTrue(os.path.isfile(fileName), "CSV file exists")
+        self.assertTrue(fileName.endswith(".csv"), "ID list: CSV file returned")
+        self.assertTrue(os.path.isfile(fileName), "ID list: CSV file exists")
+        os.remove(fileName)
+        
+        fileName = self.store.getTranscriptAttributes(
+            "['corpus'].includesAny(labels('corpus'))", layerIds, "test.csv")
+        self.assertEqual("test.csv", fileName, "Query expression: Given CSV file returned")
+        self.assertTrue(os.path.isfile(fileName), "Query expression: CSV file exists")
         os.remove(fileName)
             
     def test_getParticipantAttributes(self):
