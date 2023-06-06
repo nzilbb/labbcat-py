@@ -322,8 +322,8 @@ class TestLabbcatView(unittest.TestCase):
         os.remove(fileName)
         
         fileName = self.store.getTranscriptAttributes(
-            "['corpus'].includesAny(labels('corpus'))", layerIds)
-        self.assertTrue(fileName.endswith(".csv"), "Query expression: CSV file returned")
+            "['corpus'].includesAny(labels('corpus'))", layerIds, "test.csv")
+        self.assertEqual("test.csv", fileName, "Query expression: Given CSV file returned")
         self.assertTrue(os.path.isfile(fileName), "Query expression: CSV file exists")
         os.remove(fileName)
             

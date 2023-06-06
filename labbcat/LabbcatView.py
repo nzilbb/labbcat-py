@@ -155,7 +155,7 @@ class LabbcatView:
         if self.verbose: print("model: " + str(response.model))
         return(response.model)
          
-    def _postRequestToFile(self, url, params, dir=None):
+    def _postRequestToFile(self, url, params, dir=None, fileName=None):
         if self.verbose: print("_postRequestToFile " + url + " : " + str(params) + " -> " + dir)
         if self.username == None:
             auth = None
@@ -186,43 +186,43 @@ class LabbcatView:
         elif contentType.startswith("audio/mpeg"): extension = ".mp3"
         elif contentType.startswith("video/mpeg"): extension = ".mp4"
 
-        fileName = None
-        if dir == None:
-            # save to temporary file
-            fd, fileName = tempfile.mkstemp(extension, "labbcat-py-")
-            if self.verbose: print("file: " + fileName)
-            with open(fileName, "wb") as file:
-                file.write(response.content)
-            os.close(fd)
-        else:
-            # save into the given directory...
-            # use the name given by the server, if any
-            contentDisposition = None
-            if "content-disposition" in response.headers:
-                contentDisposition = response.headers["content-disposition"];
-                if self.verbose: print("contentDisposition: " + contentDisposition)
-            if contentDisposition != None:                
-                # something like attachment; filename=blah.wav
-                equals = contentDisposition.find("=")
-                if equals >= 0:
-                    fileName = contentDisposition[equals + 1:]
-                    if self.verbose: print("fileName: " + fileName)
-                    if fileName == "":
-                        fileName = None
-                    else:
-                        fileName = os.path.join(dir, fileName)
-            if fileName == None:
-                lastSlash = url.rfind('/')
-                if lastSlash >= 0:
-                    fileName = url[lastSlash + 1:]
-                    if not fileName.endswith(extension): fileName = fileName + extension
-                    fileName = os.path.join(dir, fileName)
-                else:
-                    fd, fileName = tempfile.mkstemp(extension, "labbcat-py-", dir)
+        if fileName == None:
+            if dir == None:
+                # save to temporary file
+                fd, fileName = tempfile.mkstemp(extension, "labbcat-py-")
+                if self.verbose: print("file: " + fileName)
+                with open(fileName, "wb") as file:
+                    file.write(response.content)
                     os.close(fd)
-            if self.verbose: print("file: " + fileName)
-            with open(fileName, "wb") as file:
-                file.write(response.content)
+            else:
+                # save into the given directory...
+                # use the name given by the server, if any
+                contentDisposition = None
+                if "content-disposition" in response.headers:
+                    contentDisposition = response.headers["content-disposition"];
+                    if self.verbose: print("contentDisposition: " + contentDisposition)
+                    if contentDisposition != None:                
+                        # something like attachment; filename=blah.wav
+                        equals = contentDisposition.find("=")
+                        if equals >= 0:
+                            fileName = contentDisposition[equals + 1:]
+                            if self.verbose: print("fileName: " + fileName)
+                            if fileName == "":
+                                fileName = None
+                            else:
+                                fileName = os.path.join(dir, fileName)
+                if fileName == None:
+                    lastSlash = url.rfind('/')
+                    if lastSlash >= 0:
+                        fileName = url[lastSlash + 1:]
+                        if not fileName.endswith(extension): fileName = fileName + extension
+                        fileName = os.path.join(dir, fileName)
+                    else:
+                        fd, fileName = tempfile.mkstemp(extension, "labbcat-py-", dir)
+                        os.close(fd)
+        if self.verbose: print("file: " + fileName)
+        with open(fileName, "wb") as file:
+            file.write(response.content)
             
         return(fileName)
          
@@ -961,7 +961,7 @@ class LabbcatView:
         """
         return(self._getRequest(self._labbcatUrl("threads"), None))
     
-    def getTranscriptAttributes(self, expresson, layerIds):
+    def getTranscriptAttributes(self, expression, layerIds, csvFileName=None):
         """ Get transcript attribute values.
         
         Retrieves transcript attribute values for a given transcript expression, saves them to
@@ -1030,6 +1030,9 @@ class LabbcatView:
         :param layerIds: A list of layer IDs corresponding to transcript attributes.
         :type layerIds: list of str.
         
+        :param csvFileName: The file to save the resulting CSV rows to.
+        :type csvFileName: str.
+        
         :returns: The name of a CSV file with one row per transcript, and one column per attribute.
         :rtype: str
         """
@@ -1041,7 +1044,7 @@ class LabbcatView:
             params = {
                 "layer" : ["transcript"]+layerIds,
                 "id" : expression }
-        return (self._postRequestToFile(self._labbcatUrl("api/attributes"), params))
+        return (self._postRequestToFile(self._labbcatUrl("api/attributes"), params, None, csvFileName))
     
     def getParticipantAttributes(self, participantIds, layerIds):
         """ Gets participant attribute values.

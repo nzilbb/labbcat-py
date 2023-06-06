@@ -5,7 +5,7 @@
 - New LabbcatView function
   + *versionInfo* - gets version information of all components of LaBB-CAT
 - Changed LabbcatView function
-  + *getTranscriptAttributes* - now accepts a query expression for identifying transcripts
+  + *getTranscriptAttributes* - now accepts a query expression for identifying transcripts, and an optional CSV file name to use
 - New labbcat functions for generating query expressions...
   + *expressionFromAttributeValue* - ... from a single-value transcript/participant attribute name and possible values
   + *expressionFromAttributeValues* - ... from a multi-value transcript/participant attribute name and possible values
