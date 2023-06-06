@@ -32,6 +32,18 @@ LabbcatAdmin class
 The LabbcatAdmin class also inherits the LabbcatEdit class.
 
 ==========================================
+Query Language Generation Functions
+==========================================
+
+.. autofunction:: labbcat.expressionFromAttributeValue
+.. autofunction:: labbcat.expressionFromAttributeValues
+.. autofunction:: labbcat.expressionFromIds
+.. autofunction:: labbcat.expressionFromTranscriptTypes
+.. autofunction:: labbcat.expressionFromCorpora
+
+The LabbcatAdmin class also inherits the LabbcatEdit class.
+
+==========================================
 ResponseException class
 ==========================================
 

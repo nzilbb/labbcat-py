@@ -67,7 +67,7 @@ by users with “view” permission.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">labbcat</span>
 
 <span class="c1"># create annotation store client</span>
-<span class="n">corpus</span> <span class="o">=</span> <span class="n">labbcat</span><span class="o">.</span><span class="n">LabbcatView</span><span class="p">(</span><span class="s2">&quot;https://labbcat.canterbury.ac.nz&quot;</span><span class="p">,</span> <span class="s2">&quot;demo&quot;</span><span class="p">,</span> <span class="s2">&quot;demo&quot;</span><span class="p">);</span>
+<span class="n">corpus</span> <span class="o">=</span> <span class="n">labbcat</span><span class="o">.</span><span class="n">LabbcatView</span><span class="p">(</span><span class="s2">&quot;https://labbcat.canterbury.ac.nz&quot;</span><span class="p">,</span> <span class="s2">&quot;demo&quot;</span><span class="p">,</span> <span class="s2">&quot;demo&quot;</span><span class="p">)</span>
 
 <span class="c1"># show some basic information</span>
 
@@ -169,7 +169,7 @@ following can be used:</p>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">==</span> <span class="pre">'ew_0_456'</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">!/th[aeiou].&amp;#47;/.test(label)</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">my('participant').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('utterances').start.offset</span> <span class="pre">==</span> <span class="pre">12.345</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">first('participant').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span> <span class="pre">&amp;&amp;</span> <span class="pre">first('utterances').start.offset</span> <span class="pre">==</span> <span class="pre">12.345</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">graph.id</span> <span class="pre">==</span> <span class="pre">'AdaAicheson-01.trs'</span> <span class="pre">&amp;&amp;</span> <span class="pre">layer.id</span> <span class="pre">==</span> <span class="pre">'orthography'</span> <span class="pre">&amp;&amp;</span> <span class="pre">start.offset</span> <span class="pre">&lt;</span> <span class="pre">10.5</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">previous.id</span> <span class="pre">==</span> <span class="pre">'ew_0_456'</span></code></li>
 </ul>
@@ -178,7 +178,7 @@ following can be used:</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>expression</strong> (<em>str</em>) – An expression that determines which participants match.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>expression</strong> (<em>str</em>) – An expression that determines which annotations match.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The number of matching annotations.</td>
 </tr>
@@ -199,12 +199,24 @@ following can be used:</p>
 <li><code class="docutils literal notranslate"><span class="pre">labels('corpus').includes('CC')</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">labels('participant_languages').includes('en')</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">labels('transcript_language').includes('en')</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">!/Ada.+/.test(id)</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('corpus').label</span> <span class="pre">==</span> <span class="pre">'CC'</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">list('transcript_rating').length</span> <span class="pre">&lt;</span> <span class="pre">2</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">list('participant_rating').length</span> <span class="pre">=</span> <span class="pre">0</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">!/Ada.+/.test(id)</span> <span class="pre">&amp;&amp;</span> <span class="pre">first('corpus').label</span> <span class="pre">==</span> <span class="pre">'CC'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">all('transcript_rating').length</span> <span class="pre">&lt;</span> <span class="pre">2</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">all('participant_rating').length</span> <span class="pre">=</span> <span class="pre">0</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">!annotators('transcript_rating').includes('labbcat')</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">my('participant_gender').label</span> <span class="pre">==</span> <span class="pre">'NA'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">first('participant_gender').label</span> <span class="pre">==</span> <span class="pre">'NA'</span></code></li>
 </ul>
+<p>The following functions can be used to generate an expression of common types:</p>
+<ul class="simple">
+<li><a class="reference external" href="#labbcat.expressionFromAttributeValue">expressionFromAttributeValue()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromAttributeValues">expressionFromAttributeValues()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromIds">expressionFromIds()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromCorpora">expressionFromCorpora()</a></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">numQbParticipants</span> <span class="o">=</span> <span class="n">corpus</span><span class="o">.</span><span class="n">countMatchingParticipantIds</span><span class="p">(</span>
+    <span class="n">labbcat</span><span class="o">.</span><span class="n">expressionFromCorpora</span><span class="p">(</span><span class="s2">&quot;QB&quot;</span><span class="p">))</span>            
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -228,20 +240,33 @@ following can be used:</p>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">/Ada.+/.test(id)</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">labels('participant').includes('Robert')</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">('CC',</span> <span class="pre">'IA',</span> <span class="pre">'MU').includes(my('corpus').label)</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">my('episode').label</span> <span class="pre">==</span> <span class="pre">'Ada</span> <span class="pre">Aitcheson'</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">my('transcript_scribe').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">my('participant_languages').label</span> <span class="pre">==</span> <span class="pre">'en'</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">my('noise').label</span> <span class="pre">==</span> <span class="pre">'bell'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">('CC',</span> <span class="pre">'IA',</span> <span class="pre">'MU').includes(first('corpus').label)</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">first('episode').label</span> <span class="pre">==</span> <span class="pre">'Ada</span> <span class="pre">Aitcheson'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">first('transcript_scribe').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">first('participant_languages').label</span> <span class="pre">==</span> <span class="pre">'en'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">first('noise').label</span> <span class="pre">==</span> <span class="pre">'bell'</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">labels('transcript_languages').includes('en')</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">labels('participant_languages').includes('en')</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">labels('noise').includes('bell')</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">list('transcript_languages').length</span> <span class="pre">gt;</span> <span class="pre">1</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">list('participant_languages').length</span> <span class="pre">gt;</span> <span class="pre">1</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">list('transcript').length</span> <span class="pre">gt;</span> <span class="pre">100</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">all('transcript_languages').length</span> <span class="pre">gt;</span> <span class="pre">1</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">all('participant_languages').length</span> <span class="pre">gt;</span> <span class="pre">1</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">all('transcript').length</span> <span class="pre">gt;</span> <span class="pre">100</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">annotators('transcript_rating').includes('Robert')</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">!/Ada.+/.test(id)</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('corpus').label</span> <span class="pre">==</span> <span class="pre">'CC'</span> <span class="pre">&amp;&amp;</span> <span class="pre">labels('participant').includes('Robert')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">!/Ada.+/.test(id)</span> <span class="pre">&amp;&amp;</span> <span class="pre">first('corpus').label</span> <span class="pre">==</span> <span class="pre">'CC'</span> <span class="pre">&amp;&amp;</span> <span class="pre">labels('participant').includes('Robert')</span></code></li>
 </ul>
+<p>The following functions can be used to generate an expression of common types:</p>
+<ul class="simple">
+<li><a class="reference external" href="#labbcat.expressionFromAttributeValue">expressionFromAttributeValue()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromAttributeValues">expressionFromAttributeValues()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromIds">expressionFromIds()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromTranscriptTypes">expressionFromTranscriptTypes()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromCorpora">expressionFromCorpora()</a></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">numQuakeFaceTranscripts</span> <span class="o">=</span> <span class="n">corpus</span><span class="o">.</span><span class="n">countMatchingTranscriptIds</span><span class="p">(</span>
+    <span class="n">labbcat</span><span class="o">.</span><span class="n">expressionFromAttributeValue</span><span class="p">(</span><span class="s2">&quot;transcript_quakeface&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">))</span>            
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -755,7 +780,7 @@ following can be used:</p>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">==</span> <span class="pre">'ew_0_456'</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">!/th[aeiou].&amp;#47;/.test(label)</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">my('participant').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('utterances').start.offset</span> <span class="pre">==</span> <span class="pre">12.345</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">first('participant').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span> <span class="pre">&amp;&amp;</span> <span class="pre">first('utterances').start.offset</span> <span class="pre">==</span> <span class="pre">12.345</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">graph.id</span> <span class="pre">==</span> <span class="pre">'AdaAicheson-01.trs'</span> <span class="pre">&amp;&amp;</span> <span class="pre">layer.id</span> <span class="pre">==</span> <span class="pre">'orthography'</span> <span class="pre">&amp;&amp;</span> <span class="pre">start.offset</span> <span class="pre">&lt;</span> <span class="pre">10.5</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">previous.id</span> <span class="pre">==</span> <span class="pre">'ew_0_456'</span></code></li>
 </ul>
@@ -793,12 +818,24 @@ following can be used:</p>
 <li><code class="docutils literal notranslate"><span class="pre">labels('corpus').includes('CC')</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">labels('participant_languages').includes('en')</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">labels('transcript_language').includes('en')</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">!/Ada.+/.test(id)</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('corpus').label</span> <span class="pre">==</span> <span class="pre">'CC'</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">list('transcript_rating').length</span> <span class="pre">&lt;</span> <span class="pre">2</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">list('participant_rating').length</span> <span class="pre">=</span> <span class="pre">0</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">!/Ada.+/.test(id)</span> <span class="pre">&amp;&amp;</span> <span class="pre">first('corpus').label</span> <span class="pre">==</span> <span class="pre">'CC'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">all('transcript_rating').length</span> <span class="pre">&lt;</span> <span class="pre">2</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">all('participant_rating').length</span> <span class="pre">=</span> <span class="pre">0</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">!annotators('transcript_rating').includes('labbcat')</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">my('participant_gender').label</span> <span class="pre">==</span> <span class="pre">'NA'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">first('participant_gender').label</span> <span class="pre">==</span> <span class="pre">'NA'</span></code></li>
 </ul>
+<p>The following functions can be used to generate an expression of common types:</p>
+<ul class="simple">
+<li><a class="reference external" href="#labbcat.expressionFromAttributeValue">expressionFromAttributeValue()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromAttributeValues">expressionFromAttributeValues()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromIds">expressionFromIds()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromCorpora">expressionFromCorpora()</a></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">qbParticipants</span> <span class="o">=</span> <span class="n">corpus</span><span class="o">.</span><span class="n">getMatchingParticipantIds</span><span class="p">(</span>
+    <span class="n">labbcat</span><span class="o">.</span><span class="n">expressionFromCorpora</span><span class="p">(</span><span class="s2">&quot;QB&quot;</span><span class="p">))</span>            
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -833,20 +870,33 @@ following can be used:</p>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">/Ada.+/.test(id)</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">labels('participant').includes('Robert')</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">('CC',</span> <span class="pre">'IA',</span> <span class="pre">'MU').includes(my('corpus').label)</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">my('episode').label</span> <span class="pre">==</span> <span class="pre">'Ada</span> <span class="pre">Aitcheson'</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">my('transcript_scribe').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">my('participant_languages').label</span> <span class="pre">==</span> <span class="pre">'en'</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">my('noise').label</span> <span class="pre">==</span> <span class="pre">'bell'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">('CC',</span> <span class="pre">'IA',</span> <span class="pre">'MU').includes(first('corpus').label)</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">first('episode').label</span> <span class="pre">==</span> <span class="pre">'Ada</span> <span class="pre">Aitcheson'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">first('transcript_scribe').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">first('participant_languages').label</span> <span class="pre">==</span> <span class="pre">'en'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">first('noise').label</span> <span class="pre">==</span> <span class="pre">'bell'</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">labels('transcript_languages').includes('en')</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">labels('participant_languages').includes('en')</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">labels('noise').includes('bell')</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">list('transcript_languages').length</span> <span class="pre">gt;</span> <span class="pre">1</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">list('participant_languages').length</span> <span class="pre">gt;</span> <span class="pre">1</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">list('transcript').length</span> <span class="pre">gt;</span> <span class="pre">100</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">all('transcript_languages').length</span> <span class="pre">gt;</span> <span class="pre">1</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">all('participant_languages').length</span> <span class="pre">gt;</span> <span class="pre">1</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">all('transcript').length</span> <span class="pre">gt;</span> <span class="pre">100</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">annotators('transcript_rating').includes('Robert')</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">!/Ada.+/.test(id)</span> <span class="pre">&amp;&amp;</span> <span class="pre">my('corpus').label</span> <span class="pre">==</span> <span class="pre">'CC'</span> <span class="pre">&amp;&amp;</span> <span class="pre">labels('participant').includes('Robert')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">!/Ada.+/.test(id)</span> <span class="pre">&amp;&amp;</span> <span class="pre">first('corpus').label</span> <span class="pre">==</span> <span class="pre">'CC'</span> <span class="pre">&amp;&amp;</span> <span class="pre">labels('participant').includes('Robert')</span></code></li>
 </ul>
+<p>The following functions can be used to generate an expression of common types:</p>
+<ul class="simple">
+<li><a class="reference external" href="#labbcat.expressionFromAttributeValue">expressionFromAttributeValue()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromAttributeValues">expressionFromAttributeValues()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromIds">expressionFromIds()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromTranscriptTypes">expressionFromTranscriptTypes()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromCorpora">expressionFromCorpora()</a></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">quakeFaceTranscripts</span> <span class="o">=</span> <span class="n">corpus</span><span class="o">.</span><span class="n">getMatchingTranscriptIds</span><span class="p">(</span>
+    <span class="n">labbcat</span><span class="o">.</span><span class="n">expressionFromAttributeValue</span><span class="p">(</span><span class="s2">&quot;transcript_quakeface&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">))</span>            
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -992,7 +1042,10 @@ layer.alignment == 0.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The name of a CSV file with one row per participant, and one column per attribute.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
 </td>
 </tr>
 </tbody>
@@ -1174,25 +1227,79 @@ required.</li>
 
 <dl class="method">
 <dt id="labbcat.LabbcatView.getTranscriptAttributes">
-<code class="descname">getTranscriptAttributes</code><span class="sig-paren">(</span><em>transcriptIds</em>, <em>layerIds</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getTranscriptAttributes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getTranscriptAttributes</code><span class="sig-paren">(</span><em>expression</em>, <em>layerIds</em>, <em>csvFileName=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getTranscriptAttributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get transcript attribute values.</p>
-<p>Retrieves transcript attribute values for given transcript IDs, saves them to
+<p>Retrieves transcript attribute values for a given transcript expression, saves them to
 a CSV file, and returns the name of the file.</p>
+<p>The expression parameter can be an explicit list of transcript IDs, or a string
+query expression that identifies which transcripts to return.</p>
+<p>The expression language is loosely based on JavaScript; expressions such as the
+following can be used:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">/Ada.+/.test(id)</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('participant').includes('Robert')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">('CC',</span> <span class="pre">'IA',</span> <span class="pre">'MU').includes(first('corpus').label)</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">first('episode').label</span> <span class="pre">==</span> <span class="pre">'Ada</span> <span class="pre">Aitcheson'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">first('transcript_scribe').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">first('participant_languages').label</span> <span class="pre">==</span> <span class="pre">'en'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">first('noise').label</span> <span class="pre">==</span> <span class="pre">'bell'</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('transcript_languages').includes('en')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('participant_languages').includes('en')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">labels('noise').includes('bell')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">all('transcript_languages').length</span> <span class="pre">&amp;gt;</span> <span class="pre">1</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">all('participant_languages').length</span> <span class="pre">y</span> <span class="pre">1</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">all('word').length</span> <span class="pre">&amp;gt;</span> <span class="pre">100</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">annotators('transcript_rating').includes('Robert')</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">!/Ada.+/.test(id)</span> <span class="pre">&amp;&amp;</span> <span class="pre">first('corpus').label</span> <span class="pre">==</span> <span class="pre">'CC'</span> <span class="pre">&amp;&amp;</span> <span class="pre">labels('participant').includes('Robert')</span></code></li>
+</ul>
+<p>The following functions can be used to generate an expression of common types:</p>
+<ul class="simple">
+<li><a class="reference external" href="#labbcat.expressionFromAttributeValue">expressionFromAttributeValue()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromAttributeValues">expressionFromAttributeValues()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromIds">expressionFromIds()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromTranscriptTypes">expressionFromTranscriptTypes()</a></li>
+<li><a class="reference external" href="#labbcat.expressionFromCorpora">expressionFromCorpora()</a></li>
+</ul>
 <p>In general, transcript attributes are layers whose ID is prefixed ‘transcript’,
 however formally it’s any layer where layer.parentId == ‘graph’ and layer.alignment
 == 0, which includes ‘corpus’ as well as transcript attribute layers.</p>
 <p>The resulting file is the responsibility of the caller to delete when finished.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># duration/word count of QB corpus transcripts</span>
+<span class="n">qbAttributesCsv</span> <span class="o">=</span> <span class="n">corpus</span><span class="o">.</span><span class="n">getTranscriptAttributes</span><span class="p">(</span>
+    <span class="n">labbcat</span><span class="o">.</span><span class="n">expressionFromCorpora</span><span class="p">(</span><span class="s2">&quot;QB&quot;</span><span class="p">),</span>
+    <span class="p">[</span><span class="s2">&quot;transcript_duration&quot;</span><span class="p">,</span> <span class="s2">&quot;transcript_word count&quot;</span><span class="p">])</span>            
+
+<span class="c1"># speech rate for spontaneous speech recordings</span>
+<span class="n">spontaneousSpeechRateCsv</span> <span class="o">=</span> <span class="n">corpus</span><span class="o">.</span><span class="n">getTranscriptAttributes</span><span class="p">(</span>
+    <span class="n">labbcat</span><span class="o">.</span><span class="n">expressionFromTranscriptTypes</span><span class="p">([</span><span class="s2">&quot;monologue&quot;</span><span class="p">,</span> <span class="s2">&quot;interview&quot;</span><span class="p">]),</span>
+    <span class="p">[</span><span class="s2">&quot;transcript_syllables per minute&quot;</span><span class="p">])</span>
+
+<span class="c1"># language for targeted transcripts</span>
+<span class="n">languageCsv</span> <span class="o">=</span> <span class="n">corpus</span><span class="o">.</span><span class="n">getTranscriptAttributes</span><span class="p">(</span>
+    <span class="p">[</span><span class="s2">&quot;AP2505_Nelson.eaf&quot;</span><span class="p">,</span> <span class="s2">&quot;AP2512_MattBlack.eaf&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;transcript_language&quot;</span><span class="p">)</span>
+
+<span class="c1"># tidily delete CSV files</span>
+<span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">([</span><span class="n">qbAttributesCsv</span><span class="p">,</span> <span class="n">spontaneousSpeechRateCsv</span><span class="p">,</span> <span class="n">languageCsv</span><span class="p">])</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>transcriptIds</strong> (<em>list of str.</em>) – A list of transcript IDs</li>
+<li><strong>expression</strong> (<em>str</em><em> or </em><em>list of str.</em>) – An expression that determines which transcripts match,
+or an explicit list of transcript IDs.</li>
 <li><strong>layerIds</strong> (<em>list of str.</em>) – A list of layer IDs corresponding to transcript attributes.</li>
+<li><strong>csvFileName</strong> (<em>str.</em>) – The file to save the resulting CSV rows to.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The name of a CSV file with one row per transcript, and one column per attribute.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
 </td>
 </tr>
 </tbody>
@@ -1435,6 +1542,25 @@ If the task has no results (yet) this function returns None.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The status of the task.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionary</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatView.versionInfo">
+<code class="descname">versionInfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.versionInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets version information of all components of LaBB-CAT.</p>
+<p>Version information includes versions of all components and modules installed on the
+LaBB-CAT server, including format converters and annotator modules.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A dictionary of sections, each section a dictionary of modules
+indicating the version of that module.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
 </tbody>
 </table>
@@ -1776,6 +1902,40 @@ and updates all affected tokens in the corpus. Words can have multiple entries.<
 </dd></dl>
 
 <dl class="method">
+<dt id="labbcat.LabbcatEdit.saveParticipant">
+<code class="descname">saveParticipant</code><span class="sig-paren">(</span><em>id</em>, <em>label</em>, <em>attributes</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.saveParticipant" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Saves a participant, and all its tags, to the graph store.</dt>
+<dd>To change the ID of an existing participant, pass the old/current ID as the
+id, and pass the new ID as the label.
+If the participant ID does not already exist in the database, a new participant record
+is created.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<em>str</em>) – The ID participant to delete.</li>
+<li><strong>label</strong> (<em>str</em>) – The new ID (name) for the participant.</li>
+<li><strong>attributes</strong> (<em>dictionary of str</em>) – Participant attribute values - the names are the participant attribute
+layer IDs, and the values are the corresponding new attribute values.
+The pass phrase for participant access can also be set by specifying
+a “_password” attribute.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the participant was updated, False if there were no changes to update.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">boolean</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.LabbcatEdit.updateFragment">
 <code class="descname">updateFragment</code><span class="sig-paren">(</span><em>fragment</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.updateFragment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update a transcript fragment.</p>
@@ -1854,6 +2014,42 @@ registration of converters, etc., i.e. those that can be performed by users with
 </tr>
 </tbody>
 </table>
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.createCategory">
+<code class="descname">createCategory</code><span class="sig-paren">(</span><em>class_id</em>, <em>category</em>, <em>description</em>, <em>display_order</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.createCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new category record.</p>
+<p>The dictionary returned has the following entries:</p>
+<ul class="simple">
+<li>“class_id”      : What kind of attributes are categorised - “transcript” or “speaker”.</li>
+<li>“category”      : The name/id of the category.</li>
+<li>“description”   : The description of the category.</li>
+<li>“display_order” : Where the category appears among other categories..</li>
+<li>“_cantDelete”   : This is not a database field, but rather is present in records
+returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>class_id</strong> (<em>str</em>) – What kind of attributes are categorised - “transcript” or “speaker”.</li>
+<li><strong>category</strong> (<em>str</em>) – The name/id of the category.</li>
+<li><strong>description</strong> (<em>str</em>) – The description of the category.</li>
+<li><strong>display_order</strong> (<em>number</em>) – Where the category appears among other categories.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the category record</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="labbcat.LabbcatAdmin.createCorpus">
 <code class="descname">createCorpus</code><span class="sig-paren">(</span><em>corpus_name</em>, <em>corpus_language</em>, <em>corpus_description</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.createCorpus" title="Permalink to this definition">¶</a></dt>
@@ -2060,6 +2256,24 @@ representing the reason the record can’t be deleted.</li>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.deleteCategory">
+<code class="descname">deleteCategory</code><span class="sig-paren">(</span><em>class_id</em>, <em>category</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.deleteCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes an existing category record.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>class_id</strong> (<em>str</em>) – What kind of attributes are categorised - “transcript” or “speaker”.</li>
+<li><strong>category</strong> (<em>str</em>) – The name/id of the category.</li>
+</ul>
 </td>
 </tr>
 </tbody>
@@ -2289,6 +2503,41 @@ each layer manager.</li>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="labbcat.LabbcatAdmin.readCategories">
+<code class="descname">readCategories</code><span class="sig-paren">(</span><em>class_id</em>, <em>pageNumber=None</em>, <em>pageLength=None</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.readCategories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a list of category records.</p>
+<p>The dictionaries in the returned list have the following entries:</p>
+<ul class="simple">
+<li>“class_id”      : What kind of attributes are categorised - “transcript” or “speaker”.</li>
+<li>“category”      : The name/id of the category.</li>
+<li>“description”   : The description of the category.</li>
+<li>“display_order” : Where the category appears among other categories..</li>
+<li>“_cantDelete”   : This is not a database field, but rather is present in records
+returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>class_id</strong> (<em>str</em>) – What kind of attributes are categorised - “transcript” or “speaker”.</li>
+<li><strong>pageNumber</strong> (<em>int</em><em> or </em><em>None</em>) – The zero-based page number to return, or null to return the first page.</li>
+<li><strong>pageLength</strong> (<em>int</em><em> or </em><em>None</em>) – The maximum number of records to return, or null to return all.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of category records.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dict</p>
 </td>
 </tr>
 </tbody>
@@ -2585,6 +2834,42 @@ associated with a description of the value (e.g. for displaying to users).</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="labbcat.LabbcatAdmin.updateCategory">
+<code class="descname">updateCategory</code><span class="sig-paren">(</span><em>class_id</em>, <em>category</em>, <em>description</em>, <em>display_order</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.updateCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates an existing category record.</p>
+<p>The dictionary returned has the following entries:</p>
+<ul class="simple">
+<li>“class_id”      : What kind of attributes are categorised - “transcript” or “speaker”.</li>
+<li>“category”      : The name/id of the category.</li>
+<li>“description”   : The description of the category.</li>
+<li>“display_order” : Where the category appears among other categories..</li>
+<li>“_cantDelete”   : This is not a database field, but rather is present in records
+returned from the server that can not currently be deleted; a string
+representing the reason the record can’t be deleted.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>class_id</strong> (<em>str</em>) – What kind of attributes are categorised - “transcript” or “speaker”.</li>
+<li><strong>category</strong> (<em>str</em>) – The name/id of the category.</li>
+<li><strong>description</strong> (<em>str</em>) – The description of the category.</li>
+<li><strong>display_order</strong> (<em>number</em>) – Where the category appears among other categories.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the category record</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="labbcat.LabbcatAdmin.updateCorpus">
 <code class="descname">updateCorpus</code><span class="sig-paren">(</span><em>corpus_name</em>, <em>corpus_language</em>, <em>corpus_description</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatAdmin.updateCorpus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates an existing corpus record.</p>
@@ -2830,6 +3115,197 @@ representing the reason the record can’t be deleted.</li>
 </table>
 </dd></dl>
 
+</dd></dl>
+
+<p>The LabbcatAdmin class also inherits the LabbcatEdit class.</p>
+</div>
+<div class="section" id="query-language-generation-functions">
+<h2>Query Language Generation Functions<a class="headerlink" href="#query-language-generation-functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="labbcat.expressionFromAttributeValue">
+<code class="descclassname">labbcat.</code><code class="descname">expressionFromAttributeValue</code><span class="sig-paren">(</span><em>attribute</em>, <em>values</em>, <em>negate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.expressionFromAttributeValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a query expression for matching a transcript/participant attribute.</p>
+<p>This function generates a query expression fragment which can be passed as
+the expression parameter of
+<a class="reference external" href="#labbcat.LabbcatView.getMatchingTranscriptIds">getMatchingTranscriptIds</a> or
+<a class="reference external" href="#labbcat.LabbcatView.getMatchingParticipantIds">getMatchingParticipantIds</a> etc.
+using a list ofpossible values for a given transcript/participant attribute.</p>
+<p>The attribute defined by ‘attribute’ is expected to have exactly one value. If
+it may have multiple values, use
+<a class="reference external" href="#labbcat.expressionFromAttributeValues">expressionFromAttributeValues()</a>
+instead.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>attribute</strong> (<em>str</em>) – The transcript/participant attribute to filter by.</li>
+<li><strong>values</strong> (<em>list</em><em> or </em><em>str</em>) – A list of possible values for attribute, or a single value.</li>
+<li><strong>negate</strong> (<em>boolean</em>) – Whether to match the given values (False),
+or everything <em>except</em> the given values (True).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A query expression which can be passed as the <em>expression</em> parameter of
+<a class="reference external" href="#labbcat.LabbcatView.countMatchingParticipantIds">countMatchingParticipantIds()</a>
+<a class="reference external" href="#labbcat.LabbcatView.getMatchingParticipantIds">getMatchingParticipantIds()</a>
+<a class="reference external" href="#labbcat.LabbcatView.countMatchingTranscriptIds">countMatchingTranscriptIds()</a>
+<a class="reference external" href="#labbcat.LabbcatView.getMatchingTranscriptIds">getMatchingTranscriptIds()</a>
+or
+<a class="reference external" href="#labbcat.LabbcatView.getTranscriptAttributes">getTranscriptAttributes()</a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="labbcat.expressionFromAttributeValues">
+<code class="descclassname">labbcat.</code><code class="descname">expressionFromAttributeValues</code><span class="sig-paren">(</span><em>attribute</em>, <em>values</em>, <em>negate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.expressionFromAttributeValues" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a query expression for matching a transcript/participant attribute.</p>
+<p>This function generates a query expression fragment which can be passed as
+the expression parameter of
+<a class="reference external" href="#labbcat.LabbcatView.getMatchingTranscriptIds">getMatchingTranscriptIds</a> or
+<a class="reference external" href="#labbcat.LabbcatView.getMatchingParticipantIds">getMatchingParticipantIds</a> etc.
+using a list of possible values for a given transcript/participant attribute.</p>
+<p>The attribute defined by ‘attribute’ is expected to have possibly more than one value. If
+it can only have one value, use
+<a class="reference external" href="#labbcat.expressionFromAttributeValue">expressionFromAttributeValue()</a>
+instead.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>attribute</strong> (<em>str</em>) – The transcript/participant attribute to filter by.</li>
+<li><strong>values</strong> (<em>list</em><em> or </em><em>str</em>) – A list of possible values for attribute, or a single value.</li>
+<li><strong>negate</strong> (<em>boolean</em>) – Whether to match the given values (False),
+or everything <em>except</em> the given values (True).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>A query expression which can be passed as the <em>expression</em> parameter of
+<a class="reference external" href="#labbcat.LabbcatView.countMatchingParticipantIds">countMatchingParticipantIds()</a>
+<a class="reference external" href="#labbcat.LabbcatView.getMatchingParticipantIds">getMatchingParticipantIds()</a>
+<a class="reference external" href="#labbcat.LabbcatView.countMatchingTranscriptIds">countMatchingTranscriptIds()</a>
+<a class="reference external" href="#labbcat.LabbcatView.getMatchingTranscriptIds">getMatchingTranscriptIds()</a>
+or
+<a class="reference external" href="#labbcat.LabbcatView.getTranscriptAttributes">getTranscriptAttributes()</a></p>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="labbcat.expressionFromIds">
+<code class="descclassname">labbcat.</code><code class="descname">expressionFromIds</code><span class="sig-paren">(</span><em>ids</em>, <em>negate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.expressionFromIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a query expression for matching transcripts or participants by ID.</p>
+<p>This function generates a query expression fragment which can be passed as
+the expression parameter of
+<a class="reference external" href="#labbcat.LabbcatView.getTranscriptAttributes">getTranscriptAttributes</a>
+etc. using a list of IDs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ids</strong> (<em>list</em><em> or </em><em>str</em>) – A list of IDs, or a single value.</li>
+<li><strong>negate</strong> (<em>boolean</em>) – Whether to match the given values (False),
+or everything <em>except</em> the given values (True).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>A query expression which can be passed as the <em>expression</em> parameter of
+<a class="reference external" href="#labbcat.LabbcatView.countMatchingParticipantIds">countMatchingParticipantIds()</a>
+<a class="reference external" href="#labbcat.LabbcatView.getMatchingParticipantIds">getMatchingParticipantIds()</a>
+<a class="reference external" href="#labbcat.LabbcatView.countMatchingTranscriptIds">countMatchingTranscriptIds()</a>
+<a class="reference external" href="#labbcat.LabbcatView.getMatchingTranscriptIds">getMatchingTranscriptIds()</a>
+or
+<a class="reference external" href="#labbcat.LabbcatView.getTranscriptAttributes">getTranscriptAttributes()</a></p>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="labbcat.expressionFromTranscriptTypes">
+<code class="descclassname">labbcat.</code><code class="descname">expressionFromTranscriptTypes</code><span class="sig-paren">(</span><em>transcriptTypes</em>, <em>negate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.expressionFromTranscriptTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a transcript query expression for matching transcripts by type.</p>
+<p>This function generates a query expression fragment which can be passed as
+the expression parameter of 
+<a class="reference external" href="#labbcat.LabbcatView.getTranscriptAttributes">getTranscriptAttributes</a>
+or <a class="reference external" href="#labbcat.LabbcatView.getMatchingTranscriptIds">getMatchingTranscriptIds</a>
+etc. using a list of transcript types.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>transcriptTypes</strong> (<em>list</em><em> or </em><em>str</em>) – A list of transcript types, or a single transcript type.</li>
+<li><strong>negate</strong> (<em>boolean</em>) – Whether to match the given values (False),
+or everything <em>except</em> the given values (True).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>A query expression which can be passed as the <em>expression</em> parameter of
+<a class="reference external" href="#labbcat.LabbcatView.getMatchingTranscriptIds">getMatchingTranscriptIds()</a>
+or
+<a class="reference external" href="#labbcat.LabbcatView.getTranscriptAttributes">getTranscriptAttributes()</a></p>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="labbcat.expressionFromCorpora">
+<code class="descclassname">labbcat.</code><code class="descname">expressionFromCorpora</code><span class="sig-paren">(</span><em>corpora</em>, <em>negate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.expressionFromCorpora" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a transcript query expression for matching transcripts/participants by corpus.</p>
+<p>This function generates a query expression fragment which can be passed as
+the expression parameter of 
+<a class="reference external" href="#labbcat.LabbcatView.getTranscriptAttributes">getTranscriptAttributes</a>
+or <a class="reference external" href="#labbcat.LabbcatView.getMatchingTranscriptIds">getMatchingTranscriptIds</a>
+etc. using a list of transcript types.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>corpora</strong> (<em>list</em><em> or </em><em>str</em>) – A list of corpus names, or a single corpus name.</li>
+<li><strong>negate</strong> (<em>boolean</em>) – Whether to match the given values (False),
+or everything <em>except</em> the given values (True).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>A query expression which can be passed as the <em>expression</em> parameter of
+<a class="reference external" href="#labbcat.LabbcatView.getMatchingTranscriptIds">getMatchingTranscriptIds()</a>
+or
+<a class="reference external" href="#labbcat.LabbcatView.getTranscriptAttributes">getTranscriptAttributes()</a> etc.</p>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <p>The LabbcatAdmin class also inherits the LabbcatEdit class.</p>
