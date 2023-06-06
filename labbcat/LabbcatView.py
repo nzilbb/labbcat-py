@@ -37,7 +37,7 @@ class LabbcatView:
         import labbcat
         
         # create annotation store client
-        corpus = labbcat.LabbcatView("https://labbcat.canterbury.ac.nz", "demo", "demo");
+        corpus = labbcat.LabbcatView("https://labbcat.canterbury.ac.nz", "demo", "demo")
         
         # show some basic information
         
@@ -358,12 +358,24 @@ class LabbcatView:
         - ``labels('corpus').includes('CC')``
         - ``labels('participant_languages').includes('en')``
         - ``labels('transcript_language').includes('en')``
-        - ``!/Ada.+/.test(id) && my('corpus').label == 'CC'``
-        - ``list('transcript_rating').length < 2``
-        - ``list('participant_rating').length = 0``
+        - ``!/Ada.+/.test(id) && first('corpus').label == 'CC'``
+        - ``all('transcript_rating').length < 2``
+        - ``all('participant_rating').length = 0``
         - ``!annotators('transcript_rating').includes('labbcat')``
-        - ``my('participant_gender').label == 'NA'``
+        - ``first('participant_gender').label == 'NA'``
 
+        The following functions can be used to generate an expression of common types:
+        
+        - `expressionFromAttributeValue() <#labbcat.expressionFromAttributeValue>`_
+        - `expressionFromAttributeValues() <#labbcat.expressionFromAttributeValues>`_
+        - `expressionFromIds() <#labbcat.expressionFromIds>`_
+        - `expressionFromCorpora() <#labbcat.expressionFromCorpora>`_
+
+        Example:: 
+        
+            numQbParticipants = corpus.countMatchingParticipantIds(
+                labbcat.expressionFromCorpora("QB"))            
+            
         :param expression: An expression that determines which participants match.
         :type expression: str
         
@@ -384,11 +396,23 @@ class LabbcatView:
         - ``labels('corpus').includes('CC')``
         - ``labels('participant_languages').includes('en')``
         - ``labels('transcript_language').includes('en')``
-        - ``!/Ada.+/.test(id) && my('corpus').label == 'CC'``
-        - ``list('transcript_rating').length < 2``
-        - ``list('participant_rating').length = 0``
+        - ``!/Ada.+/.test(id) && first('corpus').label == 'CC'``
+        - ``all('transcript_rating').length < 2``
+        - ``all('participant_rating').length = 0``
         - ``!annotators('transcript_rating').includes('labbcat')``
-        - ``my('participant_gender').label == 'NA'``
+        - ``first('participant_gender').label == 'NA'``
+
+        The following functions can be used to generate an expression of common types:
+        
+        - `expressionFromAttributeValue() <#labbcat.expressionFromAttributeValue>`_
+        - `expressionFromAttributeValues() <#labbcat.expressionFromAttributeValues>`_
+        - `expressionFromIds() <#labbcat.expressionFromIds>`_
+        - `expressionFromCorpora() <#labbcat.expressionFromCorpora>`_
+
+        Example:: 
+        
+            qbParticipants = corpus.getMatchingParticipantIds(
+                labbcat.expressionFromCorpora("QB"))            
         
         :param expression: An expression that determines which participants match.
         :type expression: str
@@ -445,19 +469,32 @@ class LabbcatView:
         
         - ``/Ada.+/.test(id)``
         - ``labels('participant').includes('Robert')``
-        - ``('CC', 'IA', 'MU').includes(my('corpus').label)``
-        - ``my('episode').label == 'Ada Aitcheson'``
-        - ``my('transcript_scribe').label == 'Robert'``
-        - ``my('participant_languages').label == 'en'``
-        - ``my('noise').label == 'bell'``
+        - ``('CC', 'IA', 'MU').includes(first('corpus').label)``
+        - ``first('episode').label == 'Ada Aitcheson'``
+        - ``first('transcript_scribe').label == 'Robert'``
+        - ``first('participant_languages').label == 'en'``
+        - ``first('noise').label == 'bell'``
         - ``labels('transcript_languages').includes('en')``
         - ``labels('participant_languages').includes('en')``
         - ``labels('noise').includes('bell')``
-        - ``list('transcript_languages').length gt; 1``
-        - ``list('participant_languages').length gt; 1``
-        - ``list('transcript').length gt; 100``
+        - ``all('transcript_languages').length gt; 1``
+        - ``all('participant_languages').length gt; 1``
+        - ``all('transcript').length gt; 100``
         - ``annotators('transcript_rating').includes('Robert')``
-        - ``!/Ada.+/.test(id) && my('corpus').label == 'CC' && labels('participant').includes('Robert')`` 
+        - ``!/Ada.+/.test(id) && first('corpus').label == 'CC' && labels('participant').includes('Robert')`` 
+
+        The following functions can be used to generate an expression of common types:
+        
+        - `expressionFromAttributeValue() <#labbcat.expressionFromAttributeValue>`_
+        - `expressionFromAttributeValues() <#labbcat.expressionFromAttributeValues>`_
+        - `expressionFromIds() <#labbcat.expressionFromIds>`_
+        - `expressionFromTranscriptTypes() <#labbcat.expressionFromTranscriptTypes>`_
+        - `expressionFromCorpora() <#labbcat.expressionFromCorpora>`_
+
+        Example:: 
+        
+            numQuakeFaceTranscripts = corpus.countMatchingTranscriptIds(
+                labbcat.expressionFromAttributeValue("transcript_quakeface", "1"))            
         
         :param expression: An expression that determines which transcripts match.
         :type expression: str
@@ -483,19 +520,32 @@ class LabbcatView:
         
         - ``/Ada.+/.test(id)``
         - ``labels('participant').includes('Robert')``
-        - ``('CC', 'IA', 'MU').includes(my('corpus').label)``
-        - ``my('episode').label == 'Ada Aitcheson'``
-        - ``my('transcript_scribe').label == 'Robert'``
-        - ``my('participant_languages').label == 'en'``
-        - ``my('noise').label == 'bell'``
+        - ``('CC', 'IA', 'MU').includes(first('corpus').label)``
+        - ``first('episode').label == 'Ada Aitcheson'``
+        - ``first('transcript_scribe').label == 'Robert'``
+        - ``first('participant_languages').label == 'en'``
+        - ``first('noise').label == 'bell'``
         - ``labels('transcript_languages').includes('en')``
         - ``labels('participant_languages').includes('en')``
         - ``labels('noise').includes('bell')``
-        - ``list('transcript_languages').length gt; 1``
-        - ``list('participant_languages').length gt; 1``
-        - ``list('transcript').length gt; 100``
+        - ``all('transcript_languages').length gt; 1``
+        - ``all('participant_languages').length gt; 1``
+        - ``all('transcript').length gt; 100``
         - ``annotators('transcript_rating').includes('Robert')``
-        - ``!/Ada.+/.test(id) && my('corpus').label == 'CC' && labels('participant').includes('Robert')``
+        - ``!/Ada.+/.test(id) && first('corpus').label == 'CC' && labels('participant').includes('Robert')``
+
+        The following functions can be used to generate an expression of common types:
+        
+        - `expressionFromAttributeValue() <#labbcat.expressionFromAttributeValue>`_
+        - `expressionFromAttributeValues() <#labbcat.expressionFromAttributeValues>`_
+        - `expressionFromIds() <#labbcat.expressionFromIds>`_
+        - `expressionFromTranscriptTypes() <#labbcat.expressionFromTranscriptTypes>`_
+        - `expressionFromCorpora() <#labbcat.expressionFromCorpora>`_
+
+        Example:: 
+        
+            quakeFaceTranscripts = corpus.getMatchingTranscriptIds(
+                labbcat.expressionFromAttributeValue("transcript_quakeface", "1"))            
         
         :param expression: An expression that determines which transcripts match.        
         :type expression: str
@@ -528,13 +578,13 @@ class LabbcatView:
         
         - ``id == 'ew_0_456'``
         - ``!/th[aeiou].&#47;/.test(label)``
-        - ``my('participant').label == 'Robert' && my('utterances').start.offset == 12.345`` 
+        - ``first('participant').label == 'Robert' && first('utterances').start.offset == 12.345`` 
         - ``graph.id == 'AdaAicheson-01.trs' && layer.id == 'orthography' && start.offset < 10.5`` 
         - ``previous.id == 'ew_0_456'``
 
         *NB* all expressions must match by either id or layer.id.
         
-        :param expression: An expression that determines which participants match.
+        :param expression: An expression that determines which annotations match.
         :type expression: str
 
         :returns: The number of matching annotations.
@@ -552,7 +602,7 @@ class LabbcatView:
         
         - ``id == 'ew_0_456'``
         - ``!/th[aeiou].&#47;/.test(label)``
-        - ``my('participant').label == 'Robert' && my('utterances').start.offset == 12.345`` 
+        - ``first('participant').label == 'Robert' && first('utterances').start.offset == 12.345`` 
         - ``graph.id == 'AdaAicheson-01.trs' && layer.id == 'orthography' && start.offset < 10.5`` 
         - ``previous.id == 'ew_0_456'``
         
@@ -911,29 +961,86 @@ class LabbcatView:
         """
         return(self._getRequest(self._labbcatUrl("threads"), None))
     
-    def getTranscriptAttributes(self, transcriptIds, layerIds):
+    def getTranscriptAttributes(self, expresson, layerIds):
         """ Get transcript attribute values.
         
-        Retrieves transcript attribute values for given transcript IDs, saves them to
+        Retrieves transcript attribute values for a given transcript expression, saves them to
         a CSV file, and returns the name of the file.
 
+        The expression parameter can be an explicit list of transcript IDs, or a string
+        query expression that identifies which transcripts to return.
+        
+        The expression language is loosely based on JavaScript; expressions such as the
+        following can be used: 
+        
+        - ``/Ada.+/.test(id)``
+        - ``labels('participant').includes('Robert')``
+        - ``('CC', 'IA', 'MU').includes(first('corpus').label)``
+        - ``first('episode').label == 'Ada Aitcheson'``
+        - ``first('transcript_scribe').label == 'Robert'``
+        - ``first('participant_languages').label == 'en'``
+        - ``first('noise').label == 'bell'``
+        - ``labels('transcript_languages').includes('en')``
+        - ``labels('participant_languages').includes('en')``
+        - ``labels('noise').includes('bell')``
+        - ``all('transcript_languages').length &gt; 1``
+        - ``all('participant_languages').length y 1``
+        - ``all('word').length &gt; 100``
+        - ``annotators('transcript_rating').includes('Robert')``
+        - ``!/Ada.+/.test(id) && first('corpus').label == 'CC' && labels('participant').includes('Robert')``
+
+        The following functions can be used to generate an expression of common types:
+        
+        - `expressionFromAttributeValue() <#labbcat.expressionFromAttributeValue>`_
+        - `expressionFromAttributeValues() <#labbcat.expressionFromAttributeValues>`_
+        - `expressionFromIds() <#labbcat.expressionFromIds>`_
+        - `expressionFromTranscriptTypes() <#labbcat.expressionFromTranscriptTypes>`_
+        - `expressionFromCorpora() <#labbcat.expressionFromCorpora>`_
+        
         In general, transcript attributes are layers whose ID is prefixed 'transcript',
         however formally it's any layer where layer.parentId == 'graph' and layer.alignment
         == 0, which includes 'corpus' as well as transcript attribute layers.
         
         The resulting file is the responsibility of the caller to delete when finished.
+
+        Example:: 
         
-        :param transcriptIds: A list of transcript IDs
-        :type transcriptIds: list of str.
+            # duration/word count of QB corpus transcripts
+            qbAttributesCsv = corpus.getTranscriptAttributes(
+                labbcat.expressionFromCorpora("QB"),
+                ["transcript_duration", "transcript_word count"])            
+            
+            # speech rate for spontaneous speech recordings
+            spontaneousSpeechRateCsv = corpus.getTranscriptAttributes(
+                labbcat.expressionFromTranscriptTypes(["monologue", "interview"]),
+                ["transcript_syllables per minute"])
+            
+            # language for targeted transcripts
+            languageCsv = corpus.getTranscriptAttributes(
+                ["AP2505_Nelson.eaf", "AP2512_MattBlack.eaf"],
+                "transcript_language")
+
+            # tidily delete CSV files
+            os.remove([qbAttributesCsv, spontaneousSpeechRateCsv, languageCsv])
+        
+        :param expression: An expression that determines which transcripts match,
+                           or an explicit list of transcript IDs.
+        :type expression: str or list of str.
         
         :param layerIds: A list of layer IDs corresponding to transcript attributes.
         :type layerIds: list of str.
         
+        :returns: The name of a CSV file with one row per transcript, and one column per attribute.
         :rtype: str
         """
-        params = {
-            "layer" : ["transcript"]+layerIds,
-            "id" : transcriptIds }
+        if isinstance(expression, str):
+            params = {
+                "layer" : ["transcript"]+layerIds,
+                "query" : expression }
+        else:
+            params = {
+                "layer" : ["transcript"]+layerIds,
+                "id" : expression }
         return (self._postRequestToFile(self._labbcatUrl("api/attributes"), params))
     
     def getParticipantAttributes(self, participantIds, layerIds):
@@ -954,6 +1061,7 @@ class LabbcatView:
         :param layerIds: A list of layer IDs corresponding to participant attributes. 
         :type layerIds: list of str.
         
+        :returns: The name of a CSV file with one row per participant, and one column per attribute.
         :rtype: str
         """
         params = {
@@ -1792,7 +1900,7 @@ class LabbcatView:
         # tidily remove the downloaded file
         os.remove(fileName)
         
-        return(dictionary)
-    
+        return(dictionary)    
+        
     # TODO getFragment
     # TODO getFragmentSeries

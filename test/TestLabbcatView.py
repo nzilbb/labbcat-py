@@ -317,8 +317,14 @@ class TestLabbcatView(unittest.TestCase):
         ids = ids[:3]
         layerIds = ["transcript_type", "corpus"]
         fileName = self.store.getTranscriptAttributes(ids, layerIds)
-        self.assertTrue(fileName.endswith(".csv"), "CSV file returned")
-        self.assertTrue(os.path.isfile(fileName), "CSV file exists")
+        self.assertTrue(fileName.endswith(".csv"), "ID list: CSV file returned")
+        self.assertTrue(os.path.isfile(fileName), "ID list: CSV file exists")
+        os.remove(fileName)
+        
+        fileName = self.store.getTranscriptAttributes(
+            "['corpus'].includesAny(labels('corpus'))", layerIds)
+        self.assertTrue(fileName.endswith(".csv"), "Query expression: CSV file returned")
+        self.assertTrue(os.path.isfile(fileName), "Query expression: CSV file exists")
         os.remove(fileName)
             
     def test_getParticipantAttributes(self):

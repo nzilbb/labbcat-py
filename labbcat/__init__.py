@@ -4,3 +4,8 @@ from labbcat.LabbcatEdit import LabbcatEdit
 from labbcat.LabbcatAdmin import LabbcatAdmin
 from labbcat.Response import Response
 from labbcat.ResponseException import ResponseException
+from labbcat.AGQL import expressionFromAttributeValue
+from labbcat.AGQL import expressionFromAttributeValues
+from labbcat.AGQL import expressionFromIds
+from labbcat.AGQL import expressionFromTranscriptTypes
+from labbcat.AGQL import expressionFromCorpora
