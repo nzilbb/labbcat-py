@@ -1301,8 +1301,9 @@ class LabbcatView:
         This function returns a list of match dictionaries, where each item has the
         following entries:
         
-        - "MatchId" : An ID whichencodes which token in which utterance by which
+        - "MatchId" : An ID which encodes which token in which utterance by which
                       participant of which transcript matched.
+        - "URL" : URL that opens the corresponding transcript page at the first matching word.
         - "Transcript" : The name of the transcript document that the match is from. 
         - "Participant" :  The name of the participant who uttered the match.
         - "Corpus" : The corpus the match comes from.
