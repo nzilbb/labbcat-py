@@ -663,7 +663,7 @@ class TestLabbcatAdmin(unittest.TestCase):
         self.assertIsNotNone(threadId, "There is a threadId")
 
         try:
-            task = self.store.waitForTask(threadId, 180)
+            task = self.store.waitForTask(threadId, 60)
             # if the task is still running, it's taking too long, so cancel it
             if task["running"]:
                 try:
