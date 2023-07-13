@@ -422,6 +422,28 @@ class TestLabbcatView(unittest.TestCase):
         finally:
             self.store.releaseTask(threadId)
 
+    def test_searchIPA(self):
+        # get a participant ID to use
+        ids = self.store.getParticipantIds()
+        self.assertTrue(len(ids) > 0, "getParticipantIds: Some IDs are returned")
+        participantId = [ ids[0] ]
+
+        # all instances of "iː"
+        pattern = {"segment" : "iː" }
+        threadId = self.store.search(pattern, participantId, None, False, False, None)
+        try:
+            task = self.store.waitForTask(threadId, 30)
+            # if the task is still running, it's taking too long, so cancel it
+            if task["running"]:
+                try:
+                    self.store.cancelTask(threadId)
+                except:
+                    pass
+            self.assertFalse(task["running"], "Search task finished in a timely manner")
+         
+        finally:
+            self.store.releaseTask(threadId)
+
     def test_getMatchesWithPattern(self):
         # all instances of "then"
         pattern = {"orthography" : "end" }
