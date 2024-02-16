@@ -1301,6 +1301,8 @@ class LabbcatView:
         This function returns a list of match dictionaries, where each item has the
         following entries:
         
+        - "Title" : The title of the LaBB-CAT instance</dd>
+        - "Version" : The current version of the LaBB-CAT instance</dd>
         - "MatchId" : An ID which encodes which token in which utterance by which
                       participant of which transcript matched.
         - "URL" : URL that opens the corresponding transcript page at the first matching word.
