@@ -3,7 +3,7 @@ import json
 import labbcat
 
 # YOU MUST ENSURE THE FOLLOWING SETTINGS ARE VALID FOR YOU TEST LABB-CAT SERVER:
-labbcatUrl = "http://localhost:8080/labbcat/"
+labbcatUrl = "http://localhost:8080/labbcat/" # TODO do this with the .env file and os.environ["url <- Sys.getenv("TEST_VIEW_LABBCAT_URL"] etc. or https://pypi.org/project/python-decouple/
 username = "labbcat"
 password = "labbcat"
 
