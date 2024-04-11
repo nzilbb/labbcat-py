@@ -58,9 +58,10 @@ class TestLabbcatEdit(unittest.TestCase):
         self.assertIsNone(participant, "Deleted participant isn't there")
 
     
-    def test_newTranscript_updateTranscript_deleteTranscript_deleteParticipant(self):
+    def test_transcriptParticipantAndMediaCRUD(self):
         transcriptName = "labbcat-py.test.txt"
         transcriptPath = "/home/robert/nzilbb/labbcat-py/test/" + transcriptName
+        mediaPath = "/home/robert/nzilbb/labbcat-py/test/labbcat-py.test.wav"
         participantName = "UnitTester"
 
         # ensure the transcript/participant don't exist to start with
@@ -104,6 +105,15 @@ class TestLabbcatEdit(unittest.TestCase):
         # ensure the transcript is there
         count = self.store.countMatchingTranscriptIds("id = '"+transcriptName+"'")
         self.assertEqual(1, count, "Transcript is in the store")
+
+        # ensure there is no media
+        files = self.store.getAvailableMedia(transcriptName);
+        self.assertEqual(0, len(files), "No media is present")
+        # upload media
+        self.store.saveMedia(transcriptName, mediaPath, None);
+        # ensure there is now media
+        files = self.store.getAvailableMedia(transcriptName);
+        self.assertTrue(1 <= len(files), "Now media is present")
         
         # delete transcript/participant
         self.store.deleteTranscript(transcriptName)

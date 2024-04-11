@@ -34,7 +34,7 @@ class LabbcatEdit(LabbcatView):
         """
         return(self._postRequest(self._storeEditUrl("deleteTranscript"), {"id":id}))
     
-    def newTranscript(self, transcript, media, mediaSuffix, transcriptType, corpus, episode):
+    def newTranscript(self, transcript, media, trackSuffix, transcriptType, corpus, episode):
         """ Uploads a new transcript.
         
         :param transcript: The path to the transcript to upload.
@@ -43,8 +43,8 @@ class LabbcatEdit(LabbcatView):
         :param media: The path to media to upload, if any. 
         :type media: str
         
-        :param mediaSuffix: The media suffix for the media.
-        :type mediaSuffix: str
+        :param trackSuffix: The track suffix for the media, which can be None.
+        :type trackSuffix: str
         
         :param transcriptType: The transcript type.
         :param type: str
@@ -153,6 +153,33 @@ class LabbcatEdit(LabbcatView):
         finally:
             f.close()
         
+    def saveMedia(self, id, media, trackSuffix):
+        """ Saves the given media for the given transcript.
+        
+        :param id: The transcript ID.
+        :type id: str
+        
+        :param media: The path to media to upload, if any. 
+        :type media: str
+        
+        :param trackSuffix: The track suffix for the media.
+        :type trackSuffix: str
+        """
+        params = {
+            "id" : id,
+            "trackSuffix" : trackSuffix }
+        
+        mediaName = os.path.basename(media)
+        f = open(media, 'rb')
+        files = {}
+        files["media"] = (mediaName, f)
+
+        try:
+            model = self._postMultipartRequest(
+                self._storeEditUrl("saveMedia"), params, files)
+        finally:
+            f.close()
+        
     def saveParticipant(self, id, label, attributes):
         """ Saves a participant, and all its tags, to the graph store.
             To change the ID of an existing participant, pass the old/current ID as the
@@ -160,7 +187,7 @@ class LabbcatEdit(LabbcatView):
             If the participant ID does not already exist in the database, a new participant record
             is created. 
         
-        :param id: The ID participant to delete.
+        :param id: The ID participant to update.
         :type id: str
         
         :param label: The new ID (name) for the participant.
