@@ -1,3 +1,10 @@
+# 0.8.0
+
+- New LabbcatEdit function
+  + *saveMedia* - saves the given media for the given transcript.
+- Changed LabbcatEdit function
+  + GraphStore.newTranscript: rename mediaSuffix paramater as trackSuffix.
+
 # 0.7.3
 
 - New LabbcatEdit function
