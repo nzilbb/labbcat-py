@@ -3,6 +3,7 @@
 - New LabbcatEdit function
   + *saveMedia* - saves the given media for the given transcript.
   + *saveEpisodeDocument* - adds the given document to the given transcript's episode documents.
+  + *deleteMedia* - deletes media or episode document files.
 - Changed LabbcatEdit function
   + GraphStore.newTranscript: rename mediaSuffix paramater as trackSuffix.
 

@@ -108,22 +108,38 @@ class TestLabbcatEdit(unittest.TestCase):
         self.assertEqual(1, count, "Transcript is in the store")
 
         # ensure there is no media
-        files = self.store.getAvailableMedia(transcriptName);
+        files = self.store.getAvailableMedia(transcriptName)
         self.assertEqual(0, len(files), "No media is present")
         # upload media
-        self.store.saveMedia(transcriptName, mediaPath, None);
+        mediaFile = self.store.saveMedia(transcriptName, mediaPath, None)
+        print(mediaFile)
+        self.assertIsNotNone(mediaFile, "mediaFile returned")
+        self.assertIsNotNone(mediaFile["name"], "media file name returned")
         # ensure there is now media
-        files = self.store.getAvailableMedia(transcriptName);
+        files = self.store.getAvailableMedia(transcriptName)
         self.assertTrue(1 <= len(files), "Now media is present")
+        # delete media
+        self.store.deleteMedia(transcriptName, mediaFile["name"])
+        # ensure the media is now gone
+        files = self.store.getAvailableMedia(transcriptName)
+        self.assertEqual(0, len(files), "Media was deleted")
         
         # ensure there is no document
-        files = self.store.getEpisodeDocuments(transcriptName);
-        #TODO implement remove document self.assertEqual(0, len(files), "No media is present")
+        files = self.store.getEpisodeDocuments(transcriptName)
+        self.assertEqual(0, len(files), "No media is present")
         # upload document
-        self.store.saveEpisodeDocument(transcriptName, documentPath);
+        docFile = self.store.saveEpisodeDocument(transcriptName, documentPath)
+        print(docFile)
+        self.assertIsNotNone(docFile, "docFile returned")
+        self.assertIsNotNone(docFile["name"], "document file name returned")
         # ensure there is now a document
-        files = self.store.getEpisodeDocuments(transcriptName);
+        files = self.store.getEpisodeDocuments(transcriptName)
         self.assertTrue(1 <= len(files), "Now document is present")
+        # delete media
+        self.store.deleteMedia(transcriptName, docFile["name"])
+        # ensure the media is now gone
+        files = self.store.getEpisodeDocuments(transcriptName);
+        self.assertEqual(0, len(files), "Document was deleted")
         
         # delete transcript/participant
         self.store.deleteTranscript(transcriptName)

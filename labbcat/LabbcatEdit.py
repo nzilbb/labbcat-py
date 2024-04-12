@@ -164,6 +164,9 @@ class LabbcatEdit(LabbcatView):
         
         :param trackSuffix: The track suffix for the media.
         :type trackSuffix: str
+        
+        :returns: A dictionary of attributes of the media file (name, url, etc.).
+        :rtype: dictionary of str
         """
         params = {
             "id" : id,
@@ -177,6 +180,7 @@ class LabbcatEdit(LabbcatView):
         try:
             model = self._postMultipartRequest(
                 self._storeEditUrl("saveMedia"), params, files)
+            return(model)
         finally:
             f.close()
         
@@ -189,6 +193,8 @@ class LabbcatEdit(LabbcatView):
         :param media: The path to the document to upload. 
         :type media: str
         
+        :returns: A dictionary of attributes of the document file (name, url, etc.).
+        :rtype: dictionary of str
         """
         params = { "id" : id }
         
@@ -200,9 +206,23 @@ class LabbcatEdit(LabbcatView):
         try:
             model = self._postMultipartRequest(
                 self._storeEditUrl("saveEpisodeDocument"), params, files)
+            return(model)
         finally:
             f.close()
         
+    def deleteMedia(self, id, fileName):
+        """ Delete a given media or episode document file.
+        
+        :param id: The ID transcript to delete.
+        :type id: str
+
+        :param fileName: The media file name, e.g. mediaFile['name'].
+        :type fileName: str
+        """
+        return(self._postRequest(self._storeEditUrl("deleteMedia"), {
+            "id": id,
+            "fileName": fileName }))
+    
     def saveParticipant(self, id, label, attributes):
         """ Saves a participant, and all its tags, to the graph store.
             To change the ID of an existing participant, pass the old/current ID as the
