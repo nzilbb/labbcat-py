@@ -62,6 +62,7 @@ class TestLabbcatEdit(unittest.TestCase):
         transcriptName = "labbcat-py.test.txt"
         transcriptPath = "/home/robert/nzilbb/labbcat-py/test/" + transcriptName
         mediaPath = "/home/robert/nzilbb/labbcat-py/test/labbcat-py.test.wav"
+        documentPath = "/home/robert/nzilbb/labbcat-py/test/labbcat-py.test.doc"
         participantName = "UnitTester"
 
         # ensure the transcript/participant don't exist to start with
@@ -114,6 +115,15 @@ class TestLabbcatEdit(unittest.TestCase):
         # ensure there is now media
         files = self.store.getAvailableMedia(transcriptName);
         self.assertTrue(1 <= len(files), "Now media is present")
+        
+        # ensure there is no document
+        files = self.store.getEpisodeDocuments(transcriptName);
+        #TODO implement remove document self.assertEqual(0, len(files), "No media is present")
+        # upload document
+        self.store.saveEpisodeDocument(transcriptName, documentPath);
+        # ensure there is now a document
+        files = self.store.getEpisodeDocuments(transcriptName);
+        self.assertTrue(1 <= len(files), "Now document is present")
         
         # delete transcript/participant
         self.store.deleteTranscript(transcriptName)

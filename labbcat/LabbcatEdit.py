@@ -159,7 +159,7 @@ class LabbcatEdit(LabbcatView):
         :param id: The transcript ID.
         :type id: str
         
-        :param media: The path to media to upload, if any. 
+        :param media: The path to media to upload. 
         :type media: str
         
         :param trackSuffix: The track suffix for the media.
@@ -177,6 +177,29 @@ class LabbcatEdit(LabbcatView):
         try:
             model = self._postMultipartRequest(
                 self._storeEditUrl("saveMedia"), params, files)
+        finally:
+            f.close()
+        
+    def saveEpisodeDocument(self, id, document):
+        """ Saves the given media for the given transcript.
+        
+        :param id: The transcript ID.
+        :type id: str
+        
+        :param media: The path to the document to upload. 
+        :type media: str
+        
+        """
+        params = { "id" : id }
+        
+        documentName = os.path.basename(document)
+        f = open(document, 'rb')
+        files = {}
+        files["document"] = (documentName, f)
+
+        try:
+            model = self._postMultipartRequest(
+                self._storeEditUrl("saveEpisodeDocument"), params, files)
         finally:
             f.close()
         

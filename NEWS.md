@@ -2,6 +2,7 @@
 
 - New LabbcatEdit function
   + *saveMedia* - saves the given media for the given transcript.
+  + *saveEpisodeDocument* - adds the given document to the given transcript's episode documents.
 - Changed LabbcatEdit function
   + GraphStore.newTranscript: rename mediaSuffix paramater as trackSuffix.
 
