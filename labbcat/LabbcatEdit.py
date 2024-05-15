@@ -213,7 +213,7 @@ class LabbcatEdit(LabbcatView):
     def deleteMedia(self, id, fileName):
         """ Delete a given media or episode document file.
         
-        :param id: The ID transcript to delete.
+        :param id: The ID transcript whose media will be deleted.
         :type id: str
 
         :param fileName: The media file name, e.g. mediaFile['name'].
