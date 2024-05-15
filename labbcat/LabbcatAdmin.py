@@ -1,5 +1,6 @@
 import os
 import time
+from deprecated import deprecated
 from labbcat.LabbcatEdit import LabbcatEdit
 from labbcat.ResponseException import ResponseException
 
@@ -262,18 +263,11 @@ class LabbcatAdmin(LabbcatEdit):
         """
         return(self._deleteRequest(self._labbcatUrl("api/admin/corpora/"+corpus_name), {}))
     
+    @deprecated("Deprecated as 'projects' are now categories with classId = 'layer' - use createCategory instead.")
     def createProject(self, project, description):
-        """ Creates a new project record.
-        
-        The dictionary returned has the following entries:
-        
-        - "project_id"  : The database key for the record.
-        - "project"     : The name/id of the project.
-        - "description" : The description of the project.
-        - "_cantDelete" : This is not a database field, but rather is present in records
-          returned from the server that can not currently be deleted; a string
-          representing the reason the record can't be deleted.   
-        
+        """ Deprecated as 'projects' are now categories with classId = 'layer' 
+        - use createCategory instead.
+
         :param project: The name/id of the project.
         :type project: str
         
@@ -283,21 +277,15 @@ class LabbcatAdmin(LabbcatEdit):
         :returns: A copy of the project record
         :rtype: dict
         """
-        return(self._postRequest(self._labbcatUrl("api/admin/projects"), {}, {
-            "project" : project,
-            "description" : description }))
+        project = self.createCategory("layer", project, description, 0)
+        # for backwards compatibility:
+        project["project"] = project["category"]
+        return(project)
     
+    @deprecated("Deprecated as 'projects' are now categories with classId = 'layer' - use readCategories('layer') instead.")
     def readProjects(self, pageNumber=None, pageLength=None):
-        """ Reads a list of project records.
-        
-        The dictionaries in the returned list have the following entries:
-        
-        - "project_id"  : The database key for the record.
-        - "project"     : The name/id of the project.
-        - "description" : The description of the project.
-        - "_cantDelete" : This is not a database field, but rather is present in records
-          returned from the server that can not currently be deleted; a string
-          representing the reason the record can't be deleted.
+        """ Deprecated as 'projects' are now categories with classId = 'layer' 
+        - use readCategory('layer') instead.
         
         :param pageNumber: The zero-based page number to return, or null to return the first page.
         :type pageNumber: int or None
@@ -308,25 +296,16 @@ class LabbcatAdmin(LabbcatEdit):
         :returns: A list of project records.
         :rtype: list of dict
         """
-        # define request parameters
-        parameters = {}
-        if pageNumber != None:
-            parameters["pageNumber"] = pageNumber
-        if pageLength != None:
-            parameters["pageLength"] = pageLength
-        return(self._getRequest(self._labbcatUrl("api/admin/projects"), parameters))
+        projects = self.readCategories("layer")
+        for project in projects:
+            # for backwards compatibility:
+            project["project"] = project["category"]
+        return(projects)
         
+    @deprecated("Deprecated as 'projects' are now categories with classId = 'layer' - use updateCategory instead.")
     def updateProject(self, project, description):
-        """ Updates an existing project record.
-        
-        The dictionary returned has the following entries:
-        
-        - "project_id"  : The database key for the record.
-        - "project"     : The name/id of the project.
-        - "description" : The description of the project.
-        - "_cantDelete" : This is not a database field, but rather is present in records
-          returned from the server that can not currently be deleted; a string
-          representing the reason the record can't be deleted.
+        """ Deprecated as 'projects' are now categories with classId = 'layer' 
+        - use updateCategory instead.
         
         :param project: The name/id of the project.
         :type project: str
@@ -337,17 +316,19 @@ class LabbcatAdmin(LabbcatEdit):
         :returns: A copy of the project record
         :rtype: dict
         """
-        return(self._putRequest(self._labbcatUrl("api/admin/projects"), {}, {
-            "project" : project,
-            "description" : description }))
+        project = self.updateCategory("layer", project, description, 0)
+        # for backwards compatibility:
+        project["project"] = project["category"]
+        return(project)
     
+    @deprecated("Deprecated as 'projects' are now categories with classId = 'layer' - use deleteCategory instead.")
     def deleteProject(self, project):
         """ Deletes an existing project record.
         
         :param project: The name/id of the project.
         :type project: str        
         """
-        return(self._deleteRequest(self._labbcatUrl("api/admin/projects/"+project), {}))
+        return(self.deleteCategory("layer", project))
     
     def createCategory(self, class_id, category, description, display_order):
         """ Creates a new category record.

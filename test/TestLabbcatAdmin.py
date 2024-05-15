@@ -141,7 +141,7 @@ class TestLabbcatAdmin(unittest.TestCase):
         # can't create an existing record
         try:
             self.store.createProject(project_name, project_description)
-            fail("Delete non-existent project")
+            fail("Re-create existing project")
         except:
             pass
         
