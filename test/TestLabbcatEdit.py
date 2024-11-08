@@ -112,7 +112,7 @@ class TestLabbcatEdit(unittest.TestCase):
         self.assertEqual(0, len(files), "No media is present")
         # upload media
         mediaFile = self.store.saveMedia(transcriptName, mediaPath, None)
-        print(mediaFile)
+        ##print(mediaFile)
         self.assertIsNotNone(mediaFile, "mediaFile returned")
         self.assertIsNotNone(mediaFile["name"], "media file name returned")
         # ensure there is now media
@@ -129,7 +129,7 @@ class TestLabbcatEdit(unittest.TestCase):
         self.assertEqual(0, len(files), "No media is present")
         # upload document
         docFile = self.store.saveEpisodeDocument(transcriptName, documentPath)
-        print(docFile)
+        ##print(docFile)
         self.assertIsNotNone(docFile, "docFile returned")
         self.assertIsNotNone(docFile["name"], "document file name returned")
         # ensure there is now a document
