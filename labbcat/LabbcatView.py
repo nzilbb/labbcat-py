@@ -1387,7 +1387,19 @@ class LabbcatView:
         - "confidence" : A rating of confidence in the label accuracy, from 0 (no
             confidence) to 100 (absolute confidence / manually annotated)
         
-        :param matchIds: A list of MatchId strings, or a list of match dictionaries
+        If offsetThreshold is a value between 0 and 100, the annotations may also include
+        a "start" entry and an "end" entry, representing the start/end anchors of the
+        annotation which define the position of the annotation in time. These values are
+        dictionaries with the following entries: 
+        - "id" : The anchor's unique ID
+        - "offset" : The time (in seconds since the start of the recording, unless the
+                     transcript is textual rather than speech, in which case it represents
+                     the number of characters from the beginning of the document)
+        - "confidence" : A rating of confidence in the alignment accuracy, from 0 (no
+            confidence) to 100 (absolute confidence / manually specified)        
+        
+        :param matchIds: A list of MatchId strings, or a list of match dictionaries of the
+                         kind returned by `getMatches() <#labbcat.LabbcatView.getMatches>`_
         :type matchIds: list of str or list of dict
         
         :param layerIds: A list of layer IDs.
