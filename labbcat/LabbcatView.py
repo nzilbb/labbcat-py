@@ -1369,7 +1369,7 @@ class LabbcatView:
         
         return(model["matches"])
     
-    def getMatchAnnotations(self, matchIds, layerIds, targetOffset=0, annotationsPerLayer=1):
+    def getMatchAnnotations(self, matchIds, layerIds, targetOffset=0, annotationsPerLayer=1, offsetThreshold=None):
         """
         Gets annotations on selected layers related to search results returned by a previous
         call to getMatches(threadId).
@@ -1405,6 +1405,13 @@ class LabbcatView:
          using a value of greater than 1 for this parameter provides other phonemic
          transcriptions, for tokens that have more than one.
         :type annotationsPerLayer: int
+
+        :param offsetThreshold: The minimum confidence for alignments, e.g.
+        - None -- do not return alignments;
+        - *0* -- return all alignments, regardless of confidence;
+        - *50* -- return only alignments that have been at least automatically aligned;
+        - *100* -- return only manually-set alignments.
+        :type offsetThreshold: int
         
         :returns: An array of arrays of Annotations, of dimensions 
          len(*matchIds*) x (len(*layerIds*) x *annotationsPerLayer*). The first index matches the
@@ -1436,7 +1443,8 @@ class LabbcatView:
             "annotationsPerLayer" : annotationsPerLayer,
             "csvFieldDelimiter" : ",",
             "targetColumn" : 0,
-            "copyColumns" : False
+            "copyColumns" : False,
+            "offsetThreshold" : offsetThreshold
         }
         
         # send the request

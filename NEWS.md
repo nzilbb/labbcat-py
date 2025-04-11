@@ -1,5 +1,9 @@
 # 0.9.0
 
+- Changed LabbcatView function
+  + *getMatchAnnnotations* - now include 'offsetTheshold' parameter to allow retrieval of
+    start/end times
+
 # 0.8.0
 
 - New LabbcatEdit functions

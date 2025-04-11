@@ -383,6 +383,29 @@ class TestLabbcatView(unittest.TestCase):
                 self.assertEqual(len(matches), len(annotations),
                                   "annotations array is same size as matches array")
                 self.assertEqual(1, len(annotations[0]), "row arrays are the right size")
+                # do they look like annotations?
+                annotation = annotations[0][0]
+                for key in ["layerId", "id", "label", "startId", "endId"]:
+                    with self.subTest(key=key):
+                        self.assertIn(key, annotation, "Has " + key)
+                # there should be no alignments
+                self.assertNotIn("start", annotation, "Doesn't have start anchor")
+                self.assertNotIn("end", annotation, "Doesn't have anchor")
+
+                # now get alignments
+                layerIds = [ "orthography" ]
+                annotations = self.store.getMatchAnnotations(matches, layerIds, 0, 1, 0)
+                self.assertEqual(len(matches), len(annotations),
+                                  "annotations array is same size as matches array")
+                self.assertEqual(1, len(annotations[0]), "row arrays are the right size")
+                # do they look like annotations?
+                annotation = annotations[0][0]
+                for key in ["layerId", "id", "label", "startId", "endId", "start", "end"]:
+                    with self.subTest(key=key):
+                        self.assertIn(key, annotation, "Has " + key)
+                # anchors have offsets
+                self.assertIn("offset", annotation["start"], "Start anchor includes offset")
+                self.assertIn("offset", annotation["end"], "End anchor includes offset")
                 
                 layerIds = [ "invalid layer ID" ]
                 try:
