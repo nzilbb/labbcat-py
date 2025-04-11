@@ -1,5 +1,12 @@
 # 0.9.0
 
+- New LabbcatView function
+  + *processWithPraat* - Process a set of intervals with Praat for extraction of acoustic measures.
+- New labbcat functions for generating praat script snippets for processWithPraat...
+  + *praatScriptFormants*
+  + *praatScriptCentreOfGravity*
+  + *praatScriptIntensity*
+  + *praatScriptPitch*
 - Changed LabbcatView function
   + *getMatchAnnnotations* - now include 'offsetTheshold' parameter to allow retrieval of
     start/end times

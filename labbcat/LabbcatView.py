@@ -1468,6 +1468,195 @@ class LabbcatView:
         
         return(model)
 
+    def processWithPraat(self, matchIds, startOffsets, endOffsets, praatScript, windowOffset,
+                         genderAttribute="participant_gender", attributes=None):
+        """
+        Process a set of intervals with Praat.
+        
+        This function instructs the LaBB-CAT server to invoke Praat for a set of sound
+        intervals, in order to extract acoustic measures.
+        
+        The exact measurements to return depend on the praatScript that is invoked. This is a
+        Praat script fragment that will run once for each sound interval specified.
+        
+        There are functions to allow the generation of a number of pre-defined praat scripts
+        for common tasks such as formant, pitch, intensity, and centre of gravity -- see
+        - `praatScriptFormants() <#labbcat.PraatScript.praatScriptFormants>`_
+        - `praatScriptCentreOfGravity() <#labbcat.PraatScript.praatScriptCentreOfGravity>`_
+        - `praatScriptIntensity() <#labbcat.PraatScript.praatScriptIntensity>`_
+        - `praatScriptPitch() <#labbcat.PraatScript.praatScriptPitch>`_
+        
+        You can provide your own script, either by building a string with your code, or loading
+        one from a file.
+        
+        LaBB-CAT prefixes praatScript with code to open a sound file and extract a defined part
+        of it into a Sound object which is then selected.
+        
+        LaBB-CAT 'Remove's this Sound object after the script finishes executing. Any other objects
+        created by the script must be 'Remove'd before the end of the script (otherwise
+        Praat runs out of memory during very large batches)
+        
+        LaBB-CAT assumes that all calls to the function 'print' correspond to fields for export
+        and each field must be printed on its own line. Specifically it scans for lines of the
+        form:
+        
+        print 'myOutputVariable' 'newline$'
+        
+        Variables that can be assumed to be already set in the context of the script are:
+        - *windowOffset*
+           -- the value used for the Window Offset; how much context to include.
+        - *windowAbsoluteStart*
+           -- the start time of the window extracted relative to the start of the original audio file.
+        - *windowAbsoluteEnd*
+           -- the end time of the window extracted relative to the start of the original audio file.
+        - *windowDuration*
+           -- the duration of the window extracted (including window offset).
+        - *targetAbsoluteStart*
+           -- the start time of the target interval relative to the start of the original audio file.
+        - *targetAbsoluteEnd*
+           -- the end time of the target interval relative to the start of the original audio file.
+        - *targetStart*
+           -- the start time of the target interval relative to the start of the window extracted.
+        - *targetEnd*
+           -- the end time of the target interval relative to the start of the window extracted.
+        - *targetDuration*
+           -- the duration of the target interval.
+        - *sampleNumber*
+           -- the number of the sample within the set of samples being processed.
+        - *sampleName$*
+           -- the name of the extracted/selected Sound object.
+        
+        :param matchIds: A list of MatchId strings, or a list of match dictionaries of the
+                         kind returned by `getMatches() <#labbcat.LabbcatView.getMatches>`_
+        :type matchIds: list of str or list of dict
+        
+        :param startOffsets: A list of start offsets, with one element for each element in
+         *matchIds*. 
+        :type startOffsets: list of float or None
+        
+        :param endOffsets: A list of end offsets, with one element for each element in
+         *matchtIds*. 
+        :type endOffsets: list of float or None
+        
+        :param praatScript: Script to run on each match.
+        :type praatScript: str
+        
+        :param windowOffset: In many circumstances, you will want some context before and after
+        the sample start/end time.  For this reason, you can specify a "window offset" -
+        this is a number of seconds to subtract from the sample start and add to the sample
+        end time, before extracting that part of the audio for processing. For example, if
+        the sample starts at 2.0s and ends at 3.0s, and you set the window offset to 0.5s,
+        then Praat will extract a sample of audio from  1.5s to 3.5s, and do the selected
+        processing on that sample. The best value for this depends on what the praatScript
+        is doing; if you are getting formants from  vowels, including some context ensures
+        that the formants at the edges are more accurate (in LaBB-CAT's web interface, the
+        default value for this 0.025), but if you're getting max pitch or COG during a
+        segment, most likely you want a window.offset of 0 to ensure neighbouring segments
+        don't influence the measurement. 
+        :type windowOffset: float
+
+        :param genderAttribute: Which participant attribute represents the participant's gender.
+        :type genderAttribute: str
+        
+        :param attributes: A list of participant attribute names to make available to the script.
+        For example, if you want to use different acoustic parameters depending on what the
+        gender of the speaker is, including the "participant_gender" attribute will make a
+        variable called participant_gender$ available to the praat script, whose value will
+        be the gender of the speaker of that segment.
+        :type attributes: list
+        
+        :returns: A list of dictionaries of acoustic measurements, one of each matchId.
+        :rtype: list of dict
+        """
+        # validation
+        if len(matchIds) != len(startOffsets):
+            raise Exception("matchIds ("+str(len(matchIds))+") and startOffsets ("
+                            +str(len(startOffsets))+") must be the same length.")
+        if len(matchIds) != len(endOffsets):
+            raise Exception("matchIds ("+str(len(matchIds))+") and endOffsets ("
+                            +str(len(endOffsets))+") must be the same length.")
+        
+        # we need a list of strings, so if we've got a list of dictionaries, convert it
+        if len(matchIds) > 0:
+            if isinstance(matchIds[0], dict):
+                # map the dictionaries to their "MatchId" entry
+                matchIds = [ m["MatchId"] for m in matchIds ]
+
+        # convert matchId list into two lists, transcriptIds and participantIds
+        transcriptIds = list(
+            map(lambda matchId: re.sub(r".*(g_[0-9]+);.*","\\1", matchId), matchIds))
+        participantIds = list(
+            map(lambda matchId: re.sub(r".*(p_[0-9]+);.*","\\1", matchId), matchIds))
+
+        # save MatchIds as a CSV file
+        fd, fileName = tempfile.mkstemp(".csv", "labbcat-py-processWithPraat-")
+        if self.verbose: print("MatchId file: " + fileName)
+        with open(fileName, "w") as file:
+            file.write("Transcript,Participant,Start,End")
+            for r in range(len(matchIds)):
+                file.write(
+                    "\n" + transcriptIds[r] + "," + participantIds[r]
+                    + ","+ str(startOffsets[r]) + "," + str(endOffsets[r]))
+        os.close(fd)
+        files = {}
+        f = open(fileName, 'r')
+        files["csv"] = (fileName, f)
+
+        # define parameters
+        parameters = {
+            "attributes" : attributes,
+            "transcriptColumn" : 0,
+            "participantColumn" : 1,
+            "startTimeColumn" : 2,
+            "endTimeColumn" : 3,
+            "windowOffset" : windowOffset,
+            "script" : praatScript,
+            "passThroughData" : False
+        }
+        
+        # send the request
+        model = self._postMultipartRequest(self._labbcatUrl("api/praat"), parameters, files)
+        
+        # delete the temporary CSV file
+        os.remove(fileName)
+
+        # we got back a threadId, wait for that to finish
+        threadId = model["threadId"]
+        task = self.waitForTask(threadId)
+
+        # now get the resulting CSV file
+        url = task["resultUrl"]
+
+        # download the file
+        fileName = self._postRequestToFile(url, {}, fileName=fileName)
+
+        # load values into an list of dict
+        results = []
+        with open(fileName) as csvDataFile:
+            csvReader = csv.reader(csvDataFile)
+            headers = None
+            for row in csvReader:
+                if headers == None:
+                    headers = row
+                else: # data row
+                    result = {}
+                    for c in range(len(row)):
+                        value = row[c]
+                        # we assume everything other than "Error" is a number!
+                        if headers[c] != "Error":
+                            if "." in value:
+                                value = float(value)
+                            else:
+                                value = int(value)
+                        result[headers[c]] = value
+                    results.append(result)
+                    
+        # tidy up
+        self.releaseTask(threadId)
+        os.remove(fileName)
+        
+        return(results)
+    
     def getSoundFragments(self, transcriptIds, startOffsets=None, endOffsets=None, sampleRate=None, dir=None, prefixNames=True):
         """
         Downloads WAV sound fragments.

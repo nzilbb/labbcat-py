@@ -492,6 +492,55 @@ class TestLabbcatView(unittest.TestCase):
         finally:
             self.store.releaseTask(threadId)
 
+    def test_processWithPraat(self):
+        # get a participant ID to use
+        ids = self.store.getParticipantIds()
+        self.assertTrue(len(ids) > 0, "getParticipantIds: Some IDs are returned")
+        participantId = [ ids[0] ]
+        
+        # all instances of the "a" segment
+        threadId = self.store.search({ "segment" : "a" }, participantId)
+        try:
+            task = self.store.waitForTask(threadId, 30)
+            # if the task is still running, it's taking too long, so cancel it
+            if task["running"]:
+                try:
+                    self.store.cancelTask(threadId)
+                except:
+                    pass
+            self.assertFalse(task["running"], "Search task finished in a timely manner")
+            
+            matches = self.store.getMatches(threadId, 0)
+            if len(matches) == 0:
+                print("getMatches: No matches were returned, cannot test getFragments")
+            else:
+                upTo = min(5, len(matches))
+                subset = matches[:upTo]
+
+                segments = self.store.getMatchAnnotations(subset, [ "segment" ], 0, 1, 0)
+                # flatten into a single list
+                segments = [item for row in segments for item in row]
+                startOffsets = list(
+                    map(lambda annotation: annotation["start"]["offset"], segments))
+                endOffsets = list(
+                    map(lambda annotation: annotation["end"]["offset"], segments))
+                
+                praatScript = labbcat.praatScriptFormants()
+                
+                measures = self.store.processWithPraat(
+                    subset, startOffsets, endOffsets, praatScript, 0.025)
+                self.assertEqual(len(subset), len(measures),
+                                 "measures array is same size as matches array")
+                # they look like praat results
+                for m in range(upTo):
+                    results = measures[m]
+                    for key in ["time_05", "f1_time_05", "f2_time_05", "Error"]:
+                        with self.subTest(key=key):
+                            self.assertIn(key, results, "Has " + key)
+            
+        finally:
+            self.store.releaseTask(threadId)
+
     def test_searchExcludingOverlappingSpeech(self):
         # all instances of "mmm", which is common in overlapping speech
         pattern = {"orthography" : "mmm" }
