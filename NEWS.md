@@ -1,6 +1,8 @@
+# 0.8.1
+
 # 0.8.0
 
-- New LabbcatEdit function
+- New LabbcatEdit functions
   + *saveMedia* - saves the given media for the given transcript.
   + *saveEpisodeDocument* - adds the given document to the given transcript's episode documents.
   + *deleteMedia* - deletes media or episode document files.
