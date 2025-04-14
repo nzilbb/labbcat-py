@@ -518,8 +518,8 @@ class TestLabbcatView(unittest.TestCase):
                 upTo = min(5, len(matches))
                 subset = matches[:upTo]
 
-                # explicit start/end offsets
-                segments = self.store.getMatchAnnotations(subset, [ "segment" ], 0, 1, 0)
+                # explicit start/end offsets (and layer ID as a string instead of array)
+                segments = self.store.getMatchAnnotations(subset, "segment", 0, 1, 0)
                 startOffsets = list(
                     map(lambda annotation: annotation["start"]["offset"], segments))
                 endOffsets = list(
