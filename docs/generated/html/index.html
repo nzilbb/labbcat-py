@@ -1306,10 +1306,11 @@ Praat script fragment that will run once for each sound interval specified.</p>
 <p>There are functions to allow the generation of a number of pre-defined praat scripts
 for common tasks such as formant, pitch, intensity, and centre of gravity – see</p>
 <ul class="simple">
-<li><p><a class="reference external" href="#labbcat.PraatScript.praatScriptFormants">praatScriptFormants()</a></p></li>
-<li><p><a class="reference external" href="#labbcat.PraatScript.praatScriptCentreOfGravity">praatScriptCentreOfGravity()</a></p></li>
-<li><p><a class="reference external" href="#labbcat.PraatScript.praatScriptIntensity">praatScriptIntensity()</a></p></li>
-<li><p><a class="reference external" href="#labbcat.PraatScript.praatScriptPitch">praatScriptPitch()</a></p></li>
+<li><p><a class="reference external" href="#labbcat.praatScriptFormants">praatScriptFormants()</a></p></li>
+<li><p><a class="reference external" href="#labbcat.praatScriptFastTrack">praatScriptFastTrack()</a></p></li>
+<li><p><a class="reference external" href="#labbcat.praatScriptCentreOfGravity">praatScriptCentreOfGravity()</a></p></li>
+<li><p><a class="reference external" href="#labbcat.praatScriptIntensity">praatScriptIntensity()</a></p></li>
+<li><p><a class="reference external" href="#labbcat.praatScriptPitch">praatScriptPitch()</a></p></li>
 </ul>
 <p>You can provide your own script, either by building a string with your code, or loading
 one from a file.</p>
@@ -1440,10 +1441,11 @@ Praat script fragment that will run once for each sound interval specified.</p>
 <p>There are functions to allow the generation of a number of pre-defined praat scripts
 for common tasks such as formant, pitch, intensity, and centre of gravity – see</p>
 <ul class="simple">
-<li><p><a class="reference external" href="#labbcat.PraatScript.praatScriptFormants">praatScriptFormants()</a></p></li>
-<li><p><a class="reference external" href="#labbcat.PraatScript.praatScriptCentreOfGravity">praatScriptCentreOfGravity()</a></p></li>
-<li><p><a class="reference external" href="#labbcat.PraatScript.praatScriptIntensity">praatScriptIntensity()</a></p></li>
-<li><p><a class="reference external" href="#labbcat.PraatScript.praatScriptPitch">praatScriptPitch()</a></p></li>
+<li><p><a class="reference external" href="#labbcat.praatScriptFormants">praatScriptFormants()</a></p></li>
+<li><p><a class="reference external" href="#labbcat.praatScriptFastTrack">praatScriptFastTrack()</a></p></li>
+<li><p><a class="reference external" href="#labbcat.praatScriptCentreOfGravity">praatScriptCentreOfGravity()</a></p></li>
+<li><p><a class="reference external" href="#labbcat.praatScriptIntensity">praatScriptIntensity()</a></p></li>
+<li><p><a class="reference external" href="#labbcat.praatScriptPitch">praatScriptPitch()</a></p></li>
 </ul>
 <p>You can provide your own script, either by building a string with your code, or loading
 one from a file.</p>
@@ -3304,7 +3306,258 @@ or
 </dl>
 </dd></dl>
 
-<p>The LabbcatAdmin class also inherits the LabbcatEdit class.</p>
+</section>
+<section id="praat-script-fragment-generation-functions">
+<h2>Praat Script Fragment Generation Functions<a class="headerlink" href="#praat-script-fragment-generation-functions" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="labbcat.praatScriptFormants">
+<span class="sig-prename descclassname"><span class="pre">labbcat.</span></span><span class="sig-name descname"><span class="pre">praatScriptFormants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">formants</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">2]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplePoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeStep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxNumberFormants</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxFormant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxFormantMale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genderAttribute</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'participant_gender'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueForMale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'M'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">windowLength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.025</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preemphasisFrom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.praatScriptFormants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a script for extracting formants, for use with 
+<a class="reference external" href="#labbcat.LabbcatView.processWithPraat">processWithPraat()</a></p>
+<p>This function generates a Praat script fragment which can be passed as the praat.script
+parameter of [processWithPraat], in order to extract selected formants.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>formants</strong> (<em>list of int</em>) – A list of integers specifying which formants to extract, e.g [1,2]
+for the first and second formant.</p></li>
+<li><p><strong>samplePoints</strong> (<em>list of float</em>) – A list of numbers (0 &lt;= samplePoints &lt;= 1) specifying multiple
+points at which to take the measurement. The default is a single point at 0.5 -
+this means one measurement will be taken halfway through the target interval. If,
+for example, you wanted eleven measurements evenly spaced throughout the interval,
+you would specify samplePoints as being
+[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].</p></li>
+<li><p><strong>timeStep</strong> (<em>float</em>) – Time step in seconds, or 0.0 for ‘auto’.</p></li>
+<li><p><strong>maxNumberFormants</strong> (<em>int</em>) – Maximum number of formants.</p></li>
+<li><p><strong>maxFormant</strong> (<em>int</em>) – Maximum formant value (Hz) for all speakers, or for female speakers,
+if maxFormantMale is also specified.</p></li>
+<li><p><strong>maxFormantMale</strong> (<em>int</em>) – Maximum formant value (Hz) for male speakers, or NULL to use
+the same value as max.formant.</p></li>
+<li><p><strong>genderAttribute</strong> (<em>str</em>) – Name of the LaBB-CAT participant attribute that contains the
+participant’s gender - normally this is “participant_gender”.</p></li>
+<li><p><strong>valueForMale</strong> (<em>str</em>) – The value that the genderAttribute has when the participant is male.</p></li>
+<li><p><strong>windowLength</strong> (<em>float</em>) – Window length in seconds.</p></li>
+<li><p><strong>preemphasisFrom</strong> (<em>int</em>) – Pre-emphasis from (Hz)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A script fragment which can be passed as the praatScript parameter of
+<a class="reference external" href="#labbcat.LabbcatView.processWithPraat">processWithPraat()</a></p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="labbcat.praatScriptFastTrack">
+<span class="sig-prename descclassname"><span class="pre">labbcat.</span></span><span class="sig-name descname"><span class="pre">praatScriptFastTrack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">formants</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">2]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplePoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lowestAnalysisFrequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lowestAnalysisFrequencyMale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highestAnalysisFrequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highestAnalysisFrequencyMale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genderAttribute</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'participant_gender'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueForMale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'M'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeStep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.002</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trackingMethod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'burg'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberOfFormants</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximumF1Frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximumF1Bandwidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximumF2Bandwidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximumF3Bandwidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimumF4Frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2900</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enableRhoticHeuristic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enableF3F4ProximityHeuristic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberOfSteps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberOfCoefficients</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.praatScriptFastTrack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a script for extracting formants using FastTrack, for use with 
+<a class="reference external" href="#labbcat.LabbcatView.processWithPraat">processWithPraat()</a></p>
+<p>This function generates a Praat script fragment which can be passed as the praat.script
+parameter of <a class="reference external" href="#labbcat.LabbcatView.processWithPraat">processWithPraat()</a>, in order to
+extract selected formants using the FastTrack Praat plugin.</p>
+<p>The FastTrack Praat plugin, developed by Santiago Barreda, automatically runs multiple
+formant analyses on each segment, selects the best (the smoothest, with optional
+heuristics), and makes the winning formant object available for measurement. For more
+information, see <a class="reference external" href="https://github.com/santiagobarreda/FastTrack">FastTrack</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>formants</strong> (<em>list of int</em>) – A list of integers specifying which formants to extract, e.g [1,2]
+for the first and second formant.</p></li>
+<li><p><strong>samplePoints</strong> (<em>list of float</em>) – A vector of numbers (0 &lt;= samplePoints &lt;= 1) specifying multiple
+points at which to take the measurement.  The default is a single
+point at 0.5 - this means one measurement will be taken halfway
+through the target interval.  If, for example, you wanted eleven
+measurements evenly spaced throughout the interval, you would
+specify sample.points as being 
+[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].</p></li>
+<li><p><strong>lowestAnalysisFrequency</strong> (<em>int</em>) – Lowest analysis frequency (Hz) by default.</p></li>
+<li><p><strong>lowestAnalysisFrequencyMale</strong> (<em>int</em>) – Lowest analysis frequency (Hz) for male
+speakers, or None to use the same value as
+lowestAnalysisFrequency.</p></li>
+<li><p><strong>highestAnalysisFrequency</strong> (<em>int</em>) – Highest analysis frequency (Hz) by default.</p></li>
+<li><p><strong>highestAnalysisFrequencyMale</strong> (<em>int</em>) – Highest analysis frequency (Hz) for male
+speakers, or None to use the same value as
+highestAnalysisFrequency.</p></li>
+<li><p><strong>genderAttribute</strong> (<em>str</em>) – Name of the LaBB-CAT participant attribute that contains the
+participant’s gender - normally this is “participant_gender”.</p></li>
+<li><p><strong>valueForMale</strong> (<em>str</em>) – The value that the genderAttribute has when the participant is male.</p></li>
+<li><p><strong>timeStep</strong> (<em>float</em>) – Time step in seconds</p></li>
+<li><p><strong>trackingMethod</strong> (<em>str</em>) – tracking_method parameter for trackAutoselectProcedure; 
+“burg” or “robust”.</p></li>
+<li><p><strong>numberOfFormants</strong> (<em>int</em>) – Number of formants to track - 3 or 4.</p></li>
+<li><p><strong>maximumF1Frequency</strong> (<em>int</em>) – Specifying a value enables the F1 frequency heuristic: 
+Median F1 frequency should not be higher than this value.</p></li>
+<li><p><strong>maximumF1Bandwidth</strong> (<em>int</em>) – Specifying a value (e.g. 500) enables the F1 bandwidth
+heuristic: Median F1 bandwidth should not be higher than
+this value.</p></li>
+<li><p><strong>maximumF2Bandwidth</strong> (<em>int</em>) – Specifying a value (e.g. 600) enables the F2 bandwidth
+heuristic: Median F2 bandwidth should not be higher than
+this value.</p></li>
+<li><p><strong>maximumF3Bandwidth</strong> (<em>int</em>) – Specifying a value (e.g. 900) enables the F3 bandwidth heuristic: 
+Median F3 bandwidth should not be higher than this value.</p></li>
+<li><p><strong>minimumF4Frequency</strong> (<em>int</em>) – Specifying a value enables the F4 frequency heuristic: 
+Median F4 frequency should not be lower than this value.</p></li>
+<li><p><strong>heuristic</strong> (<em>enable:.rhotic.heuristic Whether to enable the rhotic</em>) – If F3 &lt; 2000 Hz, F1 and F2 should be at least 500 Hz apart.</p></li>
+<li><p><strong>enableF3F4ProximityHeuristic</strong> (<em>boolean</em>) – Whether to enable the F3/F4 proximity heuristic: 
+If (F4 - F3) &lt; 500 Hz, F1 and F2 should be
+at least 1500 Hz apart.</p></li>
+<li><p><strong>numberOfSteps</strong> (<em>int</em>) – Number of analyses between low and high analysis limits. More
+analysis steps may improve results, but will increase analysis time 
+(50 percent more steps = around 50 percent longer to analyze).</p></li>
+<li><p><strong>numberOfCoefficients</strong> – Number of coefficients for formant prediction. More
+coefficients allow for more sudden, and ‘wiggly’ formant motion.</p></li>
+<li><p><strong>numberOfCoefficients</strong> – int</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A script fragment which can be passed as the praatScript parameter of
+<a class="reference external" href="#labbcat.LabbcatView.processWithPraat">processWithPraat()</a></p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="labbcat.praatScriptCentreOfGravity">
+<span class="sig-prename descclassname"><span class="pre">labbcat.</span></span><span class="sig-name descname"><span class="pre">praatScriptCentreOfGravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">powers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spectrumFast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.praatScriptCentreOfGravity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a script for extracting the CoG, for use with 
+<a class="reference external" href="#labbcat.LabbcatView.processWithPraat">processWithPraat()</a></p>
+<p>This function generates a Praat script fragment which can be passed as the praat.script
+parameter of [processWithPraat], in order to extract one or more spectral centre
+of gravity (CoG) measurements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>powers</strong> (<em>list of float</em>) – A list of numbers specifying which powers to query for to extract,
+e.g. [1,2].</p></li>
+<li><p><strong>spectrumFast</strong> (<em>boolean</em>) – Whether to use the ‘fast’ option when creating the spectrum object
+to query.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A script fragment which can be passed as the praatScript parameter of
+<a class="reference external" href="#labbcat.LabbcatView.processWithPraat">processWithPraat()</a></p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="labbcat.praatScriptIntensity">
+<span class="sig-prename descclassname"><span class="pre">labbcat.</span></span><span class="sig-name descname"><span class="pre">praatScriptIntensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">minimumPitch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeStep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subtractMean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getMaximum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplePoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpolation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cubic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipErrors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.praatScriptIntensity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a script for extracting maximum intensity, for use with
+<a class="reference external" href="#labbcat.LabbcatView.processWithPraat">processWithPraat()</a></p>
+<p>This function generates a Praat script fragment which can be passed as the praatScript
+parameter of <a class="reference external" href="#labbcat.LabbcatView.processWithPraat">processWithPraat()</a>, in order to 
+extract one or more maximum intensity values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>minimumPitch</strong> (<em>float</em>) – Minimum pitch (Hz).</p></li>
+<li><p><strong>timeStep</strong> (<em>float</em>) – Time step in seconds, or 0.0 for ‘auto’.</p></li>
+<li><p><strong>subtractMean</strong> (<em>boolean</em>) – Whether to subtract the mean or not.</p></li>
+<li><p><strong>getMaximum</strong> (<em>boolean</em>) – Extract the maximum intensity for the sample.</p></li>
+<li><p><strong>samplePoints</strong> (<em>list of float</em>) – A list of numbers (0 &lt;= samplePoints &lt;= 1) specifying multiple
+points at which to take the measurement.  The default is None, meaning no
+individual measurements will be taken (only the aggregate values identified by
+getMaximum).  A single point at 0.5 means one
+measurement will be taken halfway through the target interval.  If, for example, 
+you wanted eleven measurements evenly spaced throughout the interval, you would
+specify sample.points as being 
+[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].</p></li>
+<li><p><strong>interpolation</strong> (<em>str</em>) – If samplePoints are specified, this is the interpolation to use
+when getting individual values. Possible values are ‘nearest’, ‘linear’, ‘cubic’,
+‘sinc70’, or ‘sinc700’.</p></li>
+<li><p><strong>skipErrors</strong> – Sometimes, for some segments, Praat fails to create an Intensity object. 
+If skipErrors = True, analysis those segments will be skipped, and corresponding
+pitch values will be returned as “–undefined–”. If skip.errors = False, the error
+message from Praat will be returned in the Error field, but no pitch measures will
+be returned for any segments in the same recording.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A script fragment which can be passed as the praatScript parameter of
+<a class="reference external" href="#labbcat.LabbcatView.processWithPraat">processWithPraat()</a></p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="labbcat.praatScriptPitch">
+<span class="sig-prename descclassname"><span class="pre">labbcat.</span></span><span class="sig-name descname"><span class="pre">praatScriptPitch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">getMean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getMinimum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getMaximum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeStep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pitchFloor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxNumberOfCandidates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">veryAccurate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">silenceThreshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.03</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voicingThreshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">octaveCost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">octaveJumpCost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.35</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voicedUnvoicedCost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.35</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pitchCeiling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pitchFloorMale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voicingThresholdMale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pitchCeilingMale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genderAttribute</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'participant_gender'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueForMale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'M'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplePoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpolation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipErrors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.praatScriptPitch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a script for extracting pitch, for use with
+<a class="reference external" href="#labbcat.LabbcatView.processWithPraat">processWithPraat()</a></p>
+<p>This function generates a Praat script fragment which can be passed as the praatScript
+parameter of <a class="reference external" href="#labbcat.LabbcatView.processWithPraat">processWithPraat()</a>, in order to 
+extract pitch information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>getMean</strong> (<em>boolean</em>) – Whether to extract the mean pitch for the sample</p></li>
+<li><p><strong>getMinimum</strong> (<em>boolean</em>) – Whether to extract the minimum pitch for the sample</p></li>
+<li><p><strong>getMaximum</strong> (<em>boolean</em>) – Whether to extract the maximum pitch for the sample</p></li>
+<li><p><strong>timeStep</strong> (<em>float</em>) – Step setting for praat command</p></li>
+<li><p><strong>pitchFloor</strong> (<em>int</em>) – Minimum pitch (Hz) for all speakers, or for female speakers,           
+if pitchFloorMale is also specified</p></li>
+<li><p><strong>maxNumberOfCandidates</strong> (<em>int</em>) – Maximum number of candidates setting for praat command</p></li>
+<li><p><strong>veryAccurate</strong> (<em>boolean</em>) – Accuracy setting for praat command</p></li>
+<li><p><strong>silenceThreshold</strong> (<em>float</em>) – Silence threshold setting for praat command</p></li>
+<li><p><strong>voicingThreshold</strong> (<em>int</em>) – Voicing threshold (Hz) for all speakers, or for female speakers,
+if voicingThresholdMale is also specified</p></li>
+<li><p><strong>octaveCost</strong> (<em>float</em>) – Octave cost setting for praat command</p></li>
+<li><p><strong>octaveJumpCost</strong> (<em>float</em>) – Octave jump cost setting for praat command</p></li>
+<li><p><strong>voicedUnvoicedCost</strong> (<em>float</em>) – Voiced/unvoiced cost setting for praat command</p></li>
+<li><p><strong>pitchCeiling</strong> (<em>int</em>) – Maximum pitch (Hz) for all speakers, or for female speakers,
+if pitchFloorMale is also specified</p></li>
+<li><p><strong>pitchFloorMale</strong> (<em>int</em>) – Minimum pitch (Hz) for male speakers</p></li>
+<li><p><strong>voicingThresholdMale</strong> (<em>int</em>) – Voicing threshold (Hz) for male speakers</p></li>
+<li><p><strong>pitchCeilingMale</strong> (<em>int</em>) – Maximum pitch (Hz) for male speakers</p></li>
+<li><p><strong>genderAttribute</strong> (<em>str</em>) – Name of the LaBB-CAT participant attribute that contains the
+participant’s gender - normally this is “participant_gender”</p></li>
+<li><p><strong>valueForMale</strong> (<em>str</em>) – The value that the genderAttribute has when the participant is male</p></li>
+<li><p><strong>samplePoints</strong> – A list of numbers (0 &lt;= samplePoints &lt;= 1) specifying multiple
+points at which to take the measurement  The default is None, meaning no
+individual measurements will be taken (only the aggregate values identified by
+getMean, getMinimum, and getMaximum).  A single point at 0.5 means one
+measurement will be taken halfway through the target interval.  If, for example, 
+you wanted eleven measurements evenly spaced throughout the interval, you would
+specify sample.points as being 
+[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].</p></li>
+<li><p><strong>interpolation</strong> (<em>str</em>) – If sample.points are specified, this is the interpolation to use
+when getting individual values. Possible values are ‘nearest’ or ‘linear’.</p></li>
+<li><p><strong>skipErrors</strong> (<em>boolean</em>) – Sometimes, for some segments, Praat fails to create a Pitch
+object. If skipErrors = True, analysis those segments will be skipped, and corresponding
+pitch values will be returned as “–undefined–”. If skip.errors = FALSE, the error
+message from Praat will be returned in the Error field, but no pitch measures will
+be returned for any segments in the same recording.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A script fragment which can be passed as the praatScript parameter of
+<a class="reference external" href="#labbcat.LabbcatView.processWithPraat">processWithPraat()</a></p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="responseexception-class">
 <h2>ResponseException class<a class="headerlink" href="#responseexception-class" title="Permalink to this headline">¶</a></h2>

@@ -1497,10 +1497,11 @@ class LabbcatView:
         There are functions to allow the generation of a number of pre-defined praat scripts
         for common tasks such as formant, pitch, intensity, and centre of gravity -- see
         
-        - `praatScriptFormants() <#labbcat.PraatScript.praatScriptFormants>`_
-        - `praatScriptCentreOfGravity() <#labbcat.PraatScript.praatScriptCentreOfGravity>`_
-        - `praatScriptIntensity() <#labbcat.PraatScript.praatScriptIntensity>`_
-        - `praatScriptPitch() <#labbcat.PraatScript.praatScriptPitch>`_
+        - `praatScriptFormants() <#labbcat.praatScriptFormants>`_
+        - `praatScriptFastTrack() <#labbcat.praatScriptFastTrack>`_
+        - `praatScriptCentreOfGravity() <#labbcat.praatScriptCentreOfGravity>`_
+        - `praatScriptIntensity() <#labbcat.praatScriptIntensity>`_
+        - `praatScriptPitch() <#labbcat.praatScriptPitch>`_
         
         You can provide your own script, either by building a string with your code, or loading
         one from a file.
@@ -1651,10 +1652,11 @@ class LabbcatView:
         There are functions to allow the generation of a number of pre-defined praat scripts
         for common tasks such as formant, pitch, intensity, and centre of gravity -- see
         
-        - `praatScriptFormants() <#labbcat.PraatScript.praatScriptFormants>`_
-        - `praatScriptCentreOfGravity() <#labbcat.PraatScript.praatScriptCentreOfGravity>`_
-        - `praatScriptIntensity() <#labbcat.PraatScript.praatScriptIntensity>`_
-        - `praatScriptPitch() <#labbcat.PraatScript.praatScriptPitch>`_
+        - `praatScriptFormants() <#labbcat.praatScriptFormants>`_
+        - `praatScriptFastTrack() <#labbcat.praatScriptFastTrack>`_
+        - `praatScriptCentreOfGravity() <#labbcat.praatScriptCentreOfGravity>`_
+        - `praatScriptIntensity() <#labbcat.praatScriptIntensity>`_
+        - `praatScriptPitch() <#labbcat.praatScriptPitch>`_
         
         You can provide your own script, either by building a string with your code, or loading
         one from a file.

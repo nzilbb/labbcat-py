@@ -72,6 +72,16 @@ corpus.releaseTask(taskId)
 annotations = corpus.getAnnotations("labbcat-py.test.txt", "pos")
 labels = list(map(lambda annotation: annotation["label"], annotations))
 
+# find all /a/ segments (phones) in the whole corpus
+results = corpus.getMatches({ "segment" : "a" })
+
+# get the start/end times of the segments
+segments = corpus.getMatchAnnotations(results, "segment", offsetThreshold=50)
+
+# get F1/F2 at the midpoint of each /a/ vowel
+formantsAtMidpoint = corpus.processWithPraat(
+  labbcat.praatScriptFormants(), 0.025, results, segments)
+
 # delete tha transcript from the corpus
 corpus.deleteTranscript("labbcat-py.test.txt")
 </pre>

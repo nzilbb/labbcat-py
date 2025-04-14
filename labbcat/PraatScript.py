@@ -3,8 +3,9 @@ def praatScriptFormants(
         maxNumberFormants = 5, maxFormant = 5500,
         maxFormantMale = 5000, genderAttribute = 'participant_gender', valueForMale = "M",
         windowLength = 0.025, preemphasisFrom = 50):
-    """ Generates a script for extracting formants, for use with 
-    `processWithPraat<#labbcat.LabbcatView.processWithPraat>`_
+    """ 
+    Generates a script for extracting formants, for use with 
+    `processWithPraat() <#labbcat.LabbcatView.processWithPraat>`_
     
     This function generates a Praat script fragment which can be passed as the praat.script
     parameter of [processWithPraat], in order to extract selected formants.
@@ -14,13 +15,13 @@ def praatScriptFormants(
     :type formants: list of int
     
     :param samplePoints: A list of numbers (0 <= samplePoints <= 1) specifying multiple
-    points at which to take the measurement. The default is a single point at 0.5 -
-    this means one measurement will be taken halfway through the target interval. If,
-    for example, you wanted eleven measurements evenly spaced throughout the interval,
-    you would specify samplePoints as being
-    [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].
+     points at which to take the measurement. The default is a single point at 0.5 -
+     this means one measurement will be taken halfway through the target interval. If,
+     for example, you wanted eleven measurements evenly spaced throughout the interval,
+     you would specify samplePoints as being
+     [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].
     :type samplePoints: list of float
-
+    
     :param timeStep: Time step in seconds, or 0.0 for 'auto'.
     :type timeStep: float
     
@@ -49,7 +50,7 @@ def praatScriptFormants(
     :type preemphasisFrom: int
     
     :returns: A script fragment which can be passed as the praatScript parameter of
-              `processWithPraat<#labbcat.LabbcatView.processWithPraat>`_
+              `processWithPraat() <#labbcat.LabbcatView.processWithPraat>`_
     :rtype: str
     """
     script = "\nmaxformant = "+str(maxFormant)
@@ -79,7 +80,7 @@ def praatScriptFormants(
 
 def praatScriptCentreOfGravity(powers = [2], spectrumFast = True):
     """ Generates a script for extracting the CoG, for use with 
-    `processWithPraat<#labbcat.LabbcatView.processWithPraat>`_
+    `processWithPraat() <#labbcat.LabbcatView.processWithPraat>`_
     
     This function generates a Praat script fragment which can be passed as the praat.script
     parameter of [processWithPraat], in order to extract one or more spectral centre
@@ -94,7 +95,7 @@ def praatScriptCentreOfGravity(powers = [2], spectrumFast = True):
     :type spectrumFast: boolean
     
     :returns: A script fragment which can be passed as the praatScript parameter of
-              `processWithPraat<#labbcat.LabbcatView.processWithPraat>`_
+              `processWithPraat() <#labbcat.LabbcatView.processWithPraat>`_
     :rtype: str
     """
     # ensure the sound sample is selected
@@ -113,11 +114,12 @@ def praatScriptCentreOfGravity(powers = [2], spectrumFast = True):
     return(script)
 
 def praatScriptIntensity(minimumPitch = 100.0, timeStep = 0.0, subtractMean = True, getMaximum = True, samplePoints = None, interpolation = 'cubic', skipErrors = True):
-    """ Generates a script for extracting maximum intensity, for use with
-    `processWithPraat<#labbcat.LabbcatView.processWithPraat>`_
+    """ 
+    Generates a script for extracting maximum intensity, for use with
+    `processWithPraat() <#labbcat.LabbcatView.processWithPraat>`_
     
     This function generates a Praat script fragment which can be passed as the praatScript
-    parameter of `processWithPraat<#labbcat.LabbcatView.processWithPraat>`_, in order to 
+    parameter of `processWithPraat() <#labbcat.LabbcatView.processWithPraat>`_, in order to 
     extract one or more maximum intensity values. 
 
     :param minimumPitch: Minimum pitch (Hz).
@@ -133,18 +135,18 @@ def praatScriptIntensity(minimumPitch = 100.0, timeStep = 0.0, subtractMean = Tr
     :type getMaximum: boolean
     
     :param samplePoints: A list of numbers (0 <= samplePoints <= 1) specifying multiple
-           points at which to take the measurement.  The default is None, meaning no
-           individual measurements will be taken (only the aggregate values identified by
-           getMaximum).  A single point at 0.5 means one
-           measurement will be taken halfway through the target interval.  If, for example, 
-           you wanted eleven measurements evenly spaced throughout the interval, you would
-           specify sample.points as being 
-           [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].
-    :type samplePoints: list of floa/t
+     points at which to take the measurement.  The default is None, meaning no
+     individual measurements will be taken (only the aggregate values identified by
+     getMaximum).  A single point at 0.5 means one
+     measurement will be taken halfway through the target interval.  If, for example, 
+     you wanted eleven measurements evenly spaced throughout the interval, you would
+     specify sample.points as being 
+     [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].
+    :type samplePoints: list of float
     
     :param interpolation: If samplePoints are specified, this is the interpolation to use
-           when getting individual values. Possible values are 'nearest', 'linear', 'cubic',
-          'sinc70', or 'sinc700'.
+     when getting individual values. Possible values are 'nearest', 'linear', 'cubic',
+     'sinc70', or 'sinc700'.
     :type interpolation: str
     
     :param skipErrors: Sometimes, for some segments, Praat fails to create an Intensity object. 
@@ -155,7 +157,7 @@ def praatScriptIntensity(minimumPitch = 100.0, timeStep = 0.0, subtractMean = Tr
     :type spectrumFast: boolean
     
     :returns: A script fragment which can be passed as the praatScript parameter of
-              `processWithPraat<#labbcat.LabbcatView.processWithPraat>`_
+              `processWithPraat() <#labbcat.LabbcatView.processWithPraat>`_
     :rtype: str
     """    
     # ensure the sound sample is selected
@@ -213,10 +215,10 @@ def praatScriptPitch(
         genderAttribute = 'participant_gender', valueForMale = "M",
         samplePoints = None, interpolation = 'linear', skipErrors = True):
     """ Generates a script for extracting pitch, for use with
-    `processWithPraat<#labbcat.LabbcatView.processWithPraat>`_
+    `processWithPraat() <#labbcat.LabbcatView.processWithPraat>`_
     
     This function generates a Praat script fragment which can be passed as the praatScript
-    parameter of `processWithPraat<#labbcat.LabbcatView.processWithPraat>`_, in order to 
+    parameter of `processWithPraat() <#labbcat.LabbcatView.processWithPraat>`_, in order to 
     extract pitch information. 
 
     :param getMean: Whether to extract the mean pitch for the sample
@@ -299,7 +301,7 @@ def praatScriptPitch(
     :type skipErrors: boolean
     
     :returns: A script fragment which can be passed as the praatScript parameter of
-              `processWithPraat<#labbcat.LabbcatView.processWithPraat>`_
+              `processWithPraat() <#labbcat.LabbcatView.processWithPraat>`_
     :rtype: str
     """    
     # ensure the sound sample is selected
@@ -388,16 +390,16 @@ def praatScriptFastTrack(
         enableRhoticHeuristic = True, enableF3F4ProximityHeuristic = True,
         numberOfSteps = 20, numberOfCoefficients = 5):
     """ Generates a script for extracting formants using FastTrack, for use with 
-    `processWithPraat<#labbcat.LabbcatView.processWithPraat>`_
+    `processWithPraat() <#labbcat.LabbcatView.processWithPraat>`_
 
     This function generates a Praat script fragment which can be passed as the praat.script
-    parameter of `processWithPraat<#labbcat.LabbcatView.processWithPraat>`_, in order to
+    parameter of `processWithPraat() <#labbcat.LabbcatView.processWithPraat>`_, in order to
     extract selected formants using the FastTrack Praat plugin.
     
     The FastTrack Praat plugin, developed by Santiago Barreda, automatically runs multiple
     formant analyses on each segment, selects the best (the smoothest, with optional
     heuristics), and makes the winning formant object available for measurement. For more
-    information, see https://github.com/santiagobarreda/FastTrack
+    information, see `FastTrack <https://github.com/santiagobarreda/FastTrack>`_
     
     :param formants: A list of integers specifying which formants to extract, e.g [1,2]
                     for the first and second formant.
@@ -486,7 +488,7 @@ def praatScriptFastTrack(
     :param numberOfCoefficients: int
 
     :returns: A script fragment which can be passed as the praatScript parameter of
-              `processWithPraat<#labbcat.LabbcatView.processWithPraat>`_
+              `processWithPraat() <#labbcat.LabbcatView.processWithPraat>`_
     :rtype: str
     """
     # include FastTrack script and load default global settings

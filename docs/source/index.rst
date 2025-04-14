@@ -41,7 +41,15 @@ Query Language Generation Functions
 .. autofunction:: labbcat.expressionFromTranscriptTypes
 .. autofunction:: labbcat.expressionFromCorpora
 
-The LabbcatAdmin class also inherits the LabbcatEdit class.
+==========================================
+Praat Script Fragment Generation Functions
+==========================================
+
+.. autofunction:: labbcat.praatScriptFormants
+.. autofunction:: labbcat.praatScriptFastTrack
+.. autofunction:: labbcat.praatScriptCentreOfGravity
+.. autofunction:: labbcat.praatScriptIntensity
+.. autofunction:: labbcat.praatScriptPitch
 
 ==========================================
 ResponseException class
