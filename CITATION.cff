@@ -15,7 +15,7 @@ authors:
     orcid: 'https://orcid.org/0000-0001-5271-5487'
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.15214742
+    value: 10.5281/zenodo.15215415
 repository-code: 'https://github.com/nzilbb/labbcat-py/'
 url: 'https://pypi.org/project/nzilbb-labbcat/'
 abstract: >-
