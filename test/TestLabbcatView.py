@@ -382,9 +382,9 @@ class TestLabbcatView(unittest.TestCase):
                 annotations = self.store.getMatchAnnotations(matches, layerIds, 0, 1)
                 self.assertEqual(len(matches), len(annotations),
                                   "annotations array is same size as matches array")
-                self.assertEqual(1, len(annotations[0]), "row arrays are the right size")
+                # annotationsPerLayer = 1 ans len(layerIds) == 1, so it's a 1D array of annotations
                 # do they look like annotations?
-                annotation = annotations[0][0]
+                annotation = annotations[0]
                 for key in ["layerId", "id", "label", "startId", "endId"]:
                     with self.subTest(key=key):
                         self.assertIn(key, annotation, "Has " + key)
@@ -393,11 +393,12 @@ class TestLabbcatView(unittest.TestCase):
                 self.assertNotIn("end", annotation, "Doesn't have anchor")
 
                 # now get alignments
-                layerIds = [ "orthography" ]
-                annotations = self.store.getMatchAnnotations(matches, layerIds, 0, 1, 0)
+                layerIds = [ "phonemes" ]
+                annotations = self.store.getMatchAnnotations(matches, layerIds, 0, 2, 0)
                 self.assertEqual(len(matches), len(annotations),
                                   "annotations array is same size as matches array")
-                self.assertEqual(1, len(annotations[0]), "row arrays are the right size")
+                self.assertEqual(2, len(annotations[0]),
+                                 "row arrays are the right size - 2 annotations per layer")
                 # do they look like annotations?
                 annotation = annotations[0][0]
                 for key in ["layerId", "id", "label", "startId", "endId", "start", "end"]:
@@ -518,8 +519,6 @@ class TestLabbcatView(unittest.TestCase):
                 subset = matches[:upTo]
 
                 segments = self.store.getMatchAnnotations(subset, [ "segment" ], 0, 1, 0)
-                # flatten into a single list
-                segments = [item for row in segments for item in row]
                 startOffsets = list(
                     map(lambda annotation: annotation["start"]["offset"], segments))
                 endOffsets = list(

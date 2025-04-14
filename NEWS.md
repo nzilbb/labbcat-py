@@ -9,8 +9,9 @@
   + *praatScriptIntensity*
   + *praatScriptPitch*
 - Changed LabbcatView function
-  + *getMatchAnnnotations* - now include 'offsetTheshold' parameter to allow retrieval of
-    start/end times
+  + *getMatchAnnnotations* - now has 'offsetTheshold' parameter to allow retrieval of
+    start/end times, and returns a 1D array (instead of 2D) if annotationsPerLayer == 1
+    and only one layer is specified in layerIds
 
 # 0.8.0
 

@@ -1429,9 +1429,11 @@ class LabbcatView:
         - *100* -- return only manually-set alignments.
         :type offsetThreshold: int
         
-        :returns: An array of arrays of Annotations, of dimensions 
-         len(*matchIds*) x (len(*layerIds*) x *annotationsPerLayer*). The first index matches the
-         corresponding index in *matchIds*.  
+        :returns: If annotationsPerLayer == 1 and only one layer is specified in layerIds, 
+         a one-dimensional array of Annotations, of dimension len(*matchIds*) is returned. 
+         Otherwise, the return value is an array of arrays of Annotations, of dimensions 
+         len(*matchIds*) x (len(*layerIds*)x*annotationsPerLayer*). 
+         Either way, the first index matches the corresponding index in *matchIds*.  
         :rtype: list of list of dictionary
         """
         # we need a list of strings, so if we've got a list of dictionaries, convert it
@@ -1469,6 +1471,10 @@ class LabbcatView:
         
         # delete the temporary CSV file
         os.remove(fileName)
+
+        if annotationsPerLayer == 1 and len(layerIds) == 1:
+            # remove one of the dimensions of the result
+            model = [item for row in model for item in row]
         
         return(model)
 
