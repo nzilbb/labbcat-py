@@ -518,20 +518,30 @@ class TestLabbcatView(unittest.TestCase):
                 upTo = min(5, len(matches))
                 subset = matches[:upTo]
 
+                # explicit start/end offsets
                 segments = self.store.getMatchAnnotations(subset, [ "segment" ], 0, 1, 0)
                 startOffsets = list(
                     map(lambda annotation: annotation["start"]["offset"], segments))
                 endOffsets = list(
-                    map(lambda annotation: annotation["end"]["offset"], segments))
-                
+                    map(lambda annotation: annotation["end"]["offset"], segments))                
                 praatScript = labbcat.praatScriptFormants() \
                     +labbcat.praatScriptCentreOfGravity() \
                     +labbcat.praatScriptIntensity() \
-                    +labbcat.praatScriptPitch() \
-                    +labbcat.praatScriptFastTrack()
-                
+                    +labbcat.praatScriptPitch()                
                 measures = self.store.processWithPraat(
-                    subset, startOffsets, endOffsets, praatScript, 0.025)
+                    praatScript, 0.025, subset, startOffsets, endOffsets)
+                self.assertEqual(len(subset), len(measures),
+                                 "measures array is same size as matches array")
+                # they look like praat results
+                for m in range(upTo):
+                    results = measures[m]
+                    for key in ["time_0_5", "f1_time_0_5", "f2_time_0_5", "Error"]:
+                        with self.subTest(key=key):
+                            self.assertIn(key, results, "Has " + key)
+
+                # annotations instead of offsets
+                measures = self.store.processWithPraat(
+                    labbcat.praatScriptFastTrack(), 0.025, subset, segments)
                 self.assertEqual(len(subset), len(measures),
                                  "measures array is same size as matches array")
                 # they look like praat results

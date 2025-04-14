@@ -1,7 +1,8 @@
 # 0.9.0
 
 - New LabbcatView function
-  + *processWithPraat* - Process a set of intervals with Praat for extraction of acoustic measures.
+  + *processWithPraat*  and *processWithPraatAsync* - Process a set of intervals with Praat
+    for extraction of acoustic measures.
 - New labbcat functions for generating praat script snippets for processWithPraat...
   + *praatScriptFormants*
   + *praatScriptFastTrack*
