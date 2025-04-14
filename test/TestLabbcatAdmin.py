@@ -787,7 +787,10 @@ class TestLabbcatAdmin(unittest.TestCase):
             except:
                 pass
         finally:
-            self.store.deleteLayer("unit-test")
+            try:
+                self.store.deleteLayer("unit-test")
+            except:
+                pass
         
 if __name__ == '__main__':
     unittest.main()
