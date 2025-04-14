@@ -492,7 +492,13 @@ files regardless of how many fragments there are.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="labbcat.LabbcatView.getFragmentsAsync">
 <span class="sig-name descname"><span class="pre">getFragmentsAsync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transcriptIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layerIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mimeType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startOffsets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endOffsets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefixNames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getFragmentsAsync" title="Permalink to this definition">¶</a></dt>
-<dd><p>Starts a server task for getting transcript fragments in a specified format.</p>
+<dd><p>Starts a server task for getting transcript fragments in a specified format.
+The task continues running after this function returns, and can be 
+monitored with <a class="reference external" href="#labbcat.LabbcatView.taskStatus">taskStatus()</a>, 
+cancelled with <a class="reference external" href="#labbcat.LabbcatView.cancelTask">cancelTask()</a>,
+and the final results retrieved with <a class="reference external" href="#labbcat.LabbcatView.taskResults">taskResults()</a>.
+The caller should eventually call <a class="reference external" href="#labbcat.LabbcatView.releaseTask">releaseTask()</a>
+to free server resources after the task is cancelled or finished.</p>
 <p>The intervals to extract can be defined in two possible ways:</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -592,7 +598,7 @@ TextGrids, “text/plain” for plain text, etc.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="labbcat.LabbcatView.getMatchAnnotations">
-<span class="sig-name descname"><span class="pre">getMatchAnnotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matchIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layerIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetOffset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotationsPerLayer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getMatchAnnotations" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">getMatchAnnotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matchIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layerIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetOffset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotationsPerLayer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offsetThreshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getMatchAnnotations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets annotations on selected layers related to search results returned by a previous
 call to getMatches(threadId).</p>
 <p>The returned list of lists contains dictionaries that represent individual
@@ -611,10 +617,30 @@ annotations, with the following entries:</p>
 </dl>
 </li>
 </ul>
+<p>If offsetThreshold is a value between 0 and 100, the annotations may also include
+a “start” entry and an “end” entry, representing the start/end anchors of the
+annotation which define the position of the annotation in time. These values are
+dictionaries with the following entries:</p>
+<ul class="simple">
+<li><p>“id” : The anchor’s unique ID</p></li>
+<li><dl class="simple">
+<dt>“offset”<span class="classifier">The time (in seconds since the start of the recording, unless the</span></dt><dd><p>transcript is textual rather than speech, in which case it represents
+the number of characters from the beginning of the document)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>“confidence”<span class="classifier">A rating of confidence in the alignment accuracy, from 0 (no</span></dt><dd><p>confidence) to 100 (absolute confidence / manually specified)</p>
+</dd>
+</dl>
+</li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>matchIds</strong> (<em>list of str</em><em> or </em><em>list of dict</em>) – A list of MatchId strings, or a list of match dictionaries</p></li>
+<li><p><strong>matchIds</strong> (<em>list of str</em><em> or </em><em>list of dict</em>) – <p>A list of MatchId strings, or a list of match dictionaries of the
+kind returned by <a class="reference external" href="#labbcat.LabbcatView.getMatches">getMatches()</a></p>
+</p></li>
 <li><p><strong>layerIds</strong> (<em>list of str</em>) – A list of layer IDs.</p></li>
 <li><p><strong>targetOffset</strong> (<em>int</em>) – The distance from the original target of the match, e.g.
 -  0 : find annotations of the match target itself
@@ -625,12 +651,19 @@ retrieve. In most cases, there’s only one annotation available. However, token
 for example, be annotated with ‘all possible phonemic transcriptions’, in which case
 using a value of greater than 1 for this parameter provides other phonemic
 transcriptions, for tokens that have more than one.</p></li>
+<li><p><strong>offsetThreshold</strong> (<em>int</em>) – The minimum confidence for alignments, e.g.
+- None – do not return alignments;
+- <em>0</em> – return all alignments, regardless of confidence;
+- <em>50</em> – return only alignments that have been at least automatically aligned;
+- <em>100</em> – return only manually-set alignments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An array of arrays of Annotations, of dimensions 
-len(<em>matchIds</em>) x (len(<em>layerIds</em>) x <em>annotationsPerLayer</em>). The first index matches the
-corresponding index in <em>matchIds</em>.</p>
+<dd class="field-even"><p>If annotationsPerLayer == 1 and only one layer is specified in layerIds, 
+a one-dimensional array of Annotations, of dimension len(<em>matchIds</em>) is returned. 
+Otherwise, the return value is an array of arrays of Annotations, of dimensions 
+len(<em>matchIds</em>) x (len(<em>layerIds</em>)x*annotationsPerLayer*). 
+Either way, the first index matches the corresponding index in <em>matchIds</em>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of list of dictionary</p>
@@ -724,12 +757,11 @@ following can be used:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">graph.id</span> <span class="pre">==</span> <span class="pre">'AdaAicheson-01.trs'</span> <span class="pre">&amp;&amp;</span> <span class="pre">layer.id</span> <span class="pre">==</span> <span class="pre">'orthography'</span> <span class="pre">&amp;&amp;</span> <span class="pre">start.offset</span> <span class="pre">&lt;</span> <span class="pre">10.5</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">previous.id</span> <span class="pre">==</span> <span class="pre">'ew_0_456'</span></code></p></li>
 </ul>
-<p><em>NB</em> all expressions must match by either id or layer.id.
-:param expression: An expression that determines which transcripts match.
-:type expression: str</p>
+<p><em>NB</em> all expressions must match by either id or layer.id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>expression</strong> (<em>str</em>) – An expression that determines which transcripts match.</p></li>
 <li><p><strong>pageLength</strong> (<em>int</em><em> or </em><em>None</em>) – The maximum number of annotations to return, or null to return all.</p></li>
 <li><p><strong>pageNumber</strong> (<em>int</em><em> or </em><em>None</em>) – The zero-based page number to return, or null to return the first page.</p></li>
 </ul>
@@ -1259,6 +1291,274 @@ or an explicit list of transcript IDs.</p></li>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="labbcat.LabbcatView.processWithPraat">
+<span class="sig-name descname"><span class="pre">processWithPraat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">praatScript</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">windowOffset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matchIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offsets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endOffsets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genderAttribute</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'participant_gender'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.processWithPraat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a set of intervals with Praat.</p>
+<p>This function instructs the LaBB-CAT server to invoke Praat for a set of sound
+intervals, in order to extract acoustic measures.</p>
+<p>The exact measurements to return depend on the praatScript that is invoked. This is a
+Praat script fragment that will run once for each sound interval specified.</p>
+<p>There are functions to allow the generation of a number of pre-defined praat scripts
+for common tasks such as formant, pitch, intensity, and centre of gravity – see</p>
+<ul class="simple">
+<li><p><a class="reference external" href="#labbcat.PraatScript.praatScriptFormants">praatScriptFormants()</a></p></li>
+<li><p><a class="reference external" href="#labbcat.PraatScript.praatScriptCentreOfGravity">praatScriptCentreOfGravity()</a></p></li>
+<li><p><a class="reference external" href="#labbcat.PraatScript.praatScriptIntensity">praatScriptIntensity()</a></p></li>
+<li><p><a class="reference external" href="#labbcat.PraatScript.praatScriptPitch">praatScriptPitch()</a></p></li>
+</ul>
+<p>You can provide your own script, either by building a string with your code, or loading
+one from a file.</p>
+<p>LaBB-CAT prefixes praatScript with code to open a sound file and extract a defined part
+of it into a Sound object which is then selected.</p>
+<p>LaBB-CAT ‘Remove’s this Sound object after the script finishes executing. Any other objects
+created by the script must be ‘Remove’d before the end of the script (otherwise
+Praat runs out of memory during very large batches)</p>
+<p>LaBB-CAT assumes that all calls to the function ‘print’ correspond to fields for export
+and each field must be printed on its own line. Specifically it scans for lines of the
+form:</p>
+<p>print ‘myOutputVariable’ ‘newline$’</p>
+<p>Variables that can be assumed to be already set in the context of the script are:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><em>windowOffset</em></dt><dd><p>– the value used for the Window Offset; how much context to include.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>windowAbsoluteStart</em></dt><dd><p>– the start time of the window extracted relative to the start of the original audio file.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>windowAbsoluteEnd</em></dt><dd><p>– the end time of the window extracted relative to the start of the original audio file.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>windowDuration</em></dt><dd><p>– the duration of the window extracted (including window offset).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>targetAbsoluteStart</em></dt><dd><p>– the start time of the target interval relative to the start of the original audio file.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>targetAbsoluteEnd</em></dt><dd><p>– the end time of the target interval relative to the start of the original audio file.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>targetStart</em></dt><dd><p>– the start time of the target interval relative to the start of the window extracted.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>targetEnd</em></dt><dd><p>– the end time of the target interval relative to the start of the window extracted.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>targetDuration</em></dt><dd><p>– the duration of the target interval.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>sampleNumber</em></dt><dd><p>– the number of the sample within the set of samples being processed.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>sampleName$</em></dt><dd><p>– the name of the extracted/selected Sound object.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>praatScript</strong> (<em>str</em>) – Script to run on each match.</p></li>
+<li><p><strong>windowOffset</strong> (<em>float</em>) – In many circumstances, you will want some context before and after
+the sample start/end time.  For this reason, you can specify a “window offset” -
+this is a number of seconds to subtract from the sample start and add to the sample
+end time, before extracting that part of the audio for processing. For example, if
+the sample starts at 2.0s and ends at 3.0s, and you set the window offset to 0.5s,
+then Praat will extract a sample of audio from  1.5s to 3.5s, and do the selected
+processing on that sample. The best value for this depends on what the praatScript
+is doing; if you are getting formants from  vowels, including some context ensures
+that the formants at the edges are more accurate (in LaBB-CAT’s web interface, the
+default value for this 0.025), but if you’re getting max pitch or COG during a
+segment, most likely you want a window.offset of 0 to ensure neighbouring segments
+don’t influence the measurement.</p></li>
+<li><p><strong>matchIds</strong> (<em>list of str</em><em> or </em><em>list of dict</em>) – <p>A list of MatchId strings, or a list of match dictionaries of the
+kind returned by <a class="reference external" href="#labbcat.LabbcatView.getMatches">getMatches()</a></p>
+</p></li>
+<li><p><strong>offsets</strong> (<em>list of float</em><em> or </em><em>None</em>) – <em>Either</em> list of start offsets (in which case endOffsets must also
+be specified) <em>or</em> a list of Annotation dict objects of the kind returned by 
+<a class="reference external" href="#labbcat.LabbcatView.getMatchAnnotations">getMatchAnnotations()</a> (in which
+case endOffsets should be None). Either way, there must be one element for each
+element in <em>matchIds</em>.</p></li>
+<li><p><strong>endOffsets</strong> (<em>list of float</em><em> or </em><em>None</em>) – If offsets is a list of <em>start</em> offsets, this must be list of
+end offsets, with one element for each element in <em>matchtIds</em>. Otherwise, None</p></li>
+<li><p><strong>genderAttribute</strong> (<em>str</em>) – Which participant attribute represents the participant’s gender.</p></li>
+<li><p><strong>attributes</strong> (<em>list</em>) – A list of participant attribute names to make available to the script.
+For example, if you want to use different acoustic parameters depending on what the
+gender of the speaker is, including the “participant_gender” attribute will make a
+variable called participant_gender$ available to the praat script, whose value will
+be the gender of the speaker of that segment.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of dictionaries of acoustic measurements, one of each matchId.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="labbcat.LabbcatView.processWithPraatAsync">
+<span class="sig-name descname"><span class="pre">processWithPraatAsync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">praatScript</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">windowOffset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matchIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offsets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endOffsets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genderAttribute</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'participant_gender'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.processWithPraatAsync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts a server task for processing a set of intervals with Praat.</p>
+<p>The task continues running after this function returns, and can be 
+monitored with <a class="reference external" href="#labbcat.LabbcatView.taskStatus">taskStatus()</a>, 
+cancelled with <a class="reference external" href="#labbcat.LabbcatView.cancelTask">cancelTask()</a>,
+and the final results retrieved with <a class="reference external" href="#labbcat.LabbcatView.taskResults">taskResults()</a>.
+The caller should eventually call <a class="reference external" href="#labbcat.LabbcatView.releaseTask">releaseTask()</a>
+to free server resources after the task is cancelled or finished.</p>
+<p>This function instructs the LaBB-CAT server to invoke Praat for a set of sound
+intervals, in order to extract acoustic measures.</p>
+<p>The exact measurements to return depend on the praatScript that is invoked. This is a
+Praat script fragment that will run once for each sound interval specified.</p>
+<p>There are functions to allow the generation of a number of pre-defined praat scripts
+for common tasks such as formant, pitch, intensity, and centre of gravity – see</p>
+<ul class="simple">
+<li><p><a class="reference external" href="#labbcat.PraatScript.praatScriptFormants">praatScriptFormants()</a></p></li>
+<li><p><a class="reference external" href="#labbcat.PraatScript.praatScriptCentreOfGravity">praatScriptCentreOfGravity()</a></p></li>
+<li><p><a class="reference external" href="#labbcat.PraatScript.praatScriptIntensity">praatScriptIntensity()</a></p></li>
+<li><p><a class="reference external" href="#labbcat.PraatScript.praatScriptPitch">praatScriptPitch()</a></p></li>
+</ul>
+<p>You can provide your own script, either by building a string with your code, or loading
+one from a file.</p>
+<p>LaBB-CAT prefixes praatScript with code to open a sound file and extract a defined part
+of it into a Sound object which is then selected.</p>
+<p>LaBB-CAT ‘Remove’s this Sound object after the script finishes executing. Any other objects
+created by the script must be ‘Remove’d before the end of the script (otherwise
+Praat runs out of memory during very large batches)</p>
+<p>LaBB-CAT assumes that all calls to the function ‘print’ correspond to fields for export
+and each field must be printed on its own line. Specifically it scans for lines of the
+form:</p>
+<p>print ‘myOutputVariable’ ‘newline$’</p>
+<p>Variables that can be assumed to be already set in the context of the script are:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><em>windowOffset</em></dt><dd><p>– the value used for the Window Offset; how much context to include.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>windowAbsoluteStart</em></dt><dd><p>– the start time of the window extracted relative to the start of the original audio file.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>windowAbsoluteEnd</em></dt><dd><p>– the end time of the window extracted relative to the start of the original audio file.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>windowDuration</em></dt><dd><p>– the duration of the window extracted (including window offset).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>targetAbsoluteStart</em></dt><dd><p>– the start time of the target interval relative to the start of the original audio file.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>targetAbsoluteEnd</em></dt><dd><p>– the end time of the target interval relative to the start of the original audio file.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>targetStart</em></dt><dd><p>– the start time of the target interval relative to the start of the window extracted.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>targetEnd</em></dt><dd><p>– the end time of the target interval relative to the start of the window extracted.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>targetDuration</em></dt><dd><p>– the duration of the target interval.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>sampleNumber</em></dt><dd><p>– the number of the sample within the set of samples being processed.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>sampleName$</em></dt><dd><p>– the name of the extracted/selected Sound object.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>praatScript</strong> (<em>str</em>) – Script to run on each match.</p></li>
+<li><p><strong>windowOffset</strong> (<em>float</em>) – In many circumstances, you will want some context before and after
+the sample start/end time.  For this reason, you can specify a “window offset” -
+this is a number of seconds to subtract from the sample start and add to the sample
+end time, before extracting that part of the audio for processing. For example, if
+the sample starts at 2.0s and ends at 3.0s, and you set the window offset to 0.5s,
+then Praat will extract a sample of audio from  1.5s to 3.5s, and do the selected
+processing on that sample. The best value for this depends on what the praatScript
+is doing; if you are getting formants from  vowels, including some context ensures
+that the formants at the edges are more accurate (in LaBB-CAT’s web interface, the
+default value for this 0.025), but if you’re getting max pitch or COG during a
+segment, most likely you want a window.offset of 0 to ensure neighbouring segments
+don’t influence the measurement.</p></li>
+<li><p><strong>matchIds</strong> (<em>list of str</em><em> or </em><em>list of dict</em>) – <p>A list of MatchId strings, or a list of match dictionaries of the
+kind returned by <a class="reference external" href="#labbcat.LabbcatView.getMatches">getMatches()</a></p>
+</p></li>
+<li><p><strong>offsets</strong> (<em>list of float</em><em> or </em><em>None</em>) – <p><em>Either</em> list of start offsets (in which case endOffsets must also
+be specified) <em>or</em> a list of Annotation dict objects of the kind returned by 
+<a class="reference external" href="#labbcat.LabbcatView.getMatchAnnotations">getMatchAnnotations()</a> (in which
+case endOffsets should be None). Either way, there must be one element for each
+element in <em>matchIds</em>.</p>
+</p></li>
+<li><p><strong>endOffsets</strong> (<em>list of float</em><em> or </em><em>None</em>) – If offsets is a list of <em>start</em> offsets, this must be list of
+end offsets, with one element for each element in <em>matchtIds</em>. Otherwise, None</p></li>
+<li><p><strong>genderAttribute</strong> (<em>str</em>) – Which participant attribute represents the participant’s gender.</p></li>
+<li><p><strong>attributes</strong> (<em>list</em>) – A list of participant attribute names to make available to the script.
+For example, if you want to use different acoustic parameters depending on what the
+gender of the speaker is, including the “participant_gender” attribute will make a
+variable called participant_gender$ available to the praat script, whose value will
+be the gender of the speaker of that segment.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>The threadId of the resulting task, which can be passed in to
+<a class="reference external" href="#labbcat.LabbcatView.taskStatus">taskStatus()</a>, 
+<a class="reference external" href="#labbcat.LabbcatView.waitForTask">waitForTask()</a>
+<a class="reference external" href="#labbcat.LabbcatView.taskResults">taskResults()</a>
+<a class="reference external" href="#labbcat.LabbcatView.releaseTask">releaseTask()</a>, etc.</p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>

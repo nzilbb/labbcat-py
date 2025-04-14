@@ -607,6 +607,7 @@ class LabbcatView:
         - ``previous.id == 'ew_0_456'``
         
         *NB* all expressions must match by either id or layer.id.
+        
         :param expression: An expression that determines which transcripts match.
         :type expression: str
         
@@ -1395,6 +1396,7 @@ class LabbcatView:
         a "start" entry and an "end" entry, representing the start/end anchors of the
         annotation which define the position of the annotation in time. These values are
         dictionaries with the following entries: 
+        
         - "id" : The anchor's unique ID
         - "offset" : The time (in seconds since the start of the recording, unless the
                      transcript is textual rather than speech, in which case it represents
@@ -1423,10 +1425,10 @@ class LabbcatView:
         :type annotationsPerLayer: int
 
         :param offsetThreshold: The minimum confidence for alignments, e.g.
-        - None -- do not return alignments;
-        - *0* -- return all alignments, regardless of confidence;
-        - *50* -- return only alignments that have been at least automatically aligned;
-        - *100* -- return only manually-set alignments.
+          - None -- do not return alignments;
+          - *0* -- return all alignments, regardless of confidence;
+          - *50* -- return only alignments that have been at least automatically aligned;
+          - *100* -- return only manually-set alignments.
         :type offsetThreshold: int
         
         :returns: If annotationsPerLayer == 1 and only one layer is specified in layerIds, 
@@ -1434,7 +1436,7 @@ class LabbcatView:
          Otherwise, the return value is an array of arrays of Annotations, of dimensions 
          len(*matchIds*) x (len(*layerIds*)x*annotationsPerLayer*). 
          Either way, the first index matches the corresponding index in *matchIds*.  
-        :rtype: list of list of dictionary
+        :rtype: list of list of dictionary        
         """
         # we need a list of strings, so if we've got a list of dictionaries, convert it
         if len(matchIds) > 0:
@@ -1494,6 +1496,7 @@ class LabbcatView:
         
         There are functions to allow the generation of a number of pre-defined praat scripts
         for common tasks such as formant, pitch, intensity, and centre of gravity -- see
+        
         - `praatScriptFormants() <#labbcat.PraatScript.praatScriptFormants>`_
         - `praatScriptCentreOfGravity() <#labbcat.PraatScript.praatScriptCentreOfGravity>`_
         - `praatScriptIntensity() <#labbcat.PraatScript.praatScriptIntensity>`_
@@ -1516,6 +1519,7 @@ class LabbcatView:
         print 'myOutputVariable' 'newline$'
         
         Variables that can be assumed to be already set in the context of the script are:
+        
         - *windowOffset*
            -- the value used for the Window Offset; how much context to include.
         - *windowAbsoluteStart*
@@ -1543,17 +1547,17 @@ class LabbcatView:
         :type praatScript: str
         
         :param windowOffset: In many circumstances, you will want some context before and after
-        the sample start/end time.  For this reason, you can specify a "window offset" -
-        this is a number of seconds to subtract from the sample start and add to the sample
-        end time, before extracting that part of the audio for processing. For example, if
-        the sample starts at 2.0s and ends at 3.0s, and you set the window offset to 0.5s,
-        then Praat will extract a sample of audio from  1.5s to 3.5s, and do the selected
-        processing on that sample. The best value for this depends on what the praatScript
-        is doing; if you are getting formants from  vowels, including some context ensures
-        that the formants at the edges are more accurate (in LaBB-CAT's web interface, the
-        default value for this 0.025), but if you're getting max pitch or COG during a
-        segment, most likely you want a window.offset of 0 to ensure neighbouring segments
-        don't influence the measurement. 
+         the sample start/end time.  For this reason, you can specify a "window offset" -
+         this is a number of seconds to subtract from the sample start and add to the sample
+         end time, before extracting that part of the audio for processing. For example, if
+         the sample starts at 2.0s and ends at 3.0s, and you set the window offset to 0.5s,
+         then Praat will extract a sample of audio from  1.5s to 3.5s, and do the selected
+         processing on that sample. The best value for this depends on what the praatScript
+         is doing; if you are getting formants from  vowels, including some context ensures
+         that the formants at the edges are more accurate (in LaBB-CAT's web interface, the
+         default value for this 0.025), but if you're getting max pitch or COG during a
+         segment, most likely you want a window.offset of 0 to ensure neighbouring segments
+         don't influence the measurement. 
         :type windowOffset: float
 
         :param matchIds: A list of MatchId strings, or a list of match dictionaries of the
@@ -1575,10 +1579,10 @@ class LabbcatView:
         :type genderAttribute: str
         
         :param attributes: A list of participant attribute names to make available to the script.
-        For example, if you want to use different acoustic parameters depending on what the
-        gender of the speaker is, including the "participant_gender" attribute will make a
-        variable called participant_gender$ available to the praat script, whose value will
-        be the gender of the speaker of that segment.
+         For example, if you want to use different acoustic parameters depending on what the
+         gender of the speaker is, including the "participant_gender" attribute will make a
+         variable called participant_gender$ available to the praat script, whose value will
+         be the gender of the speaker of that segment.
         :type attributes: list
         
         :returns: A list of dictionaries of acoustic measurements, one of each matchId.
@@ -1646,6 +1650,7 @@ class LabbcatView:
         
         There are functions to allow the generation of a number of pre-defined praat scripts
         for common tasks such as formant, pitch, intensity, and centre of gravity -- see
+        
         - `praatScriptFormants() <#labbcat.PraatScript.praatScriptFormants>`_
         - `praatScriptCentreOfGravity() <#labbcat.PraatScript.praatScriptCentreOfGravity>`_
         - `praatScriptIntensity() <#labbcat.PraatScript.praatScriptIntensity>`_
@@ -1668,6 +1673,7 @@ class LabbcatView:
         print 'myOutputVariable' 'newline$'
         
         Variables that can be assumed to be already set in the context of the script are:
+        
         - *windowOffset*
            -- the value used for the Window Offset; how much context to include.
         - *windowAbsoluteStart*
@@ -1695,17 +1701,17 @@ class LabbcatView:
         :type praatScript: str
         
         :param windowOffset: In many circumstances, you will want some context before and after
-        the sample start/end time.  For this reason, you can specify a "window offset" -
-        this is a number of seconds to subtract from the sample start and add to the sample
-        end time, before extracting that part of the audio for processing. For example, if
-        the sample starts at 2.0s and ends at 3.0s, and you set the window offset to 0.5s,
-        then Praat will extract a sample of audio from  1.5s to 3.5s, and do the selected
-        processing on that sample. The best value for this depends on what the praatScript
-        is doing; if you are getting formants from  vowels, including some context ensures
-        that the formants at the edges are more accurate (in LaBB-CAT's web interface, the
-        default value for this 0.025), but if you're getting max pitch or COG during a
-        segment, most likely you want a window.offset of 0 to ensure neighbouring segments
-        don't influence the measurement. 
+         the sample start/end time.  For this reason, you can specify a "window offset" -
+         this is a number of seconds to subtract from the sample start and add to the sample
+         end time, before extracting that part of the audio for processing. For example, if
+         the sample starts at 2.0s and ends at 3.0s, and you set the window offset to 0.5s,
+         then Praat will extract a sample of audio from  1.5s to 3.5s, and do the selected
+         processing on that sample. The best value for this depends on what the praatScript
+         is doing; if you are getting formants from  vowels, including some context ensures
+         that the formants at the edges are more accurate (in LaBB-CAT's web interface, the
+         default value for this 0.025), but if you're getting max pitch or COG during a
+         segment, most likely you want a window.offset of 0 to ensure neighbouring segments
+         don't influence the measurement. 
         :type windowOffset: float
 
         :param matchIds: A list of MatchId strings, or a list of match dictionaries of the
@@ -1727,10 +1733,10 @@ class LabbcatView:
         :type genderAttribute: str
         
         :param attributes: A list of participant attribute names to make available to the script.
-        For example, if you want to use different acoustic parameters depending on what the
-        gender of the speaker is, including the "participant_gender" attribute will make a
-        variable called participant_gender$ available to the praat script, whose value will
-        be the gender of the speaker of that segment.
+         For example, if you want to use different acoustic parameters depending on what the
+         gender of the speaker is, including the "participant_gender" attribute will make a
+         variable called participant_gender$ available to the praat script, whose value will
+         be the gender of the speaker of that segment.
         :type attributes: list
         
         :returns: The threadId of the resulting task, which can be passed in to

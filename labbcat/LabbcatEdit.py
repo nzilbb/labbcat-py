@@ -33,6 +33,9 @@ class LabbcatEdit(LabbcatView):
         :type id: str
         """
         return(self._postRequest(self._storeEditUrl("deleteTranscript"), {"id":id}))
+
+    #TODO transcriptUpload(transcript, media, merge)
+    #TODO transcriptUploadParameters(id, parameters)
     
     def newTranscript(self, transcript, media, trackSuffix, transcriptType, corpus, episode):
         """ Uploads a new transcript.
