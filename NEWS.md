@@ -4,6 +4,7 @@
   + *processWithPraat* - Process a set of intervals with Praat for extraction of acoustic measures.
 - New labbcat functions for generating praat script snippets for processWithPraat...
   + *praatScriptFormants*
+  + *praatScriptFastTrack*
   + *praatScriptCentreOfGravity*
   + *praatScriptIntensity*
   + *praatScriptPitch*

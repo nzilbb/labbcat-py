@@ -10,6 +10,7 @@ from labbcat.AGQL import expressionFromIds
 from labbcat.AGQL import expressionFromTranscriptTypes
 from labbcat.AGQL import expressionFromCorpora
 from labbcat.PraatScript import praatScriptFormants
+from labbcat.PraatScript import praatScriptFastTrack
 from labbcat.PraatScript import praatScriptCentreOfGravity
 from labbcat.PraatScript import praatScriptIntensity
 from labbcat.PraatScript import praatScriptPitch

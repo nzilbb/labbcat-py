@@ -674,6 +674,10 @@ class LabbcatView:
             self._storeQueryUrl("getAnnotations"),
             { "id":id, "layerId":layerId, "maxOrdinal":maxOrdinal,
               "pageLength":pageLength, "pageNumber":pageNumber }))
+
+    # TODO getAnnotationData(expression, dir)
+    # TODO getFragmentAnnotationData(transcriptIds, startOffsets, endOffsets, layerId, dir)
+    # TODO getFragmentAnnotations(transcriptIds, participantIds, startOffsets, endOffsets, layerIds, sep, partialContainment)
         
     def getAnchors(self, id, anchorIds):
         """ Gets the given anchors in the given transcript. 
@@ -1644,10 +1648,13 @@ class LabbcatView:
                         value = row[c]
                         # we assume everything other than "Error" is a number!
                         if headers[c] != "Error":
-                            if "." in value:
-                                value = float(value)
-                            else:
-                                value = int(value)
+                            try:
+                                if "." in value:
+                                    value = float(value)
+                                else:
+                                    value = int(value)
+                            except:
+                                pass
                         result[headers[c]] = value
                     results.append(result)
                     

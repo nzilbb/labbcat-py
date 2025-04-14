@@ -26,7 +26,7 @@ class TestLabbcatView(unittest.TestCase):
         versionInfo = self.store.versionInfo()
         self.assertIn("System", versionInfo, "Has System section")
         self.assertIn("LaBB-CAT", versionInfo["System"], "Has main LaBB-CAT version")
-        print("LaBB-CAT version " + versionInfo["System"]["LaBB-CAT"])
+        print("\nLaBB-CAT version " + versionInfo["System"]["LaBB-CAT"])
     
     def test_getId(self):
         id = self.store.getId()
@@ -525,7 +525,11 @@ class TestLabbcatView(unittest.TestCase):
                 endOffsets = list(
                     map(lambda annotation: annotation["end"]["offset"], segments))
                 
-                praatScript = labbcat.praatScriptFormants()
+                praatScript = labbcat.praatScriptFormants() \
+                    +labbcat.praatScriptCentreOfGravity() \
+                    +labbcat.praatScriptIntensity() \
+                    +labbcat.praatScriptPitch() \
+                    +labbcat.praatScriptFastTrack()
                 
                 measures = self.store.processWithPraat(
                     subset, startOffsets, endOffsets, praatScript, 0.025)
@@ -534,7 +538,7 @@ class TestLabbcatView(unittest.TestCase):
                 # they look like praat results
                 for m in range(upTo):
                     results = measures[m]
-                    for key in ["time_05", "f1_time_05", "f2_time_05", "Error"]:
+                    for key in ["time_0_5", "f1_time_0_5", "f2_time_0_5", "Error"]:
                         with self.subTest(key=key):
                             self.assertIn(key, results, "Has " + key)
             
