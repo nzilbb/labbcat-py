@@ -1,3 +1,8 @@
+# 0.9.1
+
+- Fix LabbcatView function
+  + *processWithPraat*/*processWithPraatAsync* - return results even when some offsets are missing
+
 # 0.9.0
 
 - New LabbcatView function

@@ -1593,12 +1593,12 @@ class LabbcatView:
             praatScript, windowOffset, matchIds, offsets, endOffsets, genderAttribute, attributes)
 
         # wait for it to finish
-        self.waitForTask(threadId)
+        task = self.waitForTask(threadId)
 
         # download the file
         fileNames = self.taskResults(threadId)
         if len(fileNames) == 0:
-            raise Exception("oNo results returned by task " + threadId)
+            raise Exception("No results returned by task " + threadId)
 
         # load values into an list of dict
         results = []
@@ -1760,10 +1760,19 @@ class LabbcatView:
                 raise Exception("If endOffsets is not specified, offsets must be an array of "
                                 "dict, each having a value for ['start']['offset']"
                                 " and ['end']['offset']")
-            endOffsets = list(
-                    map(lambda annotation: annotation["end"]["offset"], offsets))
-            offsets = list(
-                    map(lambda annotation: annotation["start"]["offset"], offsets))
+            endOffsets = []
+            for annotation in offsets:
+                if "end" in annotation and "offset" in annotation["end"]:
+                    endOffsets.append(annotation["end"]["offset"])
+                else:
+                    endOffsets.append("")
+            startOffsets = []
+            for annotation in offsets:
+                if "start" in annotation and "offset" in annotation["start"]:
+                    startOffsets.append(annotation["start"]["offset"])
+                else:
+                    startOffsets.append("")
+            offsets = startOffsets
         elif len(matchIds) != len(endOffsets):
             raise Exception("matchIds ("+str(len(matchIds))+") and endOffsets ("
                             +str(len(endOffsets))+") must be the same length.")
