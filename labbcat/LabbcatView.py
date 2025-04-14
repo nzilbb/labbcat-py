@@ -1441,6 +1441,9 @@ class LabbcatView:
             if isinstance(matchIds[0], dict):
                 # map the dictionaries to their "MatchId" entry
                 matchIds = [ m["MatchId"] for m in matchIds ]
+        if isinstance(layerIds[0], str):
+            # convert string into an array with one string element
+            layerIds = [ layerIds ]
 
         # save MatchIds as a CSV file
         fd, fileName = tempfile.mkstemp(".csv", "labbcat-py-getMatchAnnotations-")
