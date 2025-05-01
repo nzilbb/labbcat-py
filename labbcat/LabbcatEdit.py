@@ -34,8 +34,117 @@ class LabbcatEdit(LabbcatView):
         """
         return(self._postRequest(self._storeEditUrl("deleteTranscript"), {"id":id}))
 
-    #TODO transcriptUpload(transcript, media, merge)
-    #TODO transcriptUploadParameters(id, parameters)
+    def transcriptUpload(self, transcript, media, merge, trackSuffix=None):
+        """ Upload a transcript file and associated media files, as the first stage in adding or
+        modifying a transcript to LaBB-CAT. The second stage is 
+        `transcriptUploadParameters() <#labbcat.LabbcatEdit.transcriptUploadParameters>`_
+        
+        :param transcript: The path to the transcript to upload.
+        :type transcript: str
+        
+        :param media: The path to media to upload, if any. 
+        :type media: str
+
+        :param trackSuffix: The track suffix for the media, which can be None.
+        :type trackSuffix: str
+
+        :returns: A dictionary containing the following entries:
+        
+        - "id" - The unique identifier to use for this upload when subsequently calling 
+                 `transcriptUploadParameters() <#labbcat.LabbcatEdit.transcriptUploadParameters>`_
+        - "parameters" - A list of dict representing the parameters that
+                 require values to be passed into 
+                 `transcriptUploadParameters() <#labbcat.LabbcatEdit.transcriptUploadParameters>`_
+                 The parameters returned may include both information
+                 required by the format deserializer (e.g. mappings from tiers to LaBB-CAT
+                 layers) and also general information required by LaBB-CAT (e.g. the
+                 corpus, episode, and type of the transcript).
+        :rtype: dict
+
+        Each parameter returned is a dict that may contain the following attributes:
+        
+        - "name" - The name that should be used when specifying the value for the parameter
+               when calling 
+               `transcriptUploadParameters() <#labbcat.LabbcatEdit.transcriptUploadParameters>`_
+        - "label" - A label for the parameter intended for display to the user.
+        - "hint" - A description of the purpose of the parameter, for display to the user.
+        - "type" - The type of the parameter, e.g. "String", "Double", "Integer", "Boolean".
+        - "required" - True if the value must be specified, False if it is optional.
+        - "value" - A default value for the parameter.
+        - "possibleValues" - A list of possible values, if the possibilities are limited 
+               to a finite set.
+
+        The required parameters may include both information required by the format deserializer 
+        (e.g. mappings from tiers to LaBB-CAT layers) and also general information required by 
+        LaBB-CAT, such as: 
+
+        - "labbcat_corpus" - The corpus the new transcript(s) belong(s) to.
+        - "labbcat_episode" - The episode the new transcript(s) belong(s) to.
+        - "labbcat_transcript_type" - The transcript type for the new transcript(s).
+        - "labbcat_generate" - Whether to re-regenerate layers of automated annotations or not.
+        """
+        params = {}
+        if merge:
+            params["merge"] = "true"
+        
+        transcriptName = os.path.basename(transcript)
+        files = {}
+        f = open(transcript, 'rb')
+        files["transcript"] = (transcriptName, f)
+        
+        if media != None:
+            if trackSuffix == None: trackSuffix = ""
+            mediaName = os.path.basename(media)
+            files["media"+trackSuffix] = (mediaName, open(media, 'rb'))
+
+        try:
+            return(self._postMultipartRequest(
+                self._labbcatUrl("api/edit/transcript/upload"), params, files))
+        finally:
+            f.close()
+        
+    def transcriptUploadParameters(self, id, parameters):
+        """ The second part of a transcript upload process started by a call to
+        `transcriptUpload() <#labbcat.LabbcatEdit.transcriptUpload>`_, which specifies values
+        for the parameters required to save the uploaded transcript to LaBB-CAT's database. 
+
+        If the response includes more parameters, then this method should be called again
+        to supply their values.
+        
+        :param id: Upload ID returned by the prior call to 
+                   `transcriptUpload() <#labbcat.LabbcatEdit.transcriptUpload>`_.
+        :type id: str
+        
+        :param parameters: Dict with an attribute and value for each parameter returned by 
+        the prior call to `transcriptUpload() <#labbcat.LabbcatEdit.transcriptUpload>`_.
+        :type parameters: Dict
+
+        :returns: A dictionary containing the following entries:
+        
+        - "transcripts" - a dictionary for which each key is a transcript name, and its 
+                value is the threadId of the server task processing the uploaded transcript, 
+                which can be passed to `taskStatus() <#labbcat.LabbcatView.taskStatus>`_
+                to monitor progress.
+        - "id" - The unique identifier for this upload for if a subsequent call is required to  
+                 `transcriptUploadParameters() <#labbcat.LabbcatEdit.transcriptUploadParameters>`_
+        - "parameters" - A list of dict representing the parameters that still
+                 require values to be passed into 
+                 `transcriptUploadParameters() <#labbcat.LabbcatEdit.transcriptUploadParameters>`_
+                 if any.
+        :rtype: dict
+        """
+        return(self._putRequest(self._labbcatUrl("api/edit/transcript/upload/"+id), parameters))
+        
+    def transcriptUploadDelete(self, id):
+        """ Cancel a transcript upload started by a previous call to        
+        `transcriptUpload() <#labbcat.LabbcatEdit.transcriptUpload>`_, 
+        deleting any uploaded files from the server.
+
+        :param id: Upload ID returned by the prior call to 
+                   `transcriptUpload() <#labbcat.LabbcatEdit.transcriptUpload>`_.
+        :type id: str
+        """
+        return(self._deleteRequest(self._labbcatUrl("api/edit/transcript/upload/"+id), {}))
     
     def newTranscript(self, transcript, media, trackSuffix, transcriptType, corpus, episode):
         """ Uploads a new transcript.
@@ -63,32 +172,46 @@ class LabbcatEdit(LabbcatView):
                   `taskStatus() <#labbcat.LabbcatView.taskStatus>`_.
         :rtype: dictionary of str
         """
-        params = {
-            "todo" : "new",
-            "auto" : "true",
-            "transcript_type" : transcriptType,
-            "corpus" : corpus,
-            "episode" : episode }
-        
-        transcriptName = os.path.basename(transcript)
-        files = {}
-        f = open(transcript, 'rb')
-        files["uploadfile1_0"] = (transcriptName, f)
-        
-        if media != None:
-            if mediaSuffix == None: mediaSuffix = ""
-            mediaName = os.path.basename(media)
-            files["uploadmedia"+mediaSuffix+"1"] = (mediaName, open(media, 'rb'))
-
         try:
-            model = self._postMultipartRequest(
-                self._labbcatUrl("edit/transcript/new"), params, files)
-            if not "result" in model:
-                raise ResponseException("Malformed response model, no result: " + str(model))
-            else:
-                return(model["result"])
-        finally:
-            f.close()
+            response = self.transcriptUpload(transcript, media, False, trackSuffix)
+            id = response["id"]
+            parameters = response["parameters"]
+            
+            # set parameters with default values
+            parameterValues = {}
+            for parameter in parameters:
+                parameterValues[parameter["name"]] = parameter["value"]
+            response = self.transcriptUploadParameters(id, parameterValues)
+            return(response["transcripts"])
+        
+        except ResponseException as x:
+            # fall back to old API
+            params = {
+                "todo" : "new",
+                "auto" : "true",
+                "transcript_type" : transcriptType,
+                "corpus" : corpus,
+                "episode" : episode }
+            
+            transcriptName = os.path.basename(transcript)
+            files = {}
+            f = open(transcript, 'rb')
+            files["uploadfile1_0"] = (transcriptName, f)
+        
+            if media != None:
+                if mediaSuffix == None: mediaSuffix = ""
+                mediaName = os.path.basename(media)
+                files["uploadmedia"+mediaSuffix+"1"] = (mediaName, open(media, 'rb'))
+            
+            try:
+                model = self._postMultipartRequest(
+                    self._labbcatUrl("edit/transcript/new"), params, files)
+                if not "result" in model:
+                    raise ResponseException("Malformed response model, no result: " + str(model))
+                else:
+                    return(model["result"])
+            finally:
+                f.close()
         
     def updateTranscript(self, transcript, suppressGeneration=False):
         """ Uploads a new version of an existing transcript.
@@ -105,26 +228,43 @@ class LabbcatEdit(LabbcatView):
                   `taskStatus() <#labbcat.LabbcatView.taskStatus>`_.
         :rtype: dictionary of str
         """
-        params = {
-            "todo" : "update",
-            "auto" : "true" }
-        if suppressGeneration:
-            params["suppressGeneration"] = "true"
-        
-        transcriptName = os.path.basename(transcript)
-        files = {}
-        f = open(transcript, 'rb')
-        files["uploadfile1_0"] = (transcriptName, f)
-        
         try:
-            model = self._postMultipartRequest(
-                self._labbcatUrl("edit/transcript/new"), params, files)
-            if not "result" in model:
-                raise ResponseException("Malformed response model, no result: " + str(model))
-            else:
-                return model["result"]
-        finally:
-            f.close()
+            response = self.transcriptUpload(transcript, None, True)
+            id = response["id"]
+            parameters = response["parameters"]
+            
+            # set parameters with default values
+            parameterValues = {}
+            for parameter in parameters:
+                if parameter["name"] == "labbcat_generate":
+                    parameterValues[parameter["name"]] = not suppressGeneration
+                else:
+                    parameterValues[parameter["name"]] = parameter["value"]
+            response = self.transcriptUploadParameters(id, parameterValues)
+            return(response["transcripts"])
+        
+        except ResponseException as x:
+            # fall back to legacy API
+            params = {
+                "todo" : "update",
+                "auto" : "true" }
+            if suppressGeneration:
+                params["suppressGeneration"] = "true"
+            
+            transcriptName = os.path.basename(transcript)
+            files = {}
+            f = open(transcript, 'rb')
+            files["uploadfile1_0"] = (transcriptName, f)
+            
+            try:
+                model = self._postMultipartRequest(
+                    self._labbcatUrl("edit/transcript/new"), params, files)
+                if not "result" in model:
+                    raise ResponseException("Malformed response model, no result: " + str(model))
+                else:
+                    return model["result"]
+            finally:
+                f.close()
     
     def updateFragment(self, fragment):
         """ Update a transcript fragment.

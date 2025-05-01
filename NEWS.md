@@ -1,3 +1,12 @@
+# 0.9.2
+
+- New LabbcatEdit functions for new upload API (LaBB-CAT v 20250430.1502)
+  + *transcriptUpload*
+  + *transcriptUploadParameters*
+  + *transcriptUploadDelete*
+- LabbcatEdit function implementation changes
+  + *newTranscript* and *updateTranscript* use new API (above) by default.
+
 # 0.9.1
 
 - Fix LabbcatView function

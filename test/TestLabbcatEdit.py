@@ -58,6 +58,87 @@ class TestLabbcatEdit(unittest.TestCase):
         self.assertIsNone(participant, "Deleted participant isn't there")
 
     
+    def test_uploadTranscriptAPI(self):
+        transcriptName = "labbcat-py.test.txt"
+        transcriptPath = "/home/robert/nzilbb/labbcat-py/test/" + transcriptName
+        mediaPath = "/home/robert/nzilbb/labbcat-py/test/labbcat-py.test.wav"
+        documentPath = "/home/robert/nzilbb/labbcat-py/test/labbcat-py.test.doc"
+        participantName = "UnitTester"
+
+        # ensure the transcript/participant don't exist to start with
+        try:
+            self.store.deleteTranscript(transcriptName)
+        except labbcat.ResponseException as x:
+            pass
+        try:
+            self.store.deleteParticipant(participantName)
+        except labbcat.ResponseException as x:
+            pass
+            
+        # get valid attribute values
+        corpusId = self.store.getCorpusIds()[0]
+        typeLayer = self.store.getLayer("transcript_type")
+        transcriptType = next(iter(typeLayer["validLabels"]))
+        
+        # upload transcript (with no media)
+        result = self.store.transcriptUpload(transcriptPath, None, False)
+        self.assertIn("id", result, "Has id")
+        id = result["id"]
+        self.assertIn("parameters", result, "Has parameters")
+        parameters = result["parameters"]
+
+        # delete upload
+        self.store.transcriptUploadDelete(id)
+        
+        # upload transcript (with media)
+        result = self.store.transcriptUpload(transcriptPath, mediaPath, False)
+        self.assertIn("id", result, "transcriptUpload has id")
+        id = result["id"]
+        self.assertIn("parameters", result, "transcriptUpload has parameters")
+        parameters = result["parameters"]
+ 
+        # set the parameters
+        parameterValues = {}
+        for parameter in parameters:
+            if parameter["name"] == "labbcat_corpus":
+                parameterValues[parameter["name"]] = corpusId
+            elif parameter["name"] == "labbcat_episode":
+                parameterValues[parameter["name"]] = "unit-test"
+            elif parameter["name"] == "labbcat_transcript_type":
+                parameterValues[parameter["name"]] = transcriptType
+            else:
+                parameterValues[parameter["name"]] = parameter["value"]
+        # finish the upload
+        result = self.store.transcriptUploadParameters(id, parameterValues)
+        self.assertIn("transcripts", result, "transcriptUploadParameters has transcripts")
+        transcripts = result["transcripts"]
+        self.assertIn(transcriptName, transcripts, "transcripts includes " + transcriptName)
+        threadId = transcripts[transcriptName]
+        
+        # wait for task generation to finish
+        self.store.waitForTask(threadId)
+        self.store.releaseTask(threadId)
+        
+        # ensure the transcript/participant are there
+        count = self.store.countMatchingTranscriptIds("id = '"+transcriptName+"'")
+        self.assertEqual(1, count, "Transcript is in the store")
+        count = self.store.countMatchingParticipantIds("id = '"+participantName+"'")
+        self.assertEqual(1, count, "Participant '"+participantName+"' is in the store")
+        
+        # ensure there is media
+        files = self.store.getAvailableMedia(transcriptName)
+        self.assertTrue(1 <= len(files), "Media is present")
+        
+        # delete transcript/participant
+        self.store.deleteTranscript(transcriptName)
+        self.store.deleteParticipant(participantName)
+        
+        # make sure they were deleted
+        count = self.store.countMatchingTranscriptIds("id = '"+transcriptName+"'")
+        self.assertEqual(0, count, "Transcript is gone")
+        count = self.store.countMatchingParticipantIds("id = '"+participantName+"'")
+        self.assertEqual(0, count, "Participant is in the store")
+
     def test_transcriptParticipantAndMediaCRUD(self):
         transcriptName = "labbcat-py.test.txt"
         transcriptPath = "/home/robert/nzilbb/labbcat-py/test/" + transcriptName
