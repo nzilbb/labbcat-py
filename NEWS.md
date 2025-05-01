@@ -1,4 +1,4 @@
-# 0.9.2
+# 0.10.0
 
 - New LabbcatEdit functions for new upload API (LaBB-CAT v 20250430.1502)
   + *transcriptUpload*
