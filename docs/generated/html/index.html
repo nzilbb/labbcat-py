@@ -2120,6 +2120,144 @@ a “_password” attribute.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="labbcat.LabbcatEdit.transcriptUpload">
+<span class="sig-name descname"><span class="pre">transcriptUpload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transcript</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">media</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trackSuffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.transcriptUpload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload a transcript file and associated media files, as the first stage in adding or
+modifying a transcript to LaBB-CAT. The second stage is 
+<a class="reference external" href="#labbcat.LabbcatEdit.transcriptUploadParameters">transcriptUploadParameters()</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transcript</strong> (<em>str</em>) – The path to the transcript to upload.</p></li>
+<li><p><strong>media</strong> (<em>str</em>) – The path to media to upload, if any.</p></li>
+<li><p><strong>merge</strong> (<em>boolean</em>) – Whether the upload corresponds to updates to an existing transcript
+(True) or a new transcript (False).</p></li>
+<li><p><strong>trackSuffix</strong> (<em>str</em>) – The track suffix for the media, which can be None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary containing the following entries:</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><dl class="simple">
+<dt>“id” - The unique identifier to use for this upload when subsequently calling </dt><dd><p><a class="reference external" href="#labbcat.LabbcatEdit.transcriptUploadParameters">transcriptUploadParameters()</a></p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>“parameters” - A list of dict representing the parameters that</dt><dd><p>require values to be passed into 
+<a class="reference external" href="#labbcat.LabbcatEdit.transcriptUploadParameters">transcriptUploadParameters()</a>
+The parameters returned may include both information
+required by the format deserializer (e.g. mappings from tiers to LaBB-CAT
+layers) and also general information required by LaBB-CAT (e.g. the
+corpus, episode, and type of the transcript).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<p>Each parameter returned is a dict that may contain the following attributes:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>“name” - The name that should be used when specifying the value for the parameter</dt><dd><p>when calling 
+<a class="reference external" href="#labbcat.LabbcatEdit.transcriptUploadParameters">transcriptUploadParameters()</a></p>
+</dd>
+</dl>
+</li>
+<li><p>“label” - A label for the parameter intended for display to the user.</p></li>
+<li><p>“hint” - A description of the purpose of the parameter, for display to the user.</p></li>
+<li><p>“type” - The type of the parameter, e.g. “String”, “Double”, “Integer”, “Boolean”.</p></li>
+<li><p>“required” - True if the value must be specified, False if it is optional.</p></li>
+<li><p>“value” - A default value for the parameter.</p></li>
+<li><dl class="simple">
+<dt>“possibleValues” - A list of possible values, if the possibilities are limited </dt><dd><p>to a finite set.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>The required parameters may include both information required by the format deserializer 
+(e.g. mappings from tiers to LaBB-CAT layers) and also general information required by 
+LaBB-CAT, such as:</p>
+<ul class="simple">
+<li><p>“labbcat_corpus” - The corpus the new transcript(s) belong(s) to.</p></li>
+<li><p>“labbcat_episode” - The episode the new transcript(s) belong(s) to.</p></li>
+<li><p>“labbcat_transcript_type” - The transcript type for the new transcript(s).</p></li>
+<li><p>“labbcat_generate” - Whether to re-regenerate layers of automated annotations or not.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="labbcat.LabbcatEdit.transcriptUploadDelete">
+<span class="sig-name descname"><span class="pre">transcriptUploadDelete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.transcriptUploadDelete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cancel a transcript upload started by a previous call to        
+<a class="reference external" href="#labbcat.LabbcatEdit.transcriptUpload">transcriptUpload()</a>, 
+deleting any uploaded files from the server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>str</em>) – <p>Upload ID returned by the prior call to 
+<a class="reference external" href="#labbcat.LabbcatEdit.transcriptUpload">transcriptUpload()</a>.</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="labbcat.LabbcatEdit.transcriptUploadParameters">
+<span class="sig-name descname"><span class="pre">transcriptUploadParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.transcriptUploadParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>The second part of a transcript upload process started by a call to
+<a class="reference external" href="#labbcat.LabbcatEdit.transcriptUpload">transcriptUpload()</a>, which specifies values
+for the parameters required to save the uploaded transcript to LaBB-CAT’s database.</p>
+<p>If the response includes more parameters, then this method should be called again
+to supply their values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – <p>Upload ID returned by the prior call to 
+<a class="reference external" href="#labbcat.LabbcatEdit.transcriptUpload">transcriptUpload()</a>.</p>
+</p></li>
+<li><p><strong>parameters</strong> (<em>dict</em>) – <p>A dictionary with an attribute and value for each parameter returned by 
+the prior call to <a class="reference external" href="#labbcat.LabbcatEdit.transcriptUpload">transcriptUpload()</a>.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary containing the following entries:</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><dl class="simple">
+<dt>“transcripts” - a dictionary for which each key is a transcript name, and its </dt><dd><p>value is the threadId of the server task processing the uploaded transcript, 
+which can be passed to <a class="reference external" href="#labbcat.LabbcatView.taskStatus">taskStatus()</a>
+to monitor progress.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>“id” - The unique identifier for this upload for if a subsequent call is required to  </dt><dd><p><a class="reference external" href="#labbcat.LabbcatEdit.transcriptUploadParameters">transcriptUploadParameters()</a></p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>“parameters” - A list of dict representing the parameters that still</dt><dd><p>require values to be passed into 
+<a class="reference external" href="#labbcat.LabbcatEdit.transcriptUploadParameters">transcriptUploadParameters()</a>
+if any.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="labbcat.LabbcatEdit.updateFragment">
 <span class="sig-name descname"><span class="pre">updateFragment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fragment</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatEdit.updateFragment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update a transcript fragment.</p>
