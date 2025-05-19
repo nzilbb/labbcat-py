@@ -520,10 +520,8 @@ class TestLabbcatView(unittest.TestCase):
 
                 # explicit start/end offsets (and layer ID as a string instead of array)
                 segments = self.store.getMatchAnnotations(subset, "segment", 0, 1, 0)
-                startOffsets = list(
-                    map(lambda annotation: annotation["start"]["offset"], segments))
-                endOffsets = list(
-                    map(lambda annotation: annotation["end"]["offset"], segments))                
+                startOffsets = [annotation["start"]["offset"] for annotation in segments]
+                endOffsets = [annotation["end"]["offset"] for annotation in segments]
                 praatScript = labbcat.praatScriptFormants() \
                     +labbcat.praatScriptCentreOfGravity() \
                     +labbcat.praatScriptIntensity() \
