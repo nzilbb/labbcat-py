@@ -63,8 +63,9 @@ class LabbcatEdit(LabbcatView):
                  required by the format deserializer (e.g. mappings from tiers to LaBB-CAT
                  layers) and also general information required by LaBB-CAT (e.g. the
                  corpus, episode, and type of the transcript).
+        
         :rtype: dict
-
+        
         Each parameter returned is a dict that may contain the following attributes:
         
         - "name" - The name that should be used when specifying the value for the parameter
@@ -111,7 +112,7 @@ class LabbcatEdit(LabbcatView):
         """ The second part of a transcript upload process started by a call to
         `transcriptUpload() <#labbcat.LabbcatEdit.transcriptUpload>`_, which specifies values
         for the parameters required to save the uploaded transcript to LaBB-CAT's database. 
-
+        
         If the response includes more parameters, then this method should be called again
         to supply their values.
         
@@ -120,9 +121,9 @@ class LabbcatEdit(LabbcatView):
         :type id: str
         
         :param parameters: A dictionary with an attribute and value for each parameter returned by 
-        the prior call to `transcriptUpload() <#labbcat.LabbcatEdit.transcriptUpload>`_.
+         the prior call to `transcriptUpload() <#labbcat.LabbcatEdit.transcriptUpload>`_.
         :type parameters: dict
-
+        
         :returns: A dictionary containing the following entries:
         
         - "transcripts" - a dictionary for which each key is a transcript name, and its 
@@ -135,6 +136,7 @@ class LabbcatEdit(LabbcatView):
                  require values to be passed into 
                  `transcriptUploadParameters() <#labbcat.LabbcatEdit.transcriptUploadParameters>`_
                  if any.
+        
         :rtype: dict
         """
         return(self._putRequest(self._labbcatUrl("api/edit/transcript/upload/"+id), parameters))
