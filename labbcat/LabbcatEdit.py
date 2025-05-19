@@ -45,6 +45,10 @@ class LabbcatEdit(LabbcatView):
         :param media: The path to media to upload, if any. 
         :type media: str
 
+        :param merge: Whether the upload corresponds to updates to an existing transcript
+                      (True) or a new transcript (False).
+        :type merge: boolean
+
         :param trackSuffix: The track suffix for the media, which can be None.
         :type trackSuffix: str
 
@@ -115,9 +119,9 @@ class LabbcatEdit(LabbcatView):
                    `transcriptUpload() <#labbcat.LabbcatEdit.transcriptUpload>`_.
         :type id: str
         
-        :param parameters: Dict with an attribute and value for each parameter returned by 
+        :param parameters: A dictionary with an attribute and value for each parameter returned by 
         the prior call to `transcriptUpload() <#labbcat.LabbcatEdit.transcriptUpload>`_.
-        :type parameters: Dict
+        :type parameters: dict
 
         :returns: A dictionary containing the following entries:
         
