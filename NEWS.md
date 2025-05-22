@@ -1,6 +1,6 @@
 # 0.11.0
 
-- New LabbcatVie functions for accessing files of annotations with a MIME type (e.g. images)
+- New LabbcatView functions for accessing files of annotations with a MIME type (e.g. images)
   + *getMatchingAnnotationData*
   + *getFragmentAnnotationData*
 
