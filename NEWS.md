@@ -2,6 +2,7 @@
 
 - New LabbcatVie functions for accessing files of annotations with a MIME type (e.g. images)
   + *getMatchingAnnotationData*
+  + *getFragmentAnnotationData*
 
 # 0.10.0
 

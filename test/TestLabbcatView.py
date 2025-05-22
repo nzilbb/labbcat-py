@@ -627,6 +627,27 @@ class TestLabbcatView(unittest.TestCase):
         finally:
             self.store.releaseTask(threadId)
 
+    def test_getFragmentAnnotationData(self):
+        # all instances of "and" that incompass a 'mediapipeFrame' PNG annotation
+        pattern = { "orthography" : "and", "mediapipeFrame": ".*" }
+        matches = self.store.getMatches(pattern)
+        if len(matches) == 0:
+            print("getMatches: No matches were returned, cannot test getSoundFragments")
+        else:
+            # there can be a huge number of frame annotations, so just get them for the
+            # first to matching utterances
+            upTo = min(2, len(matches))
+            subset = matches[:upTo]
+            
+            pngs = self.store.getFragmentAnnotationData("mediapipeFrame", subset)
+            try:
+                self.assertTrue(0 < len(pngs), "Some files were returned")                
+                for png in pngs:
+                    self.assertTrue(png.endswith(".png"), "File is image: "+png)
+            finally:
+                for png in pngs:
+                    os.remove(png)
+
     def test_getFragments(self):
         # get a participant ID to use
         ids = self.store.getParticipantIds()

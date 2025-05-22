@@ -677,7 +677,14 @@ class LabbcatView:
               "pageLength":pageLength, "pageNumber":pageNumber }))
 
     def getMatchingAnnotationData(self, expression, dir=None):
-        """ Gets a list of annotations that match a particular pattern. 
+        """ Gets binary data for annotations that match a particular pattern.
+        
+        In some annotation layers, the annotations have not only a textual label, but also
+        binary data associated with it; e.g. an image or a data file. In these cases, the 'type'
+        of the layer is a MIME type, e.g. 'image/png'.
+    
+        This function gets annotations that match the given expression on a MIME-typed layer,
+        and retrieves the binary data as files, whose names are returned by the function.        
         
         The expression language is loosely based on JavaScript; expressions such as the
         following can be used:
@@ -721,7 +728,91 @@ class LabbcatView:
             os.remove(fileName)
         return fileNames
     
-    # TODO getFragmentAnnotationData(transcriptIds, startOffsets, endOffsets, layerId, dir)
+    # TODO (transcriptIds, startOffsets, endOffsets, layerId, dir)
+    def getFragmentAnnotationData(self, layerId, transcriptIds, startOffsets=None, endOffsets=None, dir=None):
+        """ Gets binary annotation data in fragments.
+        
+        In some annotation layers, the annotations have not only a textual label, but also
+        binary data associated with it; e.g. an image or a data file. In these cases, the 'type'
+        of the layer is a MIME type, e.g. 'image/png'.
+        
+        This function gets annotations between given start/end times on the given MIME-typed layer,
+        and retrieves the binary data as files, whose names are returned by the function.
+        
+        The intervals to extract from can be defined in two possible ways:
+        
+         1. transcriptIds is a list of strings, and startOffsets and endOffsets are lists
+            of floats 
+         2. transcriptIds is a list of dict objects returned by getMatches(threadId), and
+            startOffsets and endOffsets are None, in which case the starts/ends are the 
+            boundaries of the utterance that matched.
+
+        :param layerId: The ID of the layer with a MIME type, from which annotation files will
+                        be extractied.
+        :type transcriptIds: str
+        
+        :param transcriptIds: A list of transcript IDs (transcript names), or a list of
+         dictionaries returned by getMatches(threadId).
+        :type transcriptIds: list of str or list of dict
+        
+        :param startOffsets: A list of start offsets, with one element for each element in
+         *transcriptIds*. 
+        :type startOffsets: list of float or None
+        
+        :param endOffsets: A list of end offsets, with one element for each element in
+         *transcriptIds*. 
+        :type endOffsets: list of float or None
+        
+        :param dir: A directory in which the files should be stored, or null for a temporary
+         folder.  If specified, and the directory doesn't exist, it will be created. 
+        :type dir: str
+        
+        :returns: A list of files (e.g. PNG images). If *dir* is None, these files will be stored
+         under the system's temporary directory, so once processing is finished, they should
+         be deleted by the caller, or moved to a more permanent location. 
+        :rtype: list of str
+        """
+        # have they passed matches as transcriptIds, instead of strings?
+        if len(transcriptIds) > 0:
+            if isinstance(transcriptIds[0], dict) and startOffsets == None and endOffsets == None:
+                startOffsets = [ m["Line"] for m in transcriptIds ]
+                endOffsets = [ m["LineEnd"] for m in transcriptIds ]
+                transcriptIds = [ m["Transcript"] for m in transcriptIds ]
+        
+        # validate parameters
+        if len(transcriptIds) != len(startOffsets) or len(transcriptIds) != len(endOffsets):
+            raise ResponseException(
+                "transcriptIds ("+str(len(transcriptIds))
+                +"), startOffsets ("+str(len(startOffsets))
+                +"), and endOffsets ("+str(len(endOffsets))+") must be lists of equal size.");
+        
+        files = []        
+        tempFiles = False
+        if dir == None:
+            dir = tempfile.mkdtemp("_data", "getFragmentAnnotationData_")
+            tempFiles = True
+        elif not os.path.exists(dir):
+            os.mkdir(dir)
+
+        # loop through each triple, getting fragments individually
+        for i in range(len(transcriptIds)):
+            if transcriptIds[i] == None or startOffsets[i] == None or endOffsets[i] == None:
+                continue
+            
+            expression = "layer.id == '"+layerId+"'"\
+                +" && graph.id == '"+transcriptIds[i]+"'"\
+                +" && start.offset >= "+str(startOffsets[i])\
+                +" && end.offset < "+str(endOffsets[i])
+            
+            try:
+                files = files + self.getMatchingAnnotationData(expression, dir)
+            except KeyboardInterrupt:
+                break
+            except:
+                pass
+        
+        return(files)
+    
     # TODO getFragmentAnnotations(transcriptIds, participantIds, startOffsets, endOffsets, layerIds, sep, partialContainment)
         
     def getAnchors(self, id, anchorIds):
