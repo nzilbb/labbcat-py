@@ -446,6 +446,51 @@ dictionary will be present in the returned result, but will have no entries.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="labbcat.LabbcatView.getFragmentAnnotationData">
+<span class="sig-name descname"><span class="pre">getFragmentAnnotationData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layerId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transcriptIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startOffsets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endOffsets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getFragmentAnnotationData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets binary annotation data in fragments.</p>
+<p>In some annotation layers, the annotations have not only a textual label, but also
+binary data associated with it; e.g. an image or a data file. In these cases, the ‘type’
+of the layer is a MIME type, e.g. ‘image/png’.</p>
+<p>This function gets annotations between given start/end times on the given MIME-typed layer,
+and retrieves the binary data as files, whose names are returned by the function.</p>
+<p>The intervals to extract from can be defined in two possible ways:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>transcriptIds is a list of strings, and startOffsets and endOffsets are lists
+of floats</p></li>
+<li><p>transcriptIds is a list of dict objects returned by getMatches(threadId), and
+startOffsets and endOffsets are None, in which case the starts/ends are the 
+boundaries of the utterance that matched.</p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layerId</strong> – The ID of the layer with a MIME type, from which annotation files will
+be extractied.</p></li>
+<li><p><strong>transcriptIds</strong> (<em>list of str</em><em> or </em><em>list of dict</em>) – A list of transcript IDs (transcript names), or a list of
+dictionaries returned by getMatches(threadId).</p></li>
+<li><p><strong>startOffsets</strong> (<em>list of float</em><em> or </em><em>None</em>) – A list of start offsets, with one element for each element in
+<em>transcriptIds</em>.</p></li>
+<li><p><strong>endOffsets</strong> (<em>list of float</em><em> or </em><em>None</em>) – A list of end offsets, with one element for each element in
+<em>transcriptIds</em>.</p></li>
+<li><p><strong>dir</strong> (<em>str</em>) – A directory in which the files should be stored, or null for a temporary
+folder.  If specified, and the directory doesn’t exist, it will be created.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of files (e.g. PNG images). If <em>dir</em> is None, these files will be stored
+under the system’s temporary directory, so once processing is finished, they should
+be deleted by the caller, or moved to a more permanent location.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="labbcat.LabbcatView.getFragments">
 <span class="sig-name descname"><span class="pre">getFragments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transcriptIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layerIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mimeType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startOffsets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endOffsets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefixNames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getFragments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get transcript fragments in a specified format.</p>
@@ -740,6 +785,44 @@ matched by search(pattern), or None if the task was cancelled.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="labbcat.LabbcatView.getMatchingAnnotationData">
+<span class="sig-name descname"><span class="pre">getMatchingAnnotationData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#labbcat.LabbcatView.getMatchingAnnotationData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets binary data for annotations that match a particular pattern.</p>
+<p>In some annotation layers, the annotations have not only a textual label, but also
+binary data associated with it; e.g. an image or a data file. In these cases, the ‘type’
+of the layer is a MIME type, e.g. ‘image/png’.</p>
+<p>This function gets annotations that match the given expression on a MIME-typed layer,
+and retrieves the binary data as files, whose names are returned by the function.</p>
+<p>The expression language is loosely based on JavaScript; expressions such as the
+following can be used:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">==</span> <span class="pre">'ew_0_456'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">!/th[aeiou].&amp;#47;/.test(label)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">first('participant').label</span> <span class="pre">==</span> <span class="pre">'Robert'</span> <span class="pre">&amp;&amp;</span> <span class="pre">first('utterances').start.offset</span> <span class="pre">==</span> <span class="pre">12.345</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">graph.id</span> <span class="pre">==</span> <span class="pre">'AdaAicheson-01.trs'</span> <span class="pre">&amp;&amp;</span> <span class="pre">layer.id</span> <span class="pre">==</span> <span class="pre">'mediapipeFrame'</span> <span class="pre">&amp;&amp;</span> <span class="pre">start.offset</span> <span class="pre">&lt;</span> <span class="pre">10.5</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">previous.id</span> <span class="pre">==</span> <span class="pre">'ew_0_456'</span></code></p></li>
+</ul>
+<p><em>NB</em> all expressions must match by either id or layer.id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expression</strong> (<em>str</em>) – An expression that determines which annotations match.</p></li>
+<li><p><strong>dir</strong> (<em>str</em>) – A directory in which the files should be stored, or null for a temporary
+folder.  If specified, and the directory doesn’t exist, it will be created.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of files. If <em>dir</em> is None, these files will be stored under the
+system’s temporary directory, so once processing is finished, they should be
+deleted by the caller, or moved to a more permanent location.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of str</p>
 </dd>
 </dl>
 </dd></dl>

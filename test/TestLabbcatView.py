@@ -251,6 +251,20 @@ class TestLabbcatView(unittest.TestCase):
           with self.subTest(key=key):
               self.assertIn(key, annotation, "Has " + key)
 
+    def test_getMatchingAnnotationData(self):
+      files = self.store.getMatchingAnnotationData(
+          "layer.id == 'mediapipeFrame' && graph.id == 'AP513_Steve.eaf' && start.offset < 10.58",
+          "png")
+      try:
+          self.assertTrue(1 <= len(files), "Files are returned")
+          
+          # do they look like images?
+          first = files[0]
+          self.assertTrue(first.endswith(".png"), "Files are images")
+      finally:
+          for f in files:
+              os.remove(f)
+
     def test_getMediaTracks(self):
         tracks = self.store.getMediaTracks()
         #for (String track : tracks) print("track " + track)
@@ -612,6 +626,27 @@ class TestLabbcatView(unittest.TestCase):
             
         finally:
             self.store.releaseTask(threadId)
+
+    def test_getFragmentAnnotationData(self):
+        # all instances of "and" that incompass a 'mediapipeFrame' PNG annotation
+        pattern = { "orthography" : "and", "mediapipeFrame": ".*" }
+        matches = self.store.getMatches(pattern)
+        if len(matches) == 0:
+            print("getMatches: No matches were returned, cannot test getSoundFragments")
+        else:
+            # there can be a huge number of frame annotations, so just get them for the
+            # first to matching utterances
+            upTo = min(2, len(matches))
+            subset = matches[:upTo]
+            
+            pngs = self.store.getFragmentAnnotationData("mediapipeFrame", subset)
+            try:
+                self.assertTrue(0 < len(pngs), "Some files were returned")                
+                for png in pngs:
+                    self.assertTrue(png.endswith(".png"), "File is image: "+png)
+            finally:
+                for png in pngs:
+                    os.remove(png)
 
     def test_getFragments(self):
         # get a participant ID to use

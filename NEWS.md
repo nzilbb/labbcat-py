@@ -1,3 +1,9 @@
+# 0.11.0
+
+- New LabbcatView functions for accessing files of annotations with a MIME type (e.g. images)
+  + *getMatchingAnnotationData*
+  + *getFragmentAnnotationData*
+
 # 0.10.0
 
 - New LabbcatEdit functions for new upload API (LaBB-CAT v 20250430.1502)
