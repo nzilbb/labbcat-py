@@ -676,7 +676,51 @@ class LabbcatView:
             { "id":id, "layerId":layerId, "maxOrdinal":maxOrdinal,
               "pageLength":pageLength, "pageNumber":pageNumber }))
 
-    # TODO getAnnotationData(expression, dir)
+    def getMatchingAnnotationData(self, expression, dir=None):
+        """ Gets a list of annotations that match a particular pattern. 
+        
+        The expression language is loosely based on JavaScript; expressions such as the
+        following can be used:
+        
+        - ``id == 'ew_0_456'``
+        - ``!/th[aeiou].&#47;/.test(label)``
+        - ``first('participant').label == 'Robert' && first('utterances').start.offset == 12.345`` 
+        - ``graph.id == 'AdaAicheson-01.trs' && layer.id == 'mediapipeFrame' && start.offset < 10.5`` 
+        - ``previous.id == 'ew_0_456'``
+        
+        *NB* all expressions must match by either id or layer.id.
+        
+        :param expression: An expression that determines which annotations match.
+        :type expression: str
+        
+        :param dir: A directory in which the files should be stored, or null for a temporary
+         folder.  If specified, and the directory doesn't exist, it will be created. 
+        :type dir: str
+                
+        :returns: A list of files. If *dir* is None, these files will be stored under the
+         system's temporary directory, so once processing is finished, they should be
+         deleted by the caller, or moved to a more permanent location. 
+        :rtype: list of str
+        """
+        tempFiles = False
+        if dir == None:
+            dir = tempfile.mkdtemp("_"+str(threadId), "taskResults_")
+            tempFiles = True
+        elif not os.path.exists(dir):
+            os.mkdir(dir)
+        fileName = self._postRequestToFile(
+            self._labbcatUrl("api/annotation/data"), { "expression":expression }, dir)
+        fileNames = [ fileName ]
+        if fileName.endswith(".zip"):
+            # extract the zip file
+            with ZipFile(fileName, 'r') as zipObj:
+                zipObj.extractall(dir)
+                fileNames = [os.path.join(dir, fileName) for fileName in zipObj.namelist()]
+                
+            # delete the temporary zip file
+            os.remove(fileName)
+        return fileNames
+    
     # TODO getFragmentAnnotationData(transcriptIds, startOffsets, endOffsets, layerId, dir)
     # TODO getFragmentAnnotations(transcriptIds, participantIds, startOffsets, endOffsets, layerIds, sep, partialContainment)
         

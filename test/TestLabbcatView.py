@@ -251,6 +251,20 @@ class TestLabbcatView(unittest.TestCase):
           with self.subTest(key=key):
               self.assertIn(key, annotation, "Has " + key)
 
+    def test_getMatchingAnnotationData(self):
+      files = self.store.getMatchingAnnotationData(
+          "layer.id == 'mediapipeFrame' && graph.id == 'AP513_Steve.eaf' && start.offset < 10.58",
+          "png")
+      try:
+          self.assertTrue(1 <= len(files), "Files are returned")
+          
+          # do they look like images?
+          first = files[0]
+          self.assertTrue(first.endswith(".png"), "Files are images")
+      finally:
+          for f in files:
+              os.remove(f)
+
     def test_getMediaTracks(self):
         tracks = self.store.getMediaTracks()
         #for (String track : tracks) print("track " + track)
