@@ -68,7 +68,40 @@ class LabbcatView:
         self.verbose = False
         self.language = "en"
         self.labbcatVersion = None
+        self.session = requests.Session() # Session manages cookies for us
 
+        # probe the server to determine the version and auth method
+        response = Response(
+            self.session.get(
+                url=self.labbcatUrl+"api/store?call=getId", headers={
+                    "Accept":"application/json",
+                    "Accept-Language":self.language,
+                    "user-agent": "labbcat-py/"+__version__}))
+        
+        if response.httpStatus == 401: # need auth
+            # what's the auth method?
+            if "www-authenticate" in response.resp.headers:
+                # the auth method is the first word of the header
+                self.authMethod = response.resp.headers["www-authenticate"].split()[0]
+            else: # auth method ust be Form
+                self.authMethod = "Form"
+                # post credentials to log in
+                response = Response(
+                    self.session.post(
+                        url=self.labbcatUrl+"j_security_check",
+                        data={
+                            "j_username":username,
+                            "j_password":password },
+                        headers={
+                            "Accept":"application/json",
+                            "Accept-Language":self.language,
+                            "user-agent": "labbcat-py/"+__version__}))
+            response = Response(self._getRequestRaw(
+                self.labbcatUrl+"api/store?call=getId", None))
+        
+        self.labbcatVersion = response.version
+        response.checkForErrors()
+                
     def _labbcatUrl(self, resource):
         return self.labbcatUrl + resource
 
@@ -77,8 +110,6 @@ class LabbcatView:
 
     def _getRequest(self, url, params):
         response = Response(self._getRequestRaw(url, params), self.verbose)
-        if self.labbcatVersion is None:
-            self.labbcatVersion = response.version
         response.checkForErrors()
 
         if self.verbose: print("response: " + str(response.text))
@@ -90,7 +121,7 @@ class LabbcatView:
             auth = None
         else:
             auth = (self.username, self.password)
-        return(requests.get(
+        return(self.session.get(
             url=url, params=params, auth=auth, headers={
                 "Accept":"application/json",
                 "Accept-Language":self.language,
@@ -104,7 +135,7 @@ class LabbcatView:
             auth = (self.username, self.password)
             
         response = Response(
-            requests.post(
+            self.session.post(
                 url=url, data=params, json=json, auth=auth, headers={
                     "Accept":"application/json",
                     "Accept-Language":self.language,
@@ -123,7 +154,7 @@ class LabbcatView:
             auth = (self.username, self.password)
             
         response = Response(
-            requests.put(
+            self.session.put(
                 url=url, params=params, json=json, auth=auth, headers={
                     "Accept":"application/json",
                     "Accept-Language":self.language,
@@ -143,7 +174,7 @@ class LabbcatView:
             auth = (self.username, self.password)
             
         response = Response(
-            requests.delete(
+            self.session.delete(
                 url=url, params=params, json=json, auth=auth, headers={
                     "Accept":"application/json",
                     "Accept-Language":self.language,
@@ -162,7 +193,7 @@ class LabbcatView:
         else:
             auth = (self.username, self.password)
         
-        response = requests.post(
+        response = self.session.post(
             url=url, data=params, auth=auth, headers={
                 "Accept":"application/json",
                     "Accept-Language":self.language,
@@ -233,7 +264,7 @@ class LabbcatView:
         else:
             auth = (self.username, self.password)
             
-        response = Response(requests.post(
+        response = Response(self.session.post(
             url=url, data=params, files=files, auth=auth, headers={
                 "Accept":"application/json",
                     "Accept-Language":self.language,
@@ -258,7 +289,7 @@ class LabbcatView:
         else:
             auth = (self.username, self.password)
             
-        resp = requests.post(
+        resp = self.session.post(
             url=url, data=params, files=files, auth=auth, headers={
                 "Accept":"text/plain",
                 "Accept-Language":self.language,
@@ -728,7 +759,6 @@ class LabbcatView:
             os.remove(fileName)
         return fileNames
     
-    # TODO (transcriptIds, startOffsets, endOffsets, layerId, dir)
     def getFragmentAnnotationData(self, layerId, transcriptIds, startOffsets=None, endOffsets=None, dir=None):
         """ Gets binary annotation data in fragments.
         

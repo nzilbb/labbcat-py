@@ -1,3 +1,7 @@
+# 0.11.1
+
+- Add support for servers configured with FORM user auth
+
 # 0.11.0
 
 - New LabbcatView functions for accessing files of annotations with a MIME type (e.g. images)

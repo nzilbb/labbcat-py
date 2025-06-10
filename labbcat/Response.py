@@ -31,6 +31,7 @@ class Response:
         self.verbose = verbose
         self.httpStatus = resp.status_code
         self.text = resp.text
+        self.resp = resp
 
         try:
             json = resp.json()
