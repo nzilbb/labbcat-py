@@ -83,7 +83,7 @@ class LabbcatView:
             if "www-authenticate" in response.resp.headers:
                 # the auth method is the first word of the header
                 self.authMethod = response.resp.headers["www-authenticate"].split()[0]
-            else: # auth method ust be Form
+            else: # auth method must be Form
                 self.authMethod = "Form"
                 # post credentials to log in
                 response = Response(
@@ -1237,14 +1237,24 @@ class LabbcatView:
         :returns: The name of a CSV file with one row per participant, and one column per attribute.
         :rtype: str
         """
-        params = {
-            "type" : "participant",
-            "content-type" : "text/csv",
-            "csvFieldDelimiter" : ",",
-            "layer" : layerIds,
-            "participantId" : participantIds }
-        return (self._postRequestToFile(self._labbcatUrl("participantsExport"), params))
-        
+        try:
+            # fall back to old API
+            params = {
+                "csvFieldDelimiter" : ",",
+                "layer" : layerIds,
+                "participantId" : participantIds }
+            return (self._postRequestToFile(self._labbcatUrl("participantsExport"), params))
+        except ResponseException as x:
+            if x.response.code == 404: # fall back to old API
+                params = {
+                    "type" : "participant",
+                    "content-type" : "text/csv",
+                    "csvFieldDelimiter" : ",",
+                    "layer" : layerIds,
+                    "participantId" : participantIds }
+                return (self._postRequestToFile(self._labbcatUrl("participantsExport"), params))
+            else:
+                raise x        
 
     def search(self, pattern, participantIds=None, transcriptTypes=None, mainParticipant=True, aligned=False, matchesPerTranscript=None, overlapThreshold=None):
         """
