@@ -1634,20 +1634,52 @@ class LabbcatView:
         f = open(fileName, 'r')
         files["uploadfile"] = (fileName, f)
 
-        # define parameters
-        parameters = {
-            "layer" : layerIds,
-            "targetOffset" : targetOffset,
-            "annotationsPerLayer" : annotationsPerLayer,
-            "csvFieldDelimiter" : ",",
-            "targetColumn" : 0,
-            "copyColumns" : False,
-            "offsetThreshold" : offsetThreshold
-        }
+        if self.labbcatVersion is None: self.getId() # ensure we know the server version
+        if self.labbcatVersion >= "20250716.1022":
+            # 'reload' results CSV
+            parameters = {
+                "csvFieldDelimiter" : ",",
+                "targetColumn" : "MatchId"
+            }
+            
+            # send the request
+            model = self._postMultipartRequest(
+                self._labbcatUrl("api/results/upload"), parameters, files)
+            threadId = model["threadId"]
+            
+            # wait for processing to finish (should be quick
+            self.waitForTask(threadId)
+            
+            # get annotations
+            parameters = {
+                "threadId" : threadId,
+                "csv_layer" : layerIds,
+                "targetOffset" : targetOffset,
+                "annotationsPerLayer" : annotationsPerLayer,
+                "csvFieldDelimiter" : ",",
+                "offsetThreshold" : offsetThreshold
+            }
         
-        # send the request
-        model = self._postMultipartRequest(
-            self._labbcatUrl("api/getMatchAnnotations"), parameters, files)
+            # send the request
+            model = self._postRequest(
+                self._labbcatUrl("api/results"), parameters)
+            
+            self.releaseTask(threadId)
+            
+        else: # labbcatVersion < 20250716.1022, so use deprecated API
+            # define parameters
+            parameters = {
+                "layer" : layerIds,
+                "targetOffset" : targetOffset,
+                "annotationsPerLayer" : annotationsPerLayer,
+                "csvFieldDelimiter" : ",",
+                "targetColumn" : 0,
+                "copyColumns" : False,
+                "offsetThreshold" : offsetThreshold
+            }        
+            # send the request
+            model = self._postMultipartRequest(
+                self._labbcatUrl("api/getMatchAnnotations"), parameters, files)
         
         # delete the temporary CSV file
         os.remove(fileName)
@@ -1937,13 +1969,13 @@ class LabbcatView:
                                 " and ['end']['offset']")
             endOffsets = []
             for annotation in offsets:
-                if "end" in annotation and "offset" in annotation["end"]:
+                if annotation != None and "end" in annotation and "offset" in annotation["end"]:
                     endOffsets.append(annotation["end"]["offset"])
                 else:
                     endOffsets.append("")
             startOffsets = []
             for annotation in offsets:
-                if "start" in annotation and "offset" in annotation["start"]:
+                if annotation != None and "start" in annotation and "offset" in annotation["start"]:
                     startOffsets.append(annotation["start"]["offset"])
                 else:
                     startOffsets.append("")
@@ -2071,7 +2103,11 @@ class LabbcatView:
             os.mkdir(dir)
 
         # loop through each triple, getting fragments individually
-        url = self._labbcatUrl("soundfragment")
+        if self.labbcatVersion is None: self.getId() # ensure we know the server version
+        if self.labbcatVersion >= "20250716.1022":
+            url = self._labbcatUrl("api/media/fragments")
+        else:
+            url = self._labbcatUrl("soundfragment")
         prefixChars = len(str(len(transcriptIds)))
         for i in range(len(transcriptIds)):
             if transcriptIds[i] == None or startOffsets[i] == None or endOffsets[i] == None:
