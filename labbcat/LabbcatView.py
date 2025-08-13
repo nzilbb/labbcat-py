@@ -187,7 +187,7 @@ class LabbcatView:
         return(response.model)
          
     def _postRequestToFile(self, url, params, dir=None, fileName=None):
-        if self.verbose: print("_postRequestToFile " + url + " : " + str(params) + " -> " + dir)
+        if self.verbose: print("_postRequestToFile " + url + " : " + str(params) + " -> " + str(dir))
         if self.username == None:
             auth = None
         else:
@@ -1237,15 +1237,15 @@ class LabbcatView:
         :returns: The name of a CSV file with one row per participant, and one column per attribute.
         :rtype: str
         """
-        try:
-            # fall back to old API
+        try: # fall back to old API
             params = {
                 "csvFieldDelimiter" : ",",
                 "layer" : layerIds,
-                "participantId" : participantIds }
-            return (self._postRequestToFile(self._labbcatUrl("participantsExport"), params))
-        except ResponseException as x:
+                "id" : participantIds }
+            return (self._postRequestToFile(self._labbcatUrl("api/participant/attributes"), params))
+        except ResponseException as x:  
             if x.response.code == 404: # fall back to old API
+                if self.verbose: print("Falling back to old API")
                 params = {
                     "type" : "participant",
                     "content-type" : "text/csv",
@@ -1632,7 +1632,7 @@ class LabbcatView:
         os.close(fd)
         files = {}
         f = open(fileName, 'r')
-        files["uploadfile"] = (fileName, f)
+        files["results"] = (fileName, f)
 
         if self.labbcatVersion is None: self.getId() # ensure we know the server version
         if self.labbcatVersion >= "20250716.1022":
@@ -1663,10 +1663,15 @@ class LabbcatView:
             # send the request
             model = self._postRequest(
                 self._labbcatUrl("api/results"), parameters)
+            annotations = model["matches"]
+            if annotationsPerLayer == 1 and len(layerIds) == 1:
+                # return a 1D array
+                annotations = [item for row in annotations for item in row[layerIds[0]]]
             
             self.releaseTask(threadId)
             
         else: # labbcatVersion < 20250716.1022, so use deprecated API
+            if self.verbose: print("Falling back to deprecated API: " + self.labbcatVersion)
             # define parameters
             parameters = {
                 "layer" : layerIds,
@@ -1677,18 +1682,20 @@ class LabbcatView:
                 "copyColumns" : False,
                 "offsetThreshold" : offsetThreshold
             }        
+            files = {}
+            files["uploadfile"] = (fileName, f)
             # send the request
-            model = self._postMultipartRequest(
+            annotations = self._postMultipartRequest(
                 self._labbcatUrl("api/getMatchAnnotations"), parameters, files)
+            # result for old API is a multidimensional array with no layer IDs identified
+            if annotationsPerLayer == 1 and len(layerIds) == 1:
+                # remove one of the dimensions of the result
+                annotations = [item for row in annotations for item in row]
         
         # delete the temporary CSV file
         os.remove(fileName)
 
-        if annotationsPerLayer == 1 and len(layerIds) == 1:
-            # remove one of the dimensions of the result
-            model = [item for row in model for item in row]
-        
-        return(model)
+        return(annotations)
 
     def processWithPraat(self, praatScript, windowOffset, matchIds, offsets, endOffsets=None, 
                          genderAttribute="participant_gender", attributes=None):
@@ -2434,7 +2441,14 @@ class LabbcatView:
          available.
         :rtype: dict of lists
         """
-        return(self._getRequest(self._labbcatUrl("dictionaries"), None))
+        try:
+            # fall back to old API
+            return(self._getRequest(self._labbcatUrl("api/dictionaries"), None))
+        except ResponseException as x:
+            if x.response.code == 404: # fall back to old API
+                return(self._getRequest(self._labbcatUrl("dictionaries"), None))
+            else:
+                raise x        
 
     def getDictionaryEntries(self, managerId, dictionaryId, keys):
         """ Lookup entries in a dictionary.
@@ -2469,17 +2483,30 @@ class LabbcatView:
         files = {}
         f = open(fileName, 'r')
         files["uploadfile"] = (fileName, f)
-        response = self._postMultipartRequestRaw(
-            self._labbcatUrl("dictionary"), {
-                "managerId" : managerId,
-                "dictionaryId" : dictionaryId
-            }, files)
+        try:
+            # fall back to old API
+            response = self._postMultipartRequestRaw(
+                self._labbcatUrl("api/dictionary"), {
+                    "managerId" : managerId,
+                    "dictionaryId" : dictionaryId
+                }, files)
+            # ensure status was ok
+            response.raise_for_status()
+        except ResponseException as x:
+            if x.response.code == 404: # fall back to old API
+                response = self._postMultipartRequestRaw(
+                    self._labbcatUrl("dictionary"), {
+                        "managerId" : managerId,
+                        "dictionaryId" : dictionaryId
+                    }, files)
+            else:
+                raise x        
         
         # tidily remove upload file
         os.remove(fileName)
         
         # ensure status was ok
-        response.raise_for_status();
+        response.raise_for_status()
 
         # save response to file
         if self.verbose: print("saving result to file: " + fileName)

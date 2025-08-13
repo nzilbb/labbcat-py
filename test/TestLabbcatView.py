@@ -252,18 +252,22 @@ class TestLabbcatView(unittest.TestCase):
               self.assertIn(key, annotation, "Has " + key)
 
     def test_getMatchingAnnotationData(self):
-      files = self.store.getMatchingAnnotationData(
-          "layer.id == 'mediapipeFrame' && graph.id == 'AP513_Steve.eaf' && start.offset < 10.58",
-          "png")
-      try:
-          self.assertTrue(1 <= len(files), "Files are returned")
-          
-          # do they look like images?
-          first = files[0]
-          self.assertTrue(first.endswith(".png"), "Files are images")
-      finally:
-          for f in files:
-              os.remove(f)
+      layerIds = self.store.getLayerIds()
+      if not "mediapipeFrame" in layerIds:
+          print("\nThere is no mediapipeFrame layer, can't test getMatchingAnnotationData.")
+      else:
+          files = self.store.getMatchingAnnotationData(
+              "layer.id == 'mediapipeFrame' && graph.id == 'AP513_Steve.eaf' && start.offset < 10.58",
+              "png")
+          try:
+              self.assertTrue(1 <= len(files), "Files are returned")
+              
+              # do they look like images?
+              first = files[0]
+              self.assertTrue(first.endswith(".png"), "Files are images")
+          finally:
+              for f in files:
+                  os.remove(f)
 
     def test_getMediaTracks(self):
         tracks = self.store.getMediaTracks()
@@ -336,7 +340,7 @@ class TestLabbcatView(unittest.TestCase):
         os.remove(fileName)
         
         fileName = self.store.getTranscriptAttributes(
-            "['corpus'].includesAny(labels('corpus'))", layerIds, "test.csv")
+            "['QB'].includesAny(labels('corpus'))", layerIds, "test.csv")
         self.assertEqual("test.csv", fileName, "Query expression: Given CSV file returned")
         self.assertTrue(os.path.isfile(fileName), "Query expression: CSV file exists")
         os.remove(fileName)
@@ -396,7 +400,8 @@ class TestLabbcatView(unittest.TestCase):
                 annotations = self.store.getMatchAnnotations(matches, layerIds, 0, 1)
                 self.assertEqual(len(matches), len(annotations),
                                   "annotations array is same size as matches array")
-                # annotationsPerLayer = 1 ans len(layerIds) == 1, so it's a 1D array of annotations
+                # annotationsPerLayer = 1 ans len(layerIds) == 1,
+                # so it's a 1D array of annotations
                 # do they look like annotations?
                 annotation = annotations[0]
                 for key in ["layerId", "id", "label", "startId", "endId"]:
@@ -411,10 +416,11 @@ class TestLabbcatView(unittest.TestCase):
                 annotations = self.store.getMatchAnnotations(matches, layerIds, 0, 2, 0)
                 self.assertEqual(len(matches), len(annotations),
                                   "annotations array is same size as matches array")
-                self.assertEqual(2, len(annotations[0]),
+                self.assertEqual(2, len(annotations[0][layerIds[0]]),
                                  "row arrays are the right size - 2 annotations per layer")
                 # do they look like annotations?
-                annotation = annotations[0][0]
+                # (first result, ortography layer, first annotation)
+                annotation = annotations[0][layerIds[0]][0]
                 for key in ["layerId", "id", "label", "startId", "endId", "start", "end"]:
                     with self.subTest(key=key):
                         self.assertIn(key, annotation, "Has " + key)
@@ -627,8 +633,12 @@ class TestLabbcatView(unittest.TestCase):
         finally:
             self.store.releaseTask(threadId)
 
-    def test_getFragmentAnnotationData(self):
-        # all instances of "and" that incompass a 'mediapipeFrame' PNG annotation
+    def test_getFragmentAnnotationData(self):        
+      # all instances of "and" that incompass a 'mediapipeFrame' PNG annotation
+      layerIds = self.store.getLayerIds()
+      if not "mediapipeFrame" in layerIds:
+          print("\nThere is no mediapipeFrame layer, can't test getMatchingAnnotationData.")
+      else:
         pattern = { "orthography" : "and", "mediapipeFrame": ".*" }
         matches = self.store.getMatches(pattern)
         if len(matches) == 0:
