@@ -99,8 +99,20 @@ corpus.deleteTranscript("labbcat-py.test.txt")
 For batch uploading and other example code, see the *examples* subdirectory.
 
 # Developers
+Create a virtual environment (once only): 
+
+```
+python3 -m venv labbcat-env
+```
+
+Before running any of the commands below: 
+
+```
+source labbcat-env/bin/activate
+```
 
 To build, test, release, and document the module, the following prerequisites are required:
+
  - `pip3 install twine`
  - `pip3 install pathlib`
  - `pip3 install deprecated`
