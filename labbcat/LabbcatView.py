@@ -1606,11 +1606,11 @@ class LabbcatView:
           - *100* -- return only manually-set alignments.
         :type offsetThreshold: int
         
-        :returns: If annotationsPerLayer == 1 and only one layer is specified in layerIds, 
-         a one-dimensional array of Annotations, of dimension len(*matchIds*) is returned. 
-         Otherwise, the return value is an array of arrays of Annotations, of dimensions 
-         len(*matchIds*) x (len(*layerIds*)x*annotationsPerLayer*). 
-         Either way, the first index matches the corresponding index in *matchIds*.  
+        :returns: If annotationsPerLayer == 1 and only one layer is specified in
+         *layerIds*, an array of Annotations, of dimension len(*matchIds*) is returned. 
+         Otherwise, the return value is an array of dimension len(*matchIds*), each element
+         being a dict with an entry for each layer in *layerIds*, each value being an array
+         of Annotations, of dimension len(*annotationsPerLayer*). 
         :rtype: list of list of dictionary        
         """
         # we need a list of strings, so if we've got a list of dictionaries, convert it
