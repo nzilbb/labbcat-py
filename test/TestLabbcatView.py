@@ -318,17 +318,17 @@ class TestLabbcatView(unittest.TestCase):
                   self.assertIn(key, file, "Has " + key)
     
     def test_getTasks(self):
+        # ensure there's at least one task
+        self.store.search(
+            {"orthography" : ".*"},
+            self.store.getParticipantIds()[0],
+            None, False, False, None)
+
         tasks = self.store.getTasks()
-        # there may be none
-        if len(tasks) == 0:
-            print("\nThere are no tasks, can't test for well-formed response.")
-        else:
-            for taskId in tasks:
-                task = tasks[taskId]
-                for key in ["threadId", "threadName", "running", "percentComplete", "status"]:
-                    with self.subTest(key=key):
-                        self.assertIn(key, task, "Has " + key)
-            
+        self.assertTrue(len(tasks) > 0)
+        for taskId in tasks:
+            self.assertTrue(taskId.isnumeric())
+        
     def test_getTrascriptAttributes(self):
         ids = self.store.getTranscriptIds()
         self.assertTrue(len(ids) > 0, "At least 3 transcripts in the corpus")
@@ -375,7 +375,7 @@ class TestLabbcatView(unittest.TestCase):
         participantId = [ ids[0] ]
 
         # all instances of "and"
-        pattern = {"orthography" : "and" }
+        pattern = { "orthography" : "and" }
         threadId = self.store.search(pattern, participantId, None, False, False, None)
         try:
             task = self.store.waitForTask(threadId, 30)

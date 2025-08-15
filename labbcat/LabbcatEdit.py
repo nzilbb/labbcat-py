@@ -434,9 +434,19 @@ class LabbcatEdit(LabbcatView):
             "generate_layer" : layerId,
             "utterances" : matchIds }
         if collectionName != None: params["collection_name"] = collectionName
-        
-        model = self._postRequest(self._labbcatUrl("generateLayerUtterances"), params)
-        return(model["threadId"])
+
+        try:
+            model = self._postRequest(
+                self._labbcatUrl("edit/generateLayerUtterances"), params)
+            return(model["threadId"])
+        except ResponseException as x:
+            if x.response.code == 404: # fall back to old API
+                # fall back to old API
+                model = self._postRequest(
+                    self._labbcatUrl("generateLayerUtterances"), params)
+                return(model["threadId"])
+            else:
+                raise x        
 
     def getAnnotatorDescriptor(self, annotatorId):
         """ Gets annotator information.

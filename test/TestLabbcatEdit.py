@@ -258,7 +258,7 @@ class TestLabbcatEdit(unittest.TestCase):
                 matches = matches[:upTo]
                 
                 # generate htk layer
-                threadId = self.store.generateLayerUtterances(matches, "htk", "unit-test")
+                threadId = self.store.generateLayerUtterances(matches, "htk", "UnitTester")
                 self.assertIsNotNone(threadId, "There is a threadId")
                 
                 try:

@@ -1,6 +1,9 @@
 # Editor backups
 *~
 
+# Env
+labbcat-env/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

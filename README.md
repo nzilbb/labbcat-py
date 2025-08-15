@@ -124,10 +124,16 @@ To build, test, release, and document the module, the following prerequisites ar
 python3 -m unittest
 ```
 
-...or for specific tests:
+...or for specific test suites:
 
 ```
 python3 -m unittest test.TestLabbcatAdmin
+```
+
+... or for specific tests:
+
+```
+python3 -m unittest test.TestLabbcatEdit.test_generateLayerUtterances
 ```
 
 ## Documentation generation

@@ -1025,7 +1025,13 @@ class LabbcatView:
         :returns: The status of the task.
         :rtype: dictionary
         """
-        return(self._getRequest(self._labbcatUrl("thread"), { "threadId" : threadId }))
+        try: # fall back to old API
+            return(self._getRequest(self._labbcatUrl("api/task/"+str(threadId)), {}))
+        except ResponseException as x:  
+            if x.response.code == 404: # fall back to old API
+                return(self._getRequest(self._labbcatUrl("thread"), { "threadId" : threadId }))
+            else:
+                raise x        
 
     def waitForTask(self, threadId, maxSeconds=0):
         """Wait for the given task to finish.
@@ -1109,8 +1115,14 @@ class LabbcatView:
         :param threadId: The ID of the task.
         :type threadId: str.
         """
-        self._getRequest(self._labbcatUrl("threads"), {
-            "threadId" : threadId, "command" : "release" })
+        try: # fall back to old API
+            self._deleteRequest(self._labbcatUrl("api/task/"+str(threadId)), {})
+        except ResponseException as x:  
+            if x.response.code == 404: # fall back to old API
+                self._getRequest(self._labbcatUrl("threads"), {
+                    "threadId" : threadId, "command" : "release" })
+            else:
+                raise x        
         return()
 
     def cancelTask(self, threadId):
@@ -1119,17 +1131,29 @@ class LabbcatView:
         :param threadId: The ID of the task.
         :type threadId: str.
         """
-        self._getRequest(self._labbcatUrl("threads"), {
-            "threadId" : threadId, "command" : "cancel" })
+        try: # fall back to old API
+            self._deleteRequest(self._labbcatUrl("api/task/"+str(threadId)), { "cancel":True })
+        except ResponseException as x:  
+            if x.response.code == 404: # fall back to old API
+                self._getRequest(self._labbcatUrl("threads"), {
+                    "threadId" : threadId, "command" : "cancel" })
+            else:
+                raise x        
         return()
 
     def getTasks(self):
         """ Gets a list of all tasks on the server. 
         
-        :returns: A list of all task statuses.
-        :rtype: list of dictionaries
+        :returns: A list of all task IDs.
+        :rtype: list of str
         """
-        return(self._getRequest(self._labbcatUrl("threads"), None))
+        try: # fall back to old API
+            return(self._getRequest(self._labbcatUrl("api/task/"), {}))
+        except ResponseException as x:  
+            if x.response.code == 404: # fall back to old API
+                return(self._getRequest(self._labbcatUrl("threads"), None))
+            else:
+                raise x
     
     def getTranscriptAttributes(self, expression, layerIds, csvFileName=None):
         """ Get transcript attribute values.
@@ -2475,6 +2499,7 @@ class LabbcatView:
         fd, fileName = tempfile.mkstemp(".csv", "labbcat-py-getDictionaryEntries-")
         if self.verbose: print("keys file: " + fileName)
         with open(fileName, "w") as file:
+            file.write("Word\n") # header
             for key in keys:
                 file.write(key + "\n")
         os.close(fd)
