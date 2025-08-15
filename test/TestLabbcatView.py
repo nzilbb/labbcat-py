@@ -519,8 +519,8 @@ class TestLabbcatView(unittest.TestCase):
         self.assertTrue(len(ids) > 0, "getParticipantIds: Some IDs are returned")
         participantId = [ ids[0] ]
         
-        # all instances of the "a" segment
-        threadId = self.store.search({ "segment" : "a" }, participantId)
+        # all instances of the "e" segment
+        threadId = self.store.search({ "segment" : "e" }, participantId)
         try:
             task = self.store.waitForTask(threadId, 30)
             # if the task is still running, it's taking too long, so cancel it
@@ -642,7 +642,7 @@ class TestLabbcatView(unittest.TestCase):
         pattern = { "orthography" : "and", "mediapipeFrame": ".*" }
         matches = self.store.getMatches(pattern)
         if len(matches) == 0:
-            print("getMatches: No matches were returned, cannot test getSoundFragments")
+            print("getMatches: No matches were returned, cannot test getFragmentAnnotationData")
         else:
             # there can be a huge number of frame annotations, so just get them for the
             # first to matching utterances
