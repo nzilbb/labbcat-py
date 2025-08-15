@@ -1,6 +1,11 @@
-# 0.11.1
+# 1.0.0
 
 - Add support for servers configured with FORM user auth
+- Changed LabbcatView function
+  + *getMatchAnnotations* - annotationsPerLayer > 1 or more than one
+    layer is specified in layerIds, the return value is now an array,
+    one element per MatchId, of dicts, where the key is the layerId,
+    and the value is an array of annotations.
 
 # 0.11.0
 
@@ -34,7 +39,7 @@
   + *praatScriptIntensity*
   + *praatScriptPitch*
 - Changed LabbcatView function
-  + *getMatchAnnnotations* - now has 'offsetTheshold' parameter to allow retrieval of
+  + *getMatchAnnotations* - now has 'offsetTheshold' parameter to allow retrieval of
     start/end times, and returns a 1D array (instead of 2D) if annotationsPerLayer == 1
     and only one layer is specified in layerIds
 
