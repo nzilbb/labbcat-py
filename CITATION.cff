@@ -15,7 +15,7 @@ authors:
     orcid: 'https://orcid.org/0000-0001-5271-5487'
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.15215415
+    value: 10.5281/zenodo.16905473
 repository-code: 'https://github.com/nzilbb/labbcat-py/'
 url: 'https://pypi.org/project/nzilbb-labbcat/'
 abstract: >-
@@ -25,5 +25,5 @@ keywords:
   - LaBB-CAT
   - corpus linguistics
 license: AGPL-3.0-or-later
-version: 0.11.0
-date-released: '2025-05-22'
+version: 1.0.0
+date-released: '2025-08-19'
