@@ -116,6 +116,7 @@ To build, test, release, and document the module, the following prerequisites ar
  - `pip3 install twine`
  - `pip3 install pathlib`
  - `pip3 install deprecated`
+ - `pip3 install setuptools`
  - `sudo apt install python3-sphinx`
 
 ## Unit tests
