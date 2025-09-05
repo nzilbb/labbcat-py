@@ -1,6 +1,5 @@
 import os
 import time
-from deprecated import deprecated
 from labbcat.LabbcatEdit import LabbcatEdit
 from labbcat.ResponseException import ResponseException
 
@@ -261,74 +260,7 @@ class LabbcatAdmin(LabbcatEdit):
         :param corpus_name: The name/id of the corpus.
         :type corpus_name: str        
         """
-        return(self._deleteRequest(self._labbcatUrl("api/admin/corpora/"+corpus_name), {}))
-    
-    @deprecated("Deprecated as 'projects' are now categories with classId = 'layer' - use createCategory instead.")
-    def createProject(self, project, description):
-        """ Deprecated as 'projects' are now categories with classId = 'layer' 
-        - use createCategory instead.
-
-        :param project: The name/id of the project.
-        :type project: str
-        
-        :param description: The description of the project.
-        :type description: str
-        
-        :returns: A copy of the project record
-        :rtype: dict
-        """
-        project = self.createCategory("layer", project, description, 0)
-        # for backwards compatibility:
-        project["project"] = project["category"]
-        return(project)
-    
-    @deprecated("Deprecated as 'projects' are now categories with classId = 'layer' - use readCategories('layer') instead.")
-    def readProjects(self, pageNumber=None, pageLength=None):
-        """ Deprecated as 'projects' are now categories with classId = 'layer' 
-        - use readCategory('layer') instead.
-        
-        :param pageNumber: The zero-based page number to return, or null to return the first page.
-        :type pageNumber: int or None
-
-        :param pageLength: The maximum number of records to return, or null to return all.
-        :type pageLength: int or None
-        
-        :returns: A list of project records.
-        :rtype: list of dict
-        """
-        projects = self.readCategories("layer")
-        for project in projects:
-            # for backwards compatibility:
-            project["project"] = project["category"]
-        return(projects)
-        
-    @deprecated("Deprecated as 'projects' are now categories with classId = 'layer' - use updateCategory instead.")
-    def updateProject(self, project, description):
-        """ Deprecated as 'projects' are now categories with classId = 'layer' 
-        - use updateCategory instead.
-        
-        :param project: The name/id of the project.
-        :type project: str
-        
-        :param description: The description of the project.
-        :type description: str
-        
-        :returns: A copy of the project record
-        :rtype: dict
-        """
-        project = self.updateCategory("layer", project, description, 0)
-        # for backwards compatibility:
-        project["project"] = project["category"]
-        return(project)
-    
-    @deprecated("Deprecated as 'projects' are now categories with classId = 'layer' - use deleteCategory instead.")
-    def deleteProject(self, project):
-        """ Deletes an existing project record.
-        
-        :param project: The name/id of the project.
-        :type project: str        
-        """
-        return(self.deleteCategory("layer", project))
+        return(self._deleteRequest(self._labbcatUrl("api/admin/corpora/"+corpus_name), {}))                
     
     def createCategory(self, class_id, category, description, display_order):
         """ Creates a new category record.

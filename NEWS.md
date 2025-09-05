@@ -1,3 +1,8 @@
+# 1.1.0
+
+- Remove deprecated functions using the 'project' terminology for categories.
+- Ensure falling back to older API versions is correctly handled.
+
 # 1.0.0
 
 - Add support for servers configured with FORM user auth

@@ -1028,7 +1028,7 @@ class LabbcatView:
         try: # fall back to old API
             return(self._getRequest(self._labbcatUrl("api/task/"+str(threadId)), {}))
         except ResponseException as x:  
-            if x.response.code == 404: # fall back to old API
+            if x.response.httpStatus == 404: # fall back to old API
                 return(self._getRequest(self._labbcatUrl("thread"), { "threadId" : threadId }))
             else:
                 raise x        
