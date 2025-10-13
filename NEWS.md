@@ -1,3 +1,7 @@
+# 1.1.1
+
+- Ensure POST requests correctly inform the server of parameter encoding.
+
 # 1.1.0
 
 - Remove deprecated functions using the 'project' terminology for categories.

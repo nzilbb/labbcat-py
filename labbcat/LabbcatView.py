@@ -93,6 +93,7 @@ class LabbcatView:
                             "j_username":username,
                             "j_password":password },
                         headers={
+                            "Content-Type":"application/x-www-form-urlencoded;charset=\"utf-8\"",
                             "Accept":"application/json",
                             "Accept-Language":self.language,
                             "user-agent": "labbcat-py/"+__version__}))
@@ -137,6 +138,7 @@ class LabbcatView:
         response = Response(
             self.session.post(
                 url=url, data=params, json=json, auth=auth, headers={
+                    "Content-Type":"application/x-www-form-urlencoded;charset=\"utf-8\"",
                     "Accept":"application/json",
                     "Accept-Language":self.language,
                     "user-agent": "labbcat-py/"+__version__}),
@@ -195,9 +197,10 @@ class LabbcatView:
         
         response = self.session.post(
             url=url, data=params, auth=auth, headers={
+                "Content-Type":"application/x-www-form-urlencoded;charset=\"utf-8\"",
                 "Accept":"application/json",
-                    "Accept-Language":self.language,
-                    "user-agent": "labbcat-py/"+__version__
+                "Accept-Language":self.language,
+                "user-agent": "labbcat-py/"+__version__
                 })
         if self.verbose: print(response.request.body)
         # ensure status was ok
@@ -266,9 +269,10 @@ class LabbcatView:
             
         response = Response(self.session.post(
             url=url, data=params, files=files, auth=auth, headers={
+                "Content-Type":"application/x-www-form-urlencoded;charset=\"utf-8\"",
                 "Accept":"application/json",
-                    "Accept-Language":self.language,
-                    "user-agent": "labbcat-py/"+__version__
+                "Accept-Language":self.language,
+                "user-agent": "labbcat-py/"+__version__
                 }))
         
         # close the files
@@ -291,6 +295,7 @@ class LabbcatView:
             
         resp = self.session.post(
             url=url, data=params, files=files, auth=auth, headers={
+                "Content-Type":"application/x-www-form-urlencoded;charset=\"utf-8\"",
                 "Accept":"text/plain",
                 "Accept-Language":self.language,
                 "user-agent": "labbcat-py/"+__version__
