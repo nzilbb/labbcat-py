@@ -2187,6 +2187,13 @@ class LabbcatView:
          dictionaries returned by getMatches(threadId).
         :type transcriptIds: list of str or list of dict
         
+        :param layerIds: A list of IDs of annotation layers to include in the fragment.
+        :type layerIds: list of str
+        
+        :param mimeType: The desired format, for example "text/praat-textgrid" for Praat
+         TextGrids, "text/plain" for plain text, etc.
+        :type mimeType: list of str
+        
         :param startOffsets: A list of start offsets, with one element for each element in
          *transcriptIds*. 
         :type startOffsets: list of float or None
@@ -2194,13 +2201,6 @@ class LabbcatView:
         :param endOffsets: A list of end offsets, with one element for each element in
          *transcriptIds*. 
         :type endOffsets: list of float or None
-        
-        :param layerIds: A list of IDs of annotation layers to include in the fragment.
-        :type layerIds: list of str
-        
-        :param mimeType: The desired format, for example "text/praat-textgrid" for Praat
-         TextGrids, "text/plain" for plain text, etc.
-        :type mimeType: list of str
         
         :param dir: A directory in which the files should be stored, or null for a temporary
          folder.  If specified, and the directory doesn't exist, it will be created. 
@@ -2220,16 +2220,16 @@ class LabbcatView:
         # have they passed matches as transcriptIds, instead of strings?
         if len(transcriptIds) > 0:
             if isinstance(transcriptIds[0], dict) and startOffsets == None and endOffsets == None:
-                startOffsets = [ m["Line"] for m in transcriptIds ]
-                endOffsets = [ m["LineEnd"] for m in transcriptIds ]
-                transcriptIds = [ m["Transcript"] for m in transcriptIds ]
+                transcriptIds = [ m["MatchId"] for m in transcriptIds ]
         
         # validate parameters
-        if len(transcriptIds) != len(startOffsets) or len(transcriptIds) != len(endOffsets):
-            raise ResponseException(
-                "transcriptIds ("+str(len(transcriptIds))
-                +"), startOffsets ("+str(len(startOffsets))
-                +"), and endOffsets ("+str(len(endOffsets))+") must be lists of equal size.");
+        if startOffsets != None and endOffsets != None:
+            if len(transcriptIds) != len(startOffsets) or len(transcriptIds) != len(endOffsets):
+                raise ResponseException(
+                    "transcriptIds ("+str(len(transcriptIds))
+                    +"), startOffsets ("+str(len(startOffsets))
+                    +"), and endOffsets ("+str(len(endOffsets))
+                    +") must be lists of equal size.");
         
         fragments = []        
         tempFiles = False
@@ -2242,12 +2242,16 @@ class LabbcatView:
         # send all triples in one request, we should get a zip file back
         url = self._labbcatUrl("api/serialize/fragment")
         params = {
-            "id" : transcriptIds,
-            "start" : startOffsets,
-            "end" : endOffsets,
             "mimeType" : mimeType,
             "layerId" : layerIds
         }
+        if startOffsets == None:
+            # passing MatchIds only
+            params["utterance"] = transcriptIds
+        else:
+            params["id"] = transcriptIds
+            params["start"] = startOffsets
+            params["end"] = endOffsets
         if prefixNames:
             params["prefix"] = True
         try:
