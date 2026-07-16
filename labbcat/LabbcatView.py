@@ -269,7 +269,6 @@ class LabbcatView:
             
         response = Response(self.session.post(
             url=url, data=params, files=files, auth=auth, headers={
-                "Content-Type":"application/x-www-form-urlencoded;charset=\"utf-8\"",
                 "Accept":"application/json",
                 "Accept-Language":self.language,
                 "user-agent": "labbcat-py/"+__version__
@@ -277,7 +276,8 @@ class LabbcatView:
         
         # close the files
         for param in files:
-            name, fd = files[param]
+            name, part = param
+            fileName, fd, contentType = part
             fd.close()
         
         # check for errors
@@ -303,7 +303,8 @@ class LabbcatView:
         
         # close the files
         for param in files:
-            name, fd = files[param]
+            name, part = param
+            fileName, fd, contentType = part
             fd.close()
         
         return(resp)
@@ -1659,9 +1660,9 @@ class LabbcatView:
             for matchId in matchIds:
                 file.write("\n" + matchId)
         os.close(fd)
-        files = {}
+        files = []
         f = open(fileName, 'r')
-        files["results"] = (fileName, f)
+        files.append(("results", (fileName, f, "text/csv")))
 
         if self.labbcatVersion is None: self.getId() # ensure we know the server version
         if self.labbcatVersion >= "20250716.1022":
@@ -1711,8 +1712,8 @@ class LabbcatView:
                 "copyColumns" : False,
                 "offsetThreshold" : offsetThreshold
             }        
-            files = {}
-            files["uploadfile"] = (fileName, f)
+            files = []
+            files.append(("uploadfile", (fileName, f, "text/csv")))
             # send the request
             annotations = self._postMultipartRequest(
                 self._labbcatUrl("api/getMatchAnnotations"), parameters, files)
@@ -2043,9 +2044,9 @@ class LabbcatView:
                     "\n" + transcriptIds[r] + "," + participantIds[r]
                     + ","+ str(offsets[r]) + "," + str(endOffsets[r]))
         os.close(fd)
-        files = {}
+        files = []
         f = open(fileName, 'r')
-        files["csv"] = (fileName, f)
+        files.append(("csv", (fileName, f, "text/csv")))
 
         # define parameters
         parameters = {
@@ -2514,9 +2515,9 @@ class LabbcatView:
         os.close(fd)
         
         # make request
-        files = {}
+        files = []
         f = open(fileName, 'r')
-        files["uploadfile"] = (fileName, f)
+        files.append(("uploadfile", (fileName, f, "text/csv")))
         try:
             # fall back to old API
             response = self._postMultipartRequestRaw(

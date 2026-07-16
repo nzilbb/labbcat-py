@@ -93,15 +93,45 @@ class LabbcatEdit(LabbcatView):
             params["merge"] = "true"
         
         transcriptName = os.path.basename(transcript)
-        files = {}
+        files = []
         f = open(transcript, 'rb')
-        files["transcript"] = (transcriptName, f)
+        contentType = "application/octet-stream"
+        if transcriptName.endswith(".txt"): contentType = "text/plain"
+        files.append(("transcript", (transcriptName, f, contentType)))
+        if self.verbose: print("transcript: " + transcriptName + " - " + contentType)
         
         if media != None:
             if trackSuffix == None: trackSuffix = ""
             mediaName = os.path.basename(media)
-            files["media"+trackSuffix] = (mediaName, open(media, 'rb'))
-
+            mediaContentType = "application/octet-stream"
+            extension = ""
+            if mediaName.rfind(".") > 0:
+                extension = mediaName[mediaName.rfind("."):]
+            match extension:
+                case "wav": mediaContentType = "audio/wav"
+                case "mp3": mediaContentType = "audio/mpeg"
+                case "aif": mediaContentType = "audio/aiff"
+                case "au": mediaContentType = "audio/basic"
+                case "oga": mediaContentType = "audio/ogg"
+                case "m4a": mediaContentType = "audio/mp4"
+                case "flac": mediaContentType = "audio/flac"
+                case "mp4": mediaContentType = "video/mp4"
+                case "mpg": mediaContentType = "video/mpeg"
+                case "mpeg": mediaContentType = "video/mpeg"
+                case "avi": mediaContentType = "video/avi"
+                case "mov": mediaContentType = "video/quicktime"
+                case "wma": mediaContentType = "audio/x-ms-wma"
+                case "wmv": mediaContentType = "video/x-ms-wmv"
+                case "ogv": mediaContentType = "video/ogg"
+                case "ogg": mediaContentType = "video/ogg"
+                case "webm": mediaContentType = "video/webm"
+                case "jpg": mediaContentType = "image/jpeg"
+                case "jpeg": mediaContentType = "image/jpeg"
+                case "gif": mediaContentType = "image/gif"
+                case "png": mediaContentType = "image/png"
+            files.append(
+                ("media"+trackSuffix, (mediaName, open(media, 'rb'), mediaContentType)))
+            if self.verbose: print("media"+trackSuffix+": " + mediaName + " - " + contentType)
         try:
             return(self._postMultipartRequest(
                 self._labbcatUrl("api/edit/transcript/upload"), params, files))
@@ -200,14 +230,16 @@ class LabbcatEdit(LabbcatView):
                 "episode" : episode }
             
             transcriptName = os.path.basename(transcript)
-            files = {}
+            files = []
             f = open(transcript, 'rb')
-            files["uploadfile1_0"] = (transcriptName, f)
+            files.append(("uploadfile1_0", (transcriptName, f), contentType))
         
             if media != None:
-                if mediaSuffix == None: mediaSuffix = ""
+                if trackSuffix == None: trackSuffix = ""
                 mediaName = os.path.basename(media)
-                files["uploadmedia"+mediaSuffix+"1"] = (mediaName, open(media, 'rb'))
+                files.append(
+                    ("uploadmedia"+trackSuffix+"1",
+                     (mediaName, open(media, 'rb'), mediaContentType)))
             
             try:
                 model = self._postMultipartRequest(
@@ -258,9 +290,11 @@ class LabbcatEdit(LabbcatView):
                 params["suppressGeneration"] = "true"
             
             transcriptName = os.path.basename(transcript)
-            files = {}
+            files = []
             f = open(transcript, 'rb')
-            files["uploadfile1_0"] = (transcriptName, f)
+            contentType = "application/octet-stream"
+            if transcriptName.endswith(".txt"): contentType = "text/plain"
+            files.append(("uploadfile1_0", (transcriptName, f, contentType)))
             
             try:
                 model = self._postMultipartRequest(
@@ -291,9 +325,11 @@ class LabbcatEdit(LabbcatView):
             "automaticMapping" : "true" }
         
         fragmentName = os.path.basename(fragment)
-        files = {}
+        files = []
         f = open(fragment, 'rb')
-        files["uploadfile"] = (fragmentName, f)
+        contentType = "application/octet-stream"
+        if fragmentName.endswith(".txt"): contentType = "text/plain"
+        files.append(("uploadfile", (fragmentName, f, contentType)))
         
         try:
             model = self._postMultipartRequest(
@@ -323,8 +359,34 @@ class LabbcatEdit(LabbcatView):
         
         mediaName = os.path.basename(media)
         f = open(media, 'rb')
-        files = {}
-        files["media"] = (mediaName, f)
+        files = []
+        mediaContentType = "application/octet-stream"
+        extension = ""
+        if mediaName.rfind(".") > 0:
+            extension = mediaName[mediaName.rfind("."):]
+        match extension:
+            case "wav": mediaContentType = "audio/wav"
+            case "mp3": mediaContentType = "audio/mpeg"
+            case "aif": mediaContentType = "audio/aiff"
+            case "au": mediaContentType = "audio/basic"
+            case "oga": mediaContentType = "audio/ogg"
+            case "m4a": mediaContentType = "audio/mp4"
+            case "flac": mediaContentType = "audio/flac"
+            case "mp4": mediaContentType = "video/mp4"
+            case "mpg": mediaContentType = "video/mpeg"
+            case "mpeg": mediaContentType = "video/mpeg"
+            case "avi": mediaContentType = "video/avi"
+            case "mov": mediaContentType = "video/quicktime"
+            case "wma": mediaContentType = "audio/x-ms-wma"
+            case "wmv": mediaContentType = "video/x-ms-wmv"
+            case "ogv": mediaContentType = "video/ogg"
+            case "ogg": mediaContentType = "video/ogg"
+            case "webm": mediaContentType = "video/webm"
+            case "jpg": mediaContentType = "image/jpeg"
+            case "jpeg": mediaContentType = "image/jpeg"
+            case "gif": mediaContentType = "image/gif"
+            case "png": mediaContentType = "image/png"
+        files.append(("media", (mediaName, f, mediaContentType)))
 
         try:
             model = self._postMultipartRequest(
@@ -348,9 +410,11 @@ class LabbcatEdit(LabbcatView):
         params = { "id" : id }
         
         documentName = os.path.basename(document)
+        contentType = "application/octet-stream"
+        if documentName.endswith(".txt"): contentType = "text/plain"
         f = open(document, 'rb')
-        files = {}
-        files["document"] = (documentName, f)
+        files = [
+            ("document", (documentName, f, contentType)) ]
 
         try:
             model = self._postMultipartRequest(

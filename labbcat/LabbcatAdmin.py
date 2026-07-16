@@ -941,9 +941,9 @@ class LabbcatAdmin(LabbcatEdit):
             "comment" : comment,
             "fieldNames" : fieldNames,
             "skipFirstLine" : skipFirstLine }
-        files = {}
+        files = []
         f = open(file, 'rb')
-        files["file"] = (os.path.basename(file), f)
+        files.append(("file", (os.path.basename(file), f, "text/plain")))
         try:
             resp = self._postMultipartRequestRaw(
                 self._labbcatUrl("edit/annotator/ext/FlatLexiconTagger/loadLexicon"),

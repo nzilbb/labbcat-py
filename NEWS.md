@@ -1,3 +1,13 @@
+# 1.1.3
+
+- Update implementation of multipart http requests.
+
+# 1.1.2
+
+- *LabbcatView.getFragments* correctly serializes only one speaker even when
+  there's simultaneous speech with the same utterance boundaries, if matches
+  returned by *getMatches* or *allUtterances* are passed as IDs.
+
 # 1.1.1
 
 - Ensure POST requests correctly inform the server of parameter encoding.
