@@ -217,6 +217,12 @@ class LabbcatEdit(LabbcatView):
             parameterValues = {}
             for parameter in parameters:
                 parameterValues[parameter["name"]] = parameter["value"]
+            if transcriptType != None:
+                parameterValues["labbcat_transcript_type"] = transcriptType
+            if episode != None:
+                parameterValues["labbcat_episode"] = episode
+            if episode != None:
+                parameterValues["labbcat_episode"] = episode
             response = self.transcriptUploadParameters(id, parameterValues)
             return(response["transcripts"])
         

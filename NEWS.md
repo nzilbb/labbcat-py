@@ -1,3 +1,7 @@
+# 1.1.4
+
+- Ensure that transcript type, episode, and corpus are correctly set during upload
+
 # 1.1.3
 
 - Update implementation of multipart http requests.

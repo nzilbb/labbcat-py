@@ -173,6 +173,8 @@ class TestLabbcatEdit(unittest.TestCase):
         # ensure the transcript/participant are there
         count = self.store.countMatchingTranscriptIds("id = '"+transcriptName+"'")
         self.assertEqual(1, count, "Transcript is in the store")
+        count = self.store.countMatchingTranscriptIds("id = '"+transcriptName+"' && first('episode').label == 'test'")
+        self.assertEqual(1, count, "Transcript is in episode")
         count = self.store.countMatchingParticipantIds("id = '"+participantName+"'")
         self.assertEqual(1, count, "Participant '"+participantName+"' is in the store")
         
