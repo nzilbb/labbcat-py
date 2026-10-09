@@ -295,7 +295,6 @@ class LabbcatView:
             
         resp = self.session.post(
             url=url, data=params, files=files, auth=auth, headers={
-                "Content-Type":"application/x-www-form-urlencoded;charset=\"utf-8\"",
                 "Accept":"text/plain",
                 "Accept-Language":self.language,
                 "user-agent": "labbcat-py/"+__version__

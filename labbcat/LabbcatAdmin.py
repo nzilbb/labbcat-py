@@ -946,7 +946,7 @@ class LabbcatAdmin(LabbcatEdit):
         files.append(("file", (os.path.basename(file), f, "text/plain")))
         try:
             resp = self._postMultipartRequestRaw(
-                self._labbcatUrl("edit/annotator/ext/FlatLexiconTagger/loadLexicon"),
+                self._labbcatUrl("annotator/ext/FlatLexiconTagger/admin/loadLexicon"),
                 params, files)
             if resp.status_code != 200:
                 raise ResponseException("Error: " + str(resp.status_code) + ": " + resp.text)
@@ -957,14 +957,14 @@ class LabbcatAdmin(LabbcatEdit):
                 while running:
                     time.sleep(1)
                     resp = self._getRequestRaw(
-                        self._labbcatUrl("edit/annotator/ext/FlatLexiconTagger/getRunning"), None)
+                        self._labbcatUrl("annotator/ext/FlatLexiconTagger/getRunning"), None)
                     running = resp.text == "true"
                     resp = self._getRequestRaw(
-                        self._labbcatUrl("edit/annotator/ext/FlatLexiconTagger/getStatus"), None)
+                        self._labbcatUrl("annotator/ext/FlatLexiconTagger/getStatus"), None)
                     status = resp.text
                     resp = self._getRequestRaw(
                         self._labbcatUrl(
-                            "edit/annotator/ext/FlatLexiconTagger/getPercentComplete"), None)
+                            "annotator/ext/FlatLexiconTagger/getPercentComplete"), None)
                     percentComplete = int(resp.text)
                     if self.verbose: print("status: " + str(percentComplete) + "% " + status + " - " + str(running))
 
@@ -992,7 +992,7 @@ class LabbcatAdmin(LabbcatEdit):
         """
         resp = self._getRequestRaw(
             self._labbcatUrl(
-                "edit/annotator/ext/FlatLexiconTagger/deleteLexicon?"+lexicon), {})
+                "annotator/ext/FlatLexiconTagger/admin/deleteLexicon?"+lexicon), {})
         if resp.status_code != 200:
             raise ResponseException("Error: " + str(resp.status_code) + ": " + resp.text)
         else:

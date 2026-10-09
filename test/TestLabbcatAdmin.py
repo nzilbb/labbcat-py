@@ -727,6 +727,7 @@ class TestLabbcatAdmin(unittest.TestCase):
             except:
                 pass
         finally:
+            self.store.verbose = False
             try:
                 self.store.deleteLayer("unit-test")
             except:

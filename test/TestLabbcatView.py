@@ -264,7 +264,7 @@ class TestLabbcatView(unittest.TestCase):
               
               # do they look like images?
               first = files[0]
-              self.assertTrue(first.endswith(".png"), "Files are images")
+              self.assertTrue(first.endswith(".png") or first.endswith(".jpg"), "Files are images")
           finally:
               for f in files:
                   os.remove(f)
@@ -649,14 +649,15 @@ class TestLabbcatView(unittest.TestCase):
             upTo = min(2, len(matches))
             subset = matches[:upTo]
             
-            pngs = self.store.getFragmentAnnotationData("mediapipeFrame", subset)
+            imgs = self.store.getFragmentAnnotationData("mediapipeFrame", subset)
             try:
-                self.assertTrue(0 < len(pngs), "Some files were returned")                
-                for png in pngs:
-                    self.assertTrue(png.endswith(".png"), "File is image: "+png)
+                self.assertTrue(0 < len(imgs), "Some files were returned")                
+                for img in imgs:
+                    self.assertTrue(img.endswith(".png") or img.endswith(".jpg"),
+                                    "File is image: "+img)
             finally:
-                for png in pngs:
-                    os.remove(png)
+                for img in imgs:
+                    os.remove(img)
 
     def test_getFragments(self):
         # get a participant ID to use
@@ -741,7 +742,7 @@ class TestLabbcatView(unittest.TestCase):
                     except:
                         pass
                 self.assertFalse(task["running"], "Fragments task finished in a timely manner")
-                
+
                 fragments = self.store.taskResults(fragmentsThreadId, dir)
                 self.store.releaseTask(fragmentsThreadId)
                 try:
